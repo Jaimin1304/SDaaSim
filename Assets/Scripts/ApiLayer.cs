@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class ApiLayer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    void HandleUserCommand()
     {
-        
+        string msg = "hello from client";
+        string command = ClientSocket.communicate("127.0.0.1", 1235, msg);
+        Debug.Log(command);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        HandleUserCommand();
     }
 }
