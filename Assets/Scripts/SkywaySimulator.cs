@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class SkywaySimulator : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Skyway skyway;
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
