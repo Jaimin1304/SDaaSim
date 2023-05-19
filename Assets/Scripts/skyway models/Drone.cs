@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Drone : MonoBehaviour
 {
+    public Swarm swarm;
+    public SubSwarm subSwarm;
+    public Vector3 position;
     public float selfWeight;
+    public float currSpeed;
     public float maxPayloadWeight;
     public float maxSpeed;
     public float currPayloadWeight;
-    public float currSpeed;
     public float batteryStatus;
-    public Swarm swarm;
-    public SubSwarm subSwarm;
     public List<PayLoad> payloads = new List<PayLoad>();
 }

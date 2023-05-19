@@ -6,7 +6,7 @@ using System.IO;
 public class PythonRunner : MonoBehaviour
 {
     private string pythonPath = @"C:\Program Files\Python310\python.exe";
-    private string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "Server/run_server.py");
+    private string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "server/run_server.py");
     private Process pythonProcess;
 
     public void ExecutePythonScript()
