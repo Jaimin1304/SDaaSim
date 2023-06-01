@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Drone : MonoBehaviour
 {
-    public Swarm swarm;
-    public SubSwarm subSwarm;
-    public Vector3 position;
-    public float selfWeight;
-    public float currSpeed;
-    public float maxPayloadWeight;
-    public float maxSpeed;
-    public float currPayloadWeight;
-    public float batteryStatus;
-    public List<PayLoad> payloads = new List<PayLoad>();
+    [SerializeField] private Swarm swarm;
+    [SerializeField] private SubSwarm subSwarm;
+    [SerializeField] private Vector3 position;
+    [SerializeField] private float selfWeight;
+    [SerializeField] private float speed;
+    [SerializeField] private float maxPayloadWeight;
+    [SerializeField] private float batteryStatus;
+    [SerializeField] private List<PayLoad> payloads = new List<PayLoad>();
 }

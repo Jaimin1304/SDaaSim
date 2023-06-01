@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class PayLoad : MonoBehaviour
 {
-    public float weight;
+    [SerializeField] private float weight;
 }

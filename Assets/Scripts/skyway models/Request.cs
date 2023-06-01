@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Request : MonoBehaviour
 {
-    public Node startNode;
-    public Node destNode;
-    public List<PayLoad> payloads = new List<PayLoad>();
+    [SerializeField] private Node startNode;
+    [SerializeField] private Node destNode;
+    [SerializeField] private List<PayLoad> payloads = new List<PayLoad>();
 }

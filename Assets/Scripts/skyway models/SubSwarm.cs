@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SubSwarm : MonoBehaviour
 {
-    public Swarm master;
-    public List<Drone> drones = new List<Drone>();
+    [SerializeField] private Swarm master;
+    [SerializeField] private List<Drone> drones = new List<Drone>();
+    [SerializeField] private Node target;
 }

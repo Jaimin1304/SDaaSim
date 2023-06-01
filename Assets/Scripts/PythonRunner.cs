@@ -32,7 +32,7 @@ public class PythonRunner : MonoBehaviour
     // Call the ExecutePythonScript() function, e.g., in the Start() or Update() methods
     private void Start()
     {
-        ExecutePythonScript();
+        //ExecutePythonScript();
     }
 
     // This method will be called when the application is quitting

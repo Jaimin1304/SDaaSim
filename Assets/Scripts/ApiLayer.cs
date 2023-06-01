@@ -13,6 +13,6 @@ public class ApiLayer : MonoBehaviour
 
     void Update()
     {
-        HandleUserCommand();
+        //HandleUserCommand();
     }
 }

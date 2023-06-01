@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Pad : MonoBehaviour {
-    public int id;
-    public Node node;  // In Unity, this can be another GameObject with a Node component attached
-    public string status = "available";
+    [SerializeField] private int id;
+    [SerializeField] private Node node;  // In Unity, this can be another GameObject with a Node component attached
+    [SerializeField] private string status = "available";
 
-    public bool IsAvailable() {
+    [SerializeField] private bool IsAvailable() {
         return status == "available";
     }
 
-    public void Occupy() {
+    [SerializeField] private void Occupy() {
         if (IsAvailable()) {
             status = "occupied";
         }
     }
 
-    public void Release() {
+    [SerializeField] private void Release() {
         status = "available";
     }
 }
