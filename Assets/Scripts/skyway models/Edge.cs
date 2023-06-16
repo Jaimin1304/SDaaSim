@@ -6,18 +6,18 @@ using UnityEngine;
 public class Edge : MonoBehaviour
 {
     [SerializeField]
-    private string id;
+    string id;
 
     [SerializeField]
-    private Node leftNode;
+    Node leftNode;
 
     [SerializeField]
-    private Node rightNode;
+    Node rightNode;
 
     [SerializeField]
-    private LineRenderer lineRenderer; // Add this field
+    LineRenderer lineRenderer; // Add this field
 
-    private void Awake()
+    void Awake()
     {
         id = Guid.NewGuid().ToString();
         if (lineRenderer == null)
@@ -26,12 +26,12 @@ public class Edge : MonoBehaviour
         }
     }
 
-    private void Start()
+    void Start()
     {
         updateLineRenderer();
     }
 
-    private void Update()
+    void Update()
     {
         if (lineRenderer == null)
         {
@@ -40,7 +40,22 @@ public class Edge : MonoBehaviour
         updateLineRenderer();
     }
 
-    private void createLineRenderer()
+    public string GetId()
+    {
+        return id;
+    }
+
+    public Node GetLeftNode()
+    {
+        return leftNode;
+    }
+
+    public Node GetRightNode()
+    {
+        return rightNode;
+    }
+
+    void createLineRenderer()
     {
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
@@ -51,7 +66,7 @@ public class Edge : MonoBehaviour
         lineRenderer.endColor = Color.red;
     }
 
-    private void updateLineRenderer()
+    void updateLineRenderer()
     {
         Vector3 heightOffset = new Vector3(0, 0, 0);
         // Set the position of the line to match the nodes
@@ -60,5 +75,13 @@ public class Edge : MonoBehaviour
             lineRenderer.SetPosition(0, leftNode.transform.position + heightOffset);
             lineRenderer.SetPosition(1, rightNode.transform.position + heightOffset);
         }
+    }
+
+    public SerializableEdge ToSerializableEdge() { 
+        return new SerializableEdge() {
+            id = id,
+            leftNode = leftNode.GetId(),
+            rightNode = rightNode.GetId(),
+        };
     }
 }

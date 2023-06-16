@@ -2,12 +2,14 @@ using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 using System.IO;
+using UDebug = UnityEngine.Debug;
+using SDebug = System.Diagnostics.Debug;
 
 public class PythonRunner : MonoBehaviour
 {
-    private string pythonPath = @"C:\Program Files\Python310\python.exe";
-    private string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "server/run_server.py");
-    private Process pythonProcess;
+    string pythonPath = @"C:\Program Files\Python310\python.exe";
+    string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "server/run_server.py");
+    Process pythonProcess;
 
     public void ExecutePythonScript()
     {
@@ -29,19 +31,13 @@ public class PythonRunner : MonoBehaviour
         pythonProcess.Start();
     }
 
-    // Call the ExecutePythonScript() function, e.g., in the Start() or Update() methods
-    private void Start()
-    {
-        //ExecutePythonScript();
-    }
-
-    // This method will be called when the application is quitting
-    private void OnApplicationQuit()
+    void OnApplicationQuit()
     {
         if (pythonProcess != null && !pythonProcess.HasExited)
         {
             ClientSocket.communicate("127.0.0.1", 1235, "exit");
             pythonProcess.Kill();
         }
+        UDebug.Log("Python server terminated");
     }
 }

@@ -1,0 +1,164 @@
+{
+    "nodes": [
+        {
+            "id": "bcc438b9-c0b7-4793-9119-8e03fe57087d",
+            "position": {
+                "x": 22.81999969482422,
+                "y": -15.399999618530274,
+                "z": -10.609999656677246
+            },
+            "pads": [],
+            "drones": [],
+            "edges": [
+                "ea7512e2-58bb-4fec-ba97-19191b5bbcf7",
+                "de42bf92-f27c-4145-8741-b06be24d65ba",
+                "fccced29-1e5e-4085-bf97-fa84573e10e2"
+            ]
+        },
+        {
+            "id": "73ef010b-fbff-4d52-85d1-0198c4a31cd9",
+            "position": {
+                "x": 4.400000095367432,
+                "y": -18.799999237060548,
+                "z": 5.369999885559082
+            },
+            "pads": [],
+            "drones": [],
+            "edges": [
+                "d03f219f-0257-4203-a763-eb48426ee161",
+                "de42bf92-f27c-4145-8741-b06be24d65ba",
+                "d2818135-061f-47dd-8422-da3d4cdeac85"
+            ]
+        },
+        {
+            "id": "6c9df083-4f56-4af6-89cd-8cd8d7aeab37",
+            "position": {
+                "x": -4.940000057220459,
+                "y": -15.149999618530274,
+                "z": -26.139999389648439
+            },
+            "pads": [],
+            "drones": [],
+            "edges": [
+                "d6747a07-2acc-4959-be9a-ca4b2e204e0b",
+                "fccced29-1e5e-4085-bf97-fa84573e10e2",
+                "c05db512-6c0d-4b36-853f-25fed7eb5398"
+            ]
+        },
+        {
+            "id": "85a79285-956d-477f-8fbb-3808a83005c5",
+            "position": {
+                "x": -30.049999237060548,
+                "y": -20.600000381469728,
+                "z": -7.860000133514404
+            },
+            "pads": [],
+            "drones": [],
+            "edges": [
+                "fce2c1c3-b1b2-4a50-a4a6-5b070fb77e00",
+                "d03f219f-0257-4203-a763-eb48426ee161",
+                "d6747a07-2acc-4959-be9a-ca4b2e204e0b"
+            ]
+        },
+        {
+            "id": "764aa030-f60e-4bfa-802f-5ca7872f17e4",
+            "position": {
+                "x": 2.2799999713897707,
+                "y": 4.889999866485596,
+                "z": -8.850000381469727
+            },
+            "pads": [],
+            "drones": [],
+            "edges": [
+                "fce2c1c3-b1b2-4a50-a4a6-5b070fb77e00",
+                "ea7512e2-58bb-4fec-ba97-19191b5bbcf7",
+                "d2818135-061f-47dd-8422-da3d4cdeac85",
+                "c05db512-6c0d-4b36-853f-25fed7eb5398"
+            ]
+        }
+    ],
+    "edges": [
+        {
+            "id": "fce2c1c3-b1b2-4a50-a4a6-5b070fb77e00",
+            "leftNode": "85a79285-956d-477f-8fbb-3808a83005c5",
+            "rightNode": "764aa030-f60e-4bfa-802f-5ca7872f17e4"
+        },
+        {
+            "id": "d03f219f-0257-4203-a763-eb48426ee161",
+            "leftNode": "85a79285-956d-477f-8fbb-3808a83005c5",
+            "rightNode": "73ef010b-fbff-4d52-85d1-0198c4a31cd9"
+        },
+        {
+            "id": "d6747a07-2acc-4959-be9a-ca4b2e204e0b",
+            "leftNode": "85a79285-956d-477f-8fbb-3808a83005c5",
+            "rightNode": "6c9df083-4f56-4af6-89cd-8cd8d7aeab37"
+        },
+        {
+            "id": "ea7512e2-58bb-4fec-ba97-19191b5bbcf7",
+            "leftNode": "764aa030-f60e-4bfa-802f-5ca7872f17e4",
+            "rightNode": "bcc438b9-c0b7-4793-9119-8e03fe57087d"
+        },
+        {
+            "id": "de42bf92-f27c-4145-8741-b06be24d65ba",
+            "leftNode": "73ef010b-fbff-4d52-85d1-0198c4a31cd9",
+            "rightNode": "bcc438b9-c0b7-4793-9119-8e03fe57087d"
+        },
+        {
+            "id": "fccced29-1e5e-4085-bf97-fa84573e10e2",
+            "leftNode": "6c9df083-4f56-4af6-89cd-8cd8d7aeab37",
+            "rightNode": "bcc438b9-c0b7-4793-9119-8e03fe57087d"
+        },
+        {
+            "id": "d2818135-061f-47dd-8422-da3d4cdeac85",
+            "leftNode": "73ef010b-fbff-4d52-85d1-0198c4a31cd9",
+            "rightNode": "764aa030-f60e-4bfa-802f-5ca7872f17e4"
+        },
+        {
+            "id": "c05db512-6c0d-4b36-853f-25fed7eb5398",
+            "leftNode": "764aa030-f60e-4bfa-802f-5ca7872f17e4",
+            "rightNode": "6c9df083-4f56-4af6-89cd-8cd8d7aeab37"
+        }
+    ],
+    "requests": [
+        {
+            "id": "8b4f9193-2f7d-42ff-a268-2c621c36af7b",
+            "startNode": "85a79285-956d-477f-8fbb-3808a83005c5",
+            "destNode": "bcc438b9-c0b7-4793-9119-8e03fe57087d",
+            "payloads": [
+                {
+                    "id": "eef700de-319b-4df3-9b3b-357c7a14c998",
+                    "weight": 1.0
+                }
+            ]
+        }
+    ],
+    "swarms": [
+        {
+            "id": "d482108f-e7ca-425f-994c-edce52a545f9",
+            "request": "8b4f9193-2f7d-42ff-a268-2c621c36af7b",
+            "subSwarms": [
+                {
+                    "id": "c962fbbd-8995-4920-bc99-59fe2a29131b",
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "drones": [
+                        {
+                            "id": "45363a6a-2743-4cd4-8eb5-7f7e5d3db00c",
+                            "selfWeight": 2.0,
+                            "speed": 2.0,
+                            "maxPayloadWeight": 5.0,
+                            "batteryStatus": 1.0,
+                            "payloads": [
+                                "eef700de-319b-4df3-9b3b-357c7a14c998"
+                            ]
+                        }
+                    ],
+                    "targetNode": "bcc438b9-c0b7-4793-9119-8e03fe57087d"
+                }
+            ]
+        }
+    ]
+}

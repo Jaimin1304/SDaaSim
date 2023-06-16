@@ -1,23 +1,64 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pad : MonoBehaviour {
-    [SerializeField] private int id;
-    [SerializeField] private Node node;  // In Unity, this can be another GameObject with a Node component attached
-    [SerializeField] private string status = "available";
+public class Pad : MonoBehaviour
+{
+    [SerializeField]
+    string id;
 
-    [SerializeField] private bool IsAvailable() {
-        return status == "available";
+    [SerializeField]
+    Node node;
+
+    [SerializeField]
+    bool isAvailable;
+
+    void Awake()
+    {
+        id = Guid.NewGuid().ToString();
     }
 
-    [SerializeField] private void Occupy() {
-        if (IsAvailable()) {
-            status = "occupied";
-        }
+    void Start()
+    {
+        isAvailable = true;
     }
 
-    [SerializeField] private void Release() {
-        status = "available";
+    public string GetId()
+    {
+        return id;
+    }
+
+    public Node GetNode()
+    {
+        return node;
+    }
+
+    [SerializeField]
+    public bool IsAvailable()
+    {
+        return isAvailable;
+    }
+
+    [SerializeField]
+    void Occupy()
+    {
+        isAvailable = false;
+    }
+
+    [SerializeField]
+    void Release()
+    {
+        isAvailable = true;
+    }
+
+    public SerializablePad ToSerializablePad()
+    {
+        return new SerializablePad()
+        {
+            id = this.id,
+            node = this.node.GetId(),
+            isAvailable = this.isAvailable,
+        };
     }
 }

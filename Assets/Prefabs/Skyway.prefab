@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2618464820941909622
+--- !u!1 &2850897530346833360
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 594742535802213817}
-  - component: {fileID: -2934891750520211348}
+  - component: {fileID: 1451251799340847241}
+  - component: {fileID: 3390801690874871320}
   m_Layer: 0
-  m_Name: Edge
+  m_Name: Skyway
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &594742535802213817
+--- !u!4 &1451251799340847241
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2618464820941909622}
+  m_GameObject: {fileID: 2850897530346833360}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,19 +32,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2934891750520211348
+--- !u!114 &3390801690874871320
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2618464820941909622}
+  m_GameObject: {fileID: 2850897530346833360}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7619ac3cf757ec04f84c12a0382a3e60, type: 3}
+  m_Script: {fileID: 11500000, guid: f1e5ba39fee0b424f969c8773cdabb81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 
-  leftNode: {fileID: 0}
-  rightNode: {fileID: 0}
-  lineRenderer: {fileID: 0}
+  nodes: []
+  edges: []
+  requests: []
+  swarms: []
