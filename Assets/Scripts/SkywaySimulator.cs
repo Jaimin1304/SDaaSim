@@ -25,7 +25,7 @@ public class SkywaySimulator : MonoBehaviour
     void Awake()
     {
         // start the server
-        pyRunner.ExecutePythonScript();
+        //pyRunner.ExecutePythonScript();
     }
 
     void Start()
@@ -42,7 +42,7 @@ public class SkywaySimulator : MonoBehaviour
     {
         // sent entire skyway to server
         string skywayJson = dataManager.RecordCurrentStateToJson(skyway);
-        string response = api.SendRequest("initSkyway", skywayJson);
+        string response = api.SendRequest(Globals.initSkywayHeader, skywayJson);
         Debug.Log(response);
     }
 

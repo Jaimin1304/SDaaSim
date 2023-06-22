@@ -4,14 +4,9 @@ using UnityEngine;
 
 public class Globals : MonoBehaviour
 {
-    public static string ip;
+    public static string ip = "127.0.0.1";
     public static int port = 1235;
-    public static string quitSignal;
-
-    void Awake()
-    {
-        ip = "127.0.0.1";
-        port = 1235;
-        quitSignal = "exit";
-    }
+    public static string quitSignal = "exit";
+    public static string endOfFileSignal = "|";
+    public static string initSkywayHeader = "initSkyway";
 }

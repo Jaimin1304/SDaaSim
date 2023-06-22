@@ -26,18 +26,10 @@ public class ClientSocket : MonoBehaviour
             clientSocket.Connect(new IPEndPoint(ipAddress, port));
 
             // send request to the server
-            string request = msg + "|";
+            string request = msg + Globals.endOfFileSignal;
             byte[] requestBytes = Encoding.UTF8.GetBytes(request);
             clientSocket.Send(requestBytes);
             Debug.Log("message sent");
-
-
-            //// receive the response from the server
-            //byte[] responseBytes = new byte[8192];
-            //int bytesRead = clientSocket.Receive(responseBytes);
-            //string response = Encoding.UTF8.GetString(responseBytes, 0, bytesRead);
-            //Debug.Log("Response from the server: " + response);
-
 
             // receive the response from the server
             StringBuilder response = new StringBuilder();
