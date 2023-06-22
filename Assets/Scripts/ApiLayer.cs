@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
+using System;
 
 public class ApiLayer : MonoBehaviour
 {
-    public Skyway skyway;  // Assuming you have a reference to your Skyway object
+    [SerializeField]
+    ClientSocket cs;
 
-    void ProcessResponse()
+    public string SendRequest(string header, string body) // Changed parameter type from string to object
     {
-        string skywayJson = JsonUtility.ToJson(skyway);
-        string command = ClientSocket.communicate("127.0.0.1", 1235, "what is changed in system since last time");
-        Debug.Log(command);
-
-        // Process the command from the server
+        JObject bodyJson = JObject.Parse(body);
+        JObject dataPackage = new JObject { { "header", header }, { "body", bodyJson } };
+        string JsonMsg = dataPackage.ToString();
+        Debug.Log(JsonMsg);
+        return cs.communicate(Globals.ip, Globals.port, JsonMsg);
     }
 }

@@ -11,6 +11,9 @@ public class PythonRunner : MonoBehaviour
     string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "server/run_server.py");
     Process pythonProcess;
 
+    [SerializeField]
+    ClientSocket cs;
+
     public void ExecutePythonScript()
     {
         ProcessStartInfo startInfo = new ProcessStartInfo
@@ -23,10 +26,7 @@ public class PythonRunner : MonoBehaviour
             CreateNoWindow = true,
         };
 
-        pythonProcess = new Process
-        {
-            StartInfo = startInfo
-        };
+        pythonProcess = new Process { StartInfo = startInfo };
 
         pythonProcess.Start();
     }
@@ -35,7 +35,8 @@ public class PythonRunner : MonoBehaviour
     {
         if (pythonProcess != null && !pythonProcess.HasExited)
         {
-            ClientSocket.communicate("127.0.0.1", 1235, "exit");
+            cs.communicate(Globals.ip, Globals.port, Globals.quitSignal);
+            UDebug.Log("Quit msg sent");
             pythonProcess.Kill();
         }
         UDebug.Log("Python server terminated");

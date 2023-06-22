@@ -11,32 +11,40 @@ public class SkywaySimulator : MonoBehaviour
     Skyway skyway;
 
     [SerializeField]
-    ApiLayer apiLayer;
+    ApiLayer api;
 
     [SerializeField]
     DataManager dataManager;
 
     [SerializeField]
-    ClientSocket clientSocket;
+    PythonRunner pyRunner;
 
     [SerializeField]
-    PythonRunner pythonRunner;
+    ClientSocket cs;
+
+    void Awake()
+    {
+        // start the server
+        pyRunner.ExecutePythonScript();
+    }
 
     void Start()
     {
-        // start the server
-        pythonRunner.ExecutePythonScript();
-        // sent entire skyway to server
-        string skywayJson = dataManager.RecordCurrentStateToJson(skyway);
-        Debug.Log(skywayJson);
-        string res = ClientSocket.communicate(
-            "127.0.0.1",
-            1235,
-            "what is changed in system since last time"
-        );
+        InitSimulation();
     }
 
-    void Update() { }
+    void Update()
+    {
+        //Debug.Log("update");
+    }
+
+    void InitSimulation()
+    {
+        // sent entire skyway to server
+        string skywayJson = dataManager.RecordCurrentStateToJson(skyway);
+        string response = api.SendRequest("initSkyway", skywayJson);
+        Debug.Log(response);
+    }
 
     void quitGame()
     {
