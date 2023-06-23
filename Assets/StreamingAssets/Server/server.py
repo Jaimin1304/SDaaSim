@@ -1,10 +1,10 @@
 import socket
 import api_layer as api
 import custom_algorithm as algorithm
-from globals import *
+import globals
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((ip, port))
+s.bind((globals.ip, globals.port))
 s.listen(5)
 
 print('--- py server up ---')
@@ -26,5 +26,6 @@ while True:
         break
 
     api.process_request(msg)
+    response = algorithm.run()
     clientsocket.send(bytes(msg, 'utf-8'))
     clientsocket.close()

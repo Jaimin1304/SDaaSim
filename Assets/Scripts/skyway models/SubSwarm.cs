@@ -18,9 +18,27 @@ public class SubSwarm : MonoBehaviour
     [SerializeField]
     Node targetNode;
 
+    [SerializeField]
+    Node currentNode;
+
+    [SerializeField]
+    float speed;
+
     void Awake()
     {
+        speed = 5;
         id = Guid.NewGuid().ToString();
+    }
+
+    void Start()
+    {
+        transform.position = currentNode.transform.position;
+    }
+
+    void Update()
+    {
+        Vector3 direction = (targetNode.transform.position - transform.position).normalized;
+        transform.position += direction * speed * Time.deltaTime;
     }
 
     public string GetId()

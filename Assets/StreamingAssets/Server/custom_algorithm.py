@@ -1,8 +1,8 @@
-import skyway_models.Skyway
+import api_layer as api
 
-def retrieve_state():
-    return 'state retrieved from skyway model'
+instructions = []
 
 def run():
-    skyway = retrieve_state()
-    return 'user custom algorithm executed'
+    skyway = api.get_skyway()
+    print(skyway)
+    return skyway

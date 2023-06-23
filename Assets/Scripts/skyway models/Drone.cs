@@ -32,6 +32,22 @@ public class Drone : MonoBehaviour
         id = Guid.NewGuid().ToString();
     }
 
+    void Start()
+    {
+        transform.position = subSwarm.transform.position;
+        Vector3 targetPostition = new Vector3(
+            subSwarm.GetTarget().transform.position.x,
+            transform.position.y,
+            subSwarm.GetTarget().transform.position.z
+        );
+        transform.LookAt(targetPostition);
+    }
+
+    void Update()
+    {
+        transform.position = subSwarm.transform.position;
+    }
+
     public string GetId()
     {
         return id;

@@ -5,12 +5,17 @@ using UnityEngine;
 public class CamController : MonoBehaviour
 {
     [SerializeField]
-    float speed = 30.0f;
+    float speed;
 
     [SerializeField]
-    float mouseSpeed = 0.5f;
+    float mouseSpeed;
 
     Vector3 lastMousePosition;
+
+    void Start() {
+        speed = Globals.camMovSpeed;
+        mouseSpeed = Globals.camRotateSpeed;
+    }
 
     void Update()
     {
