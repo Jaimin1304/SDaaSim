@@ -36,26 +36,44 @@ public class EdgeView : MonoBehaviour
         lineRenderer.endColor = Color.green;
     }
 
-    public void UpdateVisual(Vector3 leftNodePos, Vector3 rightNodePos, float length)
+    public void UpdateVisual(
+        Vector3 leftNodePos,
+        Vector3 rightNodePos,
+        List<WayPoint> wayPoints,
+        List<float> lengths,
+        float totalLength
+    )
     {
         Vector3 heightOffset = new Vector3(0, 1, 0);
+
+        // set waypoints as lineRenderer positions
+        lineRenderer.positionCount = wayPoints.Count + 2;
         lineRenderer.SetPosition(0, leftNodePos + heightOffset);
-        lineRenderer.SetPosition(1, rightNodePos + heightOffset);
+        for (int i = 0; i < wayPoints.Count; i++)
+        {
+            lineRenderer.SetPosition(i + 1, wayPoints[i].transform.position);
+        }
+        lineRenderer.SetPosition(wayPoints.Count + 1, rightNodePos + heightOffset);
 
-        Vector3 middlePosition = (leftNodePos + rightNodePos) / 2 + heightOffset * 2;
-        lengthText.transform.position = middlePosition;
+        // Position the text in the middle of the edge and slightly above it
+        if (wayPoints.Count > 0) { 
+            Vector3 middlePosition = wayPoints[wayPoints.Count/2].transform.position + heightOffset * 4;
+            lengthText.transform.position = middlePosition;
+        }
+        else
+        {
+            Vector3 middlePosition = (leftNodePos + rightNodePos) / 2 + heightOffset * 4;
+            lengthText.transform.position = middlePosition;
+        }
 
-        lengthText.text = length.ToString("F2");
-
+        lengthText.text = totalLength.ToString("F2");
         // Let the length text face the camera
         lengthText.transform.rotation = mainCamera.transform.rotation;
-
         // Calculate distance from the camera
         float distance = Vector3.Distance(
             lengthText.transform.position,
             mainCamera.transform.position
         );
-
         // Scale text size based on distance
         float scaleValue = distance * 0.03f;
         lengthText.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
