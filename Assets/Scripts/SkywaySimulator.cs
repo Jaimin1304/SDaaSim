@@ -25,7 +25,7 @@ public class SkywaySimulator : MonoBehaviour
     void Awake()
     {
         // start the server
-        //pyRunner.ExecutePythonScript();
+        pyRunner.ExecutePythonScript();
     }
 
     void Start()

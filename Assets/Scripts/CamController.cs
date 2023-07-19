@@ -12,7 +12,8 @@ public class CamController : MonoBehaviour
 
     Vector3 lastMousePosition;
 
-    void Start() {
+    void Start()
+    {
         speed = Globals.camMovSpeed;
         mouseSpeed = Globals.camRotateSpeed;
     }
@@ -29,7 +30,7 @@ public class CamController : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
             transform.Translate(Vector3.right * speed * Time.deltaTime);
 
-        // Use Q and E to move the camera up and down.
+        // Use space and left control to move the camera up and down.
         if (Input.GetKey(KeyCode.LeftControl))
             transform.Translate(Vector3.down * speed * Time.deltaTime);
         if (Input.GetKey(KeyCode.Space))
@@ -44,8 +45,6 @@ public class CamController : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             Vector3 delta = Input.mousePosition - lastMousePosition;
-            Debug.Log(delta.x);
-            Debug.Log(delta.y);
             transform.Rotate(-delta.y * mouseSpeed, delta.x * mouseSpeed, 0);
             Vector3 rotationInEulerAngles = transform.rotation.eulerAngles;
             rotationInEulerAngles.z = 0; // set z rotation to zero

@@ -1,7 +1,7 @@
 import socket
 import api_layer as api
-import custom_algorithm as algorithm
 import globals
+import json
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((globals.ip, globals.port))
@@ -26,6 +26,6 @@ while True:
         break
 
     api.process_request(msg)
-    response = algorithm.run()
-    clientsocket.send(bytes(msg, 'utf-8'))
+    response = json.dumps(api.execute_user_logic())
+    clientsocket.send(bytes(response, 'utf-8'))
     clientsocket.close()

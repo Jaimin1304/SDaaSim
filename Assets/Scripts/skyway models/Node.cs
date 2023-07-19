@@ -18,9 +18,32 @@ public class Node : MonoBehaviour
     [SerializeField]
     List<Edge> edges; // Adding edges list to Node class
 
+    Outline outline;
+
     void Awake()
     {
         id = Guid.NewGuid().ToString();
+    }
+
+    void Start() {
+        outline = GetComponentInChildren<Outline>();
+    }
+
+    void Update()
+    {
+        // Create a ray from the mouse cursor on screen in the direction of the camera
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        // Check if the ray hits this Node
+        if (Physics.Raycast(ray, out hit) && hit.transform.gameObject == this.gameObject)
+        {
+            outline.enabled = true;
+        }
+        else
+        {
+            outline.enabled = false;
+        }
     }
 
     public string GetId()

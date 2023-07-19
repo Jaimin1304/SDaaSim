@@ -19,7 +19,7 @@ public class SerializableSkyway
 public class SerializableNode
 {
     public string id;
-    public Vector3 position; 
+    public Vector3 position;
     public List<string> pads;
     public List<string> drones;
     public List<string> edges;

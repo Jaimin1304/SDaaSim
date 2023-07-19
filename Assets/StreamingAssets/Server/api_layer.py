@@ -1,6 +1,8 @@
 import json
+import custom_algorithm
 
 skyway_data = {}
+instructions = []
 
 
 def process_request(msg):
@@ -8,10 +10,10 @@ def process_request(msg):
     header = request['header']
     body = request['body']
     match header:
-        case 'initSKyway':
+        case 'initSkyway':
             init_skyway(body)
         case _:
-            print('something went wrong')
+            print(f'unknown header: {header}')
 
 
 def init_skyway(data):
@@ -24,4 +26,10 @@ def get_skyway():
 
 
 def set_subswarm_targetNode(subswarm_id, node_id):
-    return {"set_subswarm_targetNode": {'subswarm_id': subswarm_id, 'node_id': node_id}}
+    instructions.append(
+        {"set_subswarm_targetNode": {'subswarm_id': subswarm_id, 'node_id': node_id}}
+    )
+
+def execute_user_logic():
+    custom_algorithm.run()
+    return instructions
