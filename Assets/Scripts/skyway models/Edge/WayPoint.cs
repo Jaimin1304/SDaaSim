@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class WayPoint : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    Outline outline;
+
+    [SerializeField]
+    Utils utils;
 
     // Update is called once per frame
     void Update()
     {
-        
+        utils.Outline(outline, this.gameObject);
     }
 }
