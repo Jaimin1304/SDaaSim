@@ -11,4 +11,14 @@ public class DataManager : MonoBehaviour
     {
         return jsonConverter.RecordCurrentStateToJson(skyway);
     }
+
+    public string SwarmToJson(Swarm swarm)
+    {
+        return jsonConverter.SwarmToJson(swarm);
+    }
+
+    public string SubSwarmToJson(SubSwarm subSwarm)
+    {
+        return jsonConverter.SubSwarmToJson(subSwarm);
+    }
 }

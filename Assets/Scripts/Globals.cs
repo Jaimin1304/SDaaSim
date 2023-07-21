@@ -9,6 +9,8 @@ public class Globals : MonoBehaviour
     public static string quitSignal = "exit";
     public static string endOfFileSignal = "|";
     public static string initSkywayHeader = "initSkyway";
+    public static string updateSwarmHeader = "updateSwarm";
+    public static string updateSubSwarmHeader = "updateSubSwarm";
     public static float camMovSpeed = 160;
     public static float camRotateSpeed = 0.2f;
 }

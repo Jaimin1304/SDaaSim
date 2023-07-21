@@ -11,26 +11,46 @@ public class Edge : MonoBehaviour
 
     [SerializeField]
     Node leftNode;
+    public Node LeftNode
+    {
+        get { return leftNode; }
+        set { leftNode = value; }
+    }
 
     [SerializeField]
     Node rightNode;
+    public Node RightNode
+    {
+        get { return rightNode; }
+        set { rightNode = value; }
+    }
 
     [SerializeField]
     List<WayPoint> wayPoints = new List<WayPoint>();
+    public List<WayPoint> WayPoints
+    {
+        get { return wayPoints; }
+        set { wayPoints = value; }
+    }
 
     [SerializeField]
     List<float> subEdgeLengths = new List<float>();
 
     [SerializeField]
     private float totalLength;
-
-    public float Length
+    public float TotalLength
     {
         get { return totalLength; }
     }
 
     [SerializeField]
     EdgeView edgeView; // Reference to the EdgeView script
+
+    List<Vector3> path = new List<Vector3>();
+    public List<Vector3> Path
+    {
+        get { return path; }
+    }
 
     void Awake()
     {
@@ -40,6 +60,7 @@ public class Edge : MonoBehaviour
     void Start()
     {
         InitLengths();
+        InitPath();
         UpdateEdgeVisual();
     }
 
@@ -53,45 +74,35 @@ public class Edge : MonoBehaviour
         return id;
     }
 
-    public Node GetLeftNode()
-    {
-        return leftNode;
-    }
-
-    public Node GetRightNode()
-    {
-        return rightNode;
-    }
-
     void InitLengths()
     {
         subEdgeLengths.Clear(); // Clear any previous lengths
-        // If there are waypoints, calculate subedge lengths
-        if (wayPoints.Count > 0)
+        // If there are WayPoints, calculate subedge lengths
+        if (WayPoints.Count > 0)
         {
             // Calculate the length from the left node to the first waypoint
             float firstLength = Vector3.Distance(
                 leftNode.transform.position,
-                wayPoints[0].transform.position
+                WayPoints[0].transform.position
             );
             subEdgeLengths.Add(firstLength);
-            // Calculate lengths between each pair of waypoints
-            for (int i = 0; i < wayPoints.Count - 1; i++)
+            // Calculate lengths between each pair of WayPoints
+            for (int i = 0; i < WayPoints.Count - 1; i++)
             {
                 float subEdgeLength = Vector3.Distance(
-                    wayPoints[i].transform.position,
-                    wayPoints[i + 1].transform.position
+                    WayPoints[i].transform.position,
+                    WayPoints[i + 1].transform.position
                 );
                 subEdgeLengths.Add(subEdgeLength);
             }
             // Calculate the length from the last waypoint to the right node
             float lastLength = Vector3.Distance(
-                wayPoints[wayPoints.Count - 1].transform.position,
+                WayPoints[WayPoints.Count - 1].transform.position,
                 rightNode.transform.position
             );
             subEdgeLengths.Add(lastLength);
         }
-        else // If there are no waypoints, just calculate length from left node to right node
+        else // If there are no WayPoints, just calculate length from left node to right node
         {
             float length = Vector3.Distance(
                 leftNode.transform.position,
@@ -103,12 +114,20 @@ public class Edge : MonoBehaviour
         totalLength = subEdgeLengths.Sum();
     }
 
+    void InitPath() { 
+        path.Add(leftNode.transform.position);
+        for (int i = 0; i < wayPoints.Count; i++) {
+            path.Add(wayPoints[i].transform.position);
+        }
+        path.Add(rightNode.transform.position);
+    }
+
     void UpdateEdgeVisual()
     {
         edgeView.UpdateVisual(
             leftNode.transform.position,
             rightNode.transform.position,
-            wayPoints,
+            WayPoints,
             subEdgeLengths,
             totalLength
         );

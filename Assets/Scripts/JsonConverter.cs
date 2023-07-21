@@ -71,7 +71,8 @@ public class SerializableSubSwarm
     public string id;
     public Vector3 position;
     public List<SerializableDrone> drones;
-    public string targetNode;
+    public string node;
+    public string edge;
 }
 
 [Serializable]
@@ -92,5 +93,19 @@ public class JsonConverter : MonoBehaviour
         SerializableSkyway currState = skyway.ToSerializableSkyway();
         string skywayJson = JsonUtility.ToJson(currState);
         return skywayJson;
+    }
+
+    public string SwarmToJson(Swarm swarm)
+    {
+        SerializableSwarm currSwarm = swarm.ToSerializableSwarm();
+        string swarmJson = JsonUtility.ToJson(currSwarm);
+        return swarmJson;
+    }
+
+    public string SubSwarmToJson(SubSwarm subSwarm)
+    {
+        SerializableSubSwarm currSubSwarm = subSwarm.ToSerializableSubSwarm();
+        string subSwarmJson = JsonUtility.ToJson(currSubSwarm);
+        return subSwarmJson;
     }
 }

@@ -7,6 +7,8 @@ using System.Text;
 
 public class SkywaySimulator : MonoBehaviour
 {
+    public static SkywaySimulator instance;
+
     [SerializeField]
     Skyway skyway;
 
@@ -24,6 +26,12 @@ public class SkywaySimulator : MonoBehaviour
 
     void Awake()
     {
+        if (instance != null) // Singleton
+        {
+            Debug.LogError("More than one GameManager in scene!");
+            return;
+        }
+        instance = this;
         // start the server
         pyRunner.ExecutePythonScript();
     }
@@ -43,6 +51,18 @@ public class SkywaySimulator : MonoBehaviour
         // sent entire skyway to server
         string skywayJson = dataManager.RecordCurrentStateToJson(skyway);
         string response = api.SendRequest(Globals.initSkywayHeader, skywayJson);
+        Debug.Log(response);
+    }
+
+    public void UpdateSwarm(Swarm swarm) {
+        string swarmJson = dataManager.SwarmToJson(swarm);
+        string response = api.SendRequest(Globals.updateSwarmHeader, swarmJson);
+        Debug.Log(response);
+    }
+
+    public void UpdateSubSwarm(SubSwarm subSwarm) {
+        string subSwarmJson = dataManager.SubSwarmToJson(subSwarm);
+        string response = api.SendRequest(Globals.updateSubSwarmHeader, subSwarmJson);
         Debug.Log(response);
     }
 
