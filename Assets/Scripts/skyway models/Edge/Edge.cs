@@ -7,46 +7,56 @@ using System.Linq;
 public class Edge : MonoBehaviour
 {
     [SerializeField]
-    string id;
+    private string id;
 
     [SerializeField]
-    Node leftNode;
+    private Node leftNode;
+
+    [SerializeField]
+    private Node rightNode;
+
+    [SerializeField]
+    private List<WayPoint> wayPoints = new List<WayPoint>();
+
+    [SerializeField]
+    private List<float> subEdgeLengths = new List<float>();
+
+    [SerializeField]
+    private float totalLength;
+
+    [SerializeField]
+    private EdgeView edgeView;
+
+    private List<Vector3> path = new List<Vector3>();
+
+    public string Id
+    {
+        get { return id; }
+    }
+
     public Node LeftNode
     {
         get { return leftNode; }
         set { leftNode = value; }
     }
 
-    [SerializeField]
-    Node rightNode;
     public Node RightNode
     {
         get { return rightNode; }
         set { rightNode = value; }
     }
 
-    [SerializeField]
-    List<WayPoint> wayPoints = new List<WayPoint>();
     public List<WayPoint> WayPoints
     {
         get { return wayPoints; }
         set { wayPoints = value; }
     }
 
-    [SerializeField]
-    List<float> subEdgeLengths = new List<float>();
-
-    [SerializeField]
-    private float totalLength;
     public float TotalLength
     {
         get { return totalLength; }
     }
 
-    [SerializeField]
-    EdgeView edgeView; // Reference to the EdgeView script
-
-    List<Vector3> path = new List<Vector3>();
     public List<Vector3> Path
     {
         get { return path; }
@@ -67,11 +77,6 @@ public class Edge : MonoBehaviour
     void Update()
     {
         UpdateEdgeVisual();
-    }
-
-    public string GetId()
-    {
-        return id;
     }
 
     void InitLengths()
@@ -114,9 +119,11 @@ public class Edge : MonoBehaviour
         totalLength = subEdgeLengths.Sum();
     }
 
-    void InitPath() { 
+    void InitPath()
+    {
         path.Add(leftNode.transform.position);
-        for (int i = 0; i < wayPoints.Count; i++) {
+        for (int i = 0; i < wayPoints.Count; i++)
+        {
             path.Add(wayPoints[i].transform.position);
         }
         path.Add(rightNode.transform.position);
@@ -138,8 +145,8 @@ public class Edge : MonoBehaviour
         return new SerializableEdge()
         {
             id = id,
-            leftNode = leftNode.GetId(),
-            rightNode = rightNode.GetId(),
+            leftNode = leftNode.Id,
+            rightNode = rightNode.Id,
         };
     }
 }

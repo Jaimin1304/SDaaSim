@@ -7,32 +7,22 @@ using System.Linq;
 public class SubSwarm : MonoBehaviour
 {
     [SerializeField]
-    string id;
+    private string id;
 
     [SerializeField]
-    SubSwarmView subSwarmView;
+    private SubSwarmView subSwarmView;
 
     [SerializeField]
-    Swarm parentSwarm;
+    private Swarm parentSwarm;
 
     [SerializeField]
-    List<Drone> drones = new List<Drone>();
+    private List<Drone> drones = new List<Drone>();
 
     [SerializeField]
     private Node node;
-    public Node Node
-    {
-        get { return node; }
-        set { node = value; }
-    }
 
     [SerializeField]
     private Edge edge;
-    public Edge Edge
-    {
-        get { return edge; }
-        set { edge = value; }
-    }
 
     public enum State
     {
@@ -40,21 +30,59 @@ public class SubSwarm : MonoBehaviour
         Operating
     }
 
-    public State currentState;
+    [SerializeField]
+    State currentState;
 
-    int wayPointIndex;
+    private int wayPointIndex;
+
+    [SerializeField]
+    private float speed;
+
+    private bool destReached;
+
+    public string Id
+    {
+        get { return id; }
+    }
+
+    public State CurrentState
+    {
+        get { return currentState; }
+    }
+
+    public Swarm ParentSwarm
+    {
+        get { return parentSwarm; }
+        set { parentSwarm = value; }
+    }
+
+    public List<Drone> Drones
+    {
+        get { return drones; }
+        set { drones = value; }
+    }
+
+    public Node Node
+    {
+        get { return node; }
+        set { node = value; }
+    }
+
+    public Edge Edge
+    {
+        get { return edge; }
+        set { edge = value; }
+    }
+
     public int WayPointIndex
     {
         get { return wayPointIndex; }
         set { wayPointIndex = value; }
     }
 
-    [SerializeField]
-    float speed;
-
-    void Awake() 
+    void Awake()
     {
-        speed = 5;
+        speed = 18;
         id = Guid.NewGuid().ToString();
     }
 
@@ -96,10 +124,11 @@ public class SubSwarm : MonoBehaviour
         }
 
         if (Vector3.Distance(transform.position, Edge.Path[wayPointIndex]) <= speed)
-        {
+        { // reach milestone
             if (Vector3.Distance(transform.position, targetNode.transform.position) <= speed)
-            {
+            { // reach target
                 ToStandby(targetNode);
+                AskForCommand();
                 return;
             }
             transform.position = Edge.Path[wayPointIndex];
@@ -126,23 +155,12 @@ public class SubSwarm : MonoBehaviour
         Node = node;
         transform.position = node.transform.position;
         Edge = null;
+        wayPointIndex = 0;
     }
 
-    public void AskForCommand() { }
-
-    public string GetId()
+    public void AskForCommand()
     {
-        return id;
-    }
-
-    public Swarm GetSwarm()
-    {
-        return parentSwarm;
-    }
-
-    public List<Drone> GetDrones()
-    {
-        return drones;
+        SkywaySimulator.instance.UpdateSubSwarm(this);
     }
 
     public SerializableSubSwarm ToSerializableSubSwarm()
@@ -151,9 +169,11 @@ public class SubSwarm : MonoBehaviour
         {
             id = id,
             position = transform.position,
-            drones = drones.Select(drone => drone.ToSerializableDrone()).ToList(),
-            node = node.GetId(),
-            edge = edge.GetId()
+            drones = drones.Select(drone => drone.Id).ToList(),
+            node = node.Id,
+            edge = "",
+            wayPointIndex = wayPointIndex,
+            currentState = currentState.ToString()
         };
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -7,40 +6,43 @@ using System.Linq;
 public class Request : MonoBehaviour
 {
     [SerializeField]
-    string id;
+    private string id;
 
     [SerializeField]
-    Node startNode;
+    private Node startNode;
 
     [SerializeField]
-    Node destNode;
+    private Node destNode;
 
     [SerializeField]
-    List<Payload> payloads = new List<Payload>();
+    private List<Payload> payloads = new List<Payload>();
+
+    public string Id
+    {
+        get { return id; }
+    }
+
+    public Node StartNode
+    {
+        get { return startNode; }
+        set { startNode = value; }
+    }
+
+    public Node DestNode
+    {
+        get { return destNode; }
+        set { destNode = value; }
+    }
+
+    public List<Payload> Payloads
+    {
+        get { return payloads; }
+        set { payloads = value; }
+    }
 
     void Awake()
     {
         id = Guid.NewGuid().ToString();
-    }
-
-    public string GetId()
-    {
-        return id;
-    }
-
-    public Node GetStartNode()
-    {
-        return startNode;
-    }
-
-    public Node GetDestNode()
-    {
-        return destNode;
-    }
-
-    public List<Payload> GetPayloads()
-    {
-        return payloads;
     }
 
     public SerializableRequest ToSerializableRequest()
@@ -48,9 +50,9 @@ public class Request : MonoBehaviour
         return new SerializableRequest()
         {
             id = id,
-            startNode = startNode.GetId(),
-            destNode = destNode.GetId(),
-            payloads = payloads.Select(payload => payload.ToSerializablePayload()).ToList(),
+            startNode = startNode.Id,
+            destNode = destNode.Id,
+            payloads = payloads.Select(payload => payload.Id).ToList(),
         };
     }
 }

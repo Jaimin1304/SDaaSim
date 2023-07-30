@@ -1,37 +1,38 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Payload : MonoBehaviour
 {
     [SerializeField]
-    string id;
+    private string id;
 
     [SerializeField]
-    float weight;
+    private float weight;
 
     [SerializeField]
-    Request request;
+    private Request request;
+
+    public string Id
+    {
+        get { return id; }
+    }
+
+    public float Weight
+    {
+        get { return weight; }
+        set { weight = value; }
+    }
+
+    public Request Request
+    {
+        get { return request; }
+        set { request = value; }
+    }
 
     void Awake()
     {
         id = Guid.NewGuid().ToString();
-    }
-
-    public string GetId()
-    {
-        return id;
-    }
-
-    public float GetWeight()
-    {
-        return weight;
-    }
-
-    public Request GetRequest()
-    {
-        return request;
     }
 
     public SerializablePayload ToSerializablePayload()

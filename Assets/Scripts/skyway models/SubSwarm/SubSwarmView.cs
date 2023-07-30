@@ -6,11 +6,14 @@ public class SubSwarmView : MonoBehaviour
 {
     public void Visual(SubSwarm subSwarm)
     {
-        Vector3 targetPostition = new Vector3(
-            subSwarm.Edge.Path[subSwarm.WayPointIndex].x,
-            transform.position.y,
-            subSwarm.Edge.Path[subSwarm.WayPointIndex].z
-        );
-        subSwarm.transform.LookAt(targetPostition);
+        if (subSwarm.CurrentState == SubSwarm.State.Operating)
+        {
+            Vector3 targetPostition = new Vector3(
+                subSwarm.Edge.Path[subSwarm.WayPointIndex].x,
+                transform.position.y,
+                subSwarm.Edge.Path[subSwarm.WayPointIndex].z
+            );
+            subSwarm.transform.LookAt(targetPostition);
+        }
     }
 }

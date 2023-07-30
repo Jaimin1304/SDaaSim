@@ -15,7 +15,7 @@ public class ApiLayer : MonoBehaviour
         JObject bodyJson = JObject.Parse(body);
         JObject dataPackage = new JObject { { "header", header }, { "body", bodyJson } };
         string jsonMsg = dataPackage.ToString();
-        Debug.Log(jsonMsg);
+        Debug.Log("Msg sent: " + jsonMsg);
         string jsonResponse = cs.communicate(Globals.ip, Globals.port, jsonMsg);
         return jsonResponse;
     }

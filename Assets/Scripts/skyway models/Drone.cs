@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -7,79 +6,75 @@ using System.Linq;
 public class Drone : MonoBehaviour
 {
     [SerializeField]
-    string id;
+    private string id;
 
     [SerializeField]
-    SubSwarm subSwarm;
+    private SubSwarm subSwarm;
 
     [SerializeField]
-    float selfWeight;
+    private float selfWeight;
 
     [SerializeField]
-    float speed;
+    private float speed;
 
     [SerializeField]
-    float maxPayloadWeight;
+    private float maxPayloadWeight;
 
     [SerializeField]
-    float batteryStatus;
+    private float batteryStatus;
 
     [SerializeField]
-    List<Payload> payloads = new List<Payload>();
+    private List<Payload> payloads = new List<Payload>();
+
+    public string Id
+    {
+        get { return id; }
+    }
+
+    public SubSwarm SubSwarm
+    {
+        get { return subSwarm; }
+        set { subSwarm = value; }
+    }
+
+    public float SelfWeight
+    {
+        get { return selfWeight; }
+        set { selfWeight = value; }
+    }
+
+    public float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
+
+    public float MaxPayloadWeight
+    {
+        get { return maxPayloadWeight; }
+        set { maxPayloadWeight = value; }
+    }
+
+    public float BatteryStatus
+    {
+        get { return batteryStatus; }
+        set { batteryStatus = value; }
+    }
+
+    public List<Payload> Payloads
+    {
+        get { return payloads; }
+        set { payloads = value; }
+    }
 
     void Awake()
     {
         id = Guid.NewGuid().ToString();
     }
 
-    void Start()
-    {
-        //Vector3 targetPostition = new Vector3(
-        //    subSwarm.GetTarget().transform.position.x,
-        //    transform.position.y,
-        //    subSwarm.GetTarget().transform.position.z
-        //);
-        //transform.LookAt(targetPostition);
-    }
+    void Start() { }
 
-    void Update()
-    {
-    }
-
-    public string GetId()
-    {
-        return id;
-    }
-
-    public SubSwarm GetSubSwarm()
-    {
-        return subSwarm;
-    }
-
-    public float GetSelfWeight()
-    {
-        return selfWeight;
-    }
-
-    public float GetSpeed()
-    {
-        return speed;
-    }
-
-    public float GetMaxPayloadWeight()
-    {
-        return maxPayloadWeight;
-    }
-
-    public float GetBatteryStatus()
-    {
-        return batteryStatus;
-    }
-
-    public List<Payload> GetPayloads()
-    {
-        return payloads;
-    }
+    void Update() { }
 
     public SerializableDrone ToSerializableDrone()
     {
@@ -90,7 +85,7 @@ public class Drone : MonoBehaviour
             speed = speed,
             maxPayloadWeight = maxPayloadWeight,
             batteryStatus = batteryStatus,
-            payloads = payloads.Select(payload => payload.GetId()).ToList(),
+            payloads = payloads.Select(payload => payload.Id).ToList(),
         };
     }
 }

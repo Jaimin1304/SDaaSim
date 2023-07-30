@@ -1,18 +1,34 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Pad : MonoBehaviour
 {
     [SerializeField]
-    string id;
+    private string id;
 
     [SerializeField]
-    Node node;
+    private Node node;
 
     [SerializeField]
-    bool isAvailable;
+    private bool isAvailable;
+
+    public string Id
+    {
+        get { return id; }
+    }
+
+    public Node Node
+    {
+        get { return node; }
+        set { node = value; }
+    }
+
+    public bool IsAvailable
+    {
+        get { return isAvailable; }
+        set { isAvailable = value; }
+    }
 
     void Awake()
     {
@@ -21,35 +37,17 @@ public class Pad : MonoBehaviour
 
     void Start()
     {
-        isAvailable = true;
+        IsAvailable = true;
     }
 
-    public string GetId()
+    public void Occupy()
     {
-        return id;
+        IsAvailable = false;
     }
 
-    public Node GetNode()
+    public void Release()
     {
-        return node;
-    }
-
-    [SerializeField]
-    public bool IsAvailable()
-    {
-        return isAvailable;
-    }
-
-    [SerializeField]
-    void Occupy()
-    {
-        isAvailable = false;
-    }
-
-    [SerializeField]
-    void Release()
-    {
-        isAvailable = true;
+        IsAvailable = true;
     }
 
     public SerializablePad ToSerializablePad()
@@ -57,7 +55,7 @@ public class Pad : MonoBehaviour
         return new SerializablePad()
         {
             id = this.id,
-            node = this.node.GetId(),
+            node = this.node.Id,
             isAvailable = this.isAvailable,
         };
     }

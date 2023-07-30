@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -19,48 +18,69 @@ public class Skyway : MonoBehaviour
     [SerializeField]
     List<Swarm> swarms = new List<Swarm>();
 
-    public List<Node> getNodes()
+    List<SubSwarm> subSwarms = new List<SubSwarm>();
+    List<Pad> pads = new List<Pad>();
+    List<Drone> drones = new List<Drone>();
+    List<Payload> payloads = new List<Payload>();
+
+    public List<Node> Nodes
     {
-        return this.nodes;
+        get { return nodes; }
+        set { nodes = value; }
     }
 
-    public List<Edge> getEdges()
+    public List<Edge> Edges
     {
-        return this.edges;
+        get { return edges; }
+        set { edges = value; }
     }
 
-    public List<Request> getRequests()
+    public List<Request> Requests
     {
-        return this.requests;
+        get { return requests; }
+        set { requests = value; }
     }
 
-    public List<Swarm> getSwarms()
+    public List<Swarm> Swarms
     {
-        return this.swarms;
+        get { return swarms; }
+        set { swarms = value; }
     }
 
-    public Boolean setNodes(List<Node> nodes)
+    void Awake()
     {
-        this.nodes = nodes;
-        return true;
-    }
-
-    public Boolean setEdges(List<Edge> edges)
-    {
-        this.edges = edges;
-        return true;
-    }
-
-    public Boolean setRequests(List<Request> requests)
-    {
-        this.requests = requests;
-        return true;
-    }
-
-    public Boolean setSwarms(List<Swarm> swarms)
-    {
-        this.swarms = swarms;
-        return true;
+        // init subswarms
+        foreach (Swarm swarm in swarms)
+        {
+            foreach (SubSwarm subSwarm in swarm.SubSwarms)
+            {
+                subSwarms.Add(subSwarm);
+            }
+        }
+        // init pads
+        foreach (Node node in nodes)
+        {
+            foreach (Pad pad in node.Pads)
+            {
+                pads.Add(pad);
+            }
+        }
+        // init drones
+        foreach (SubSwarm subSwarm in subSwarms)
+        {
+            foreach (Drone drone in subSwarm.Drones)
+            {
+                drones.Add(drone);
+            }
+        }
+        // init payloads
+        foreach (Request request in Requests)
+        {
+            foreach (Payload payload in request.Payloads)
+            {
+                payloads.Add(payload);
+            }
+        }
     }
 
     public SerializableSkyway ToSerializableSkyway()
@@ -71,6 +91,11 @@ public class Skyway : MonoBehaviour
             requests = requests.Select(request => request.ToSerializableRequest()).ToList(),
             edges = edges.Select(edge => edge.ToSerializableEdge()).ToList(),
             swarms = swarms.Select(swarm => swarm.ToSerializableSwarm()).ToList(),
+
+            subSwarms = subSwarms.Select(subSwarm => subSwarm.ToSerializableSubSwarm()).ToList(),
+            pads = pads.Select(pad => pad.ToSerializablePad()).ToList(),
+            drones = drones.Select(drone => drone.ToSerializableDrone()).ToList(),
+            payloads = payloads.Select(payload => payload.ToSerializablePayload()).ToList(),
         };
     }
 }

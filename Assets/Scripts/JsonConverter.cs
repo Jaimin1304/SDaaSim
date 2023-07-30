@@ -13,6 +13,10 @@ public class SerializableSkyway
     public List<SerializableEdge> edges;
     public List<SerializableRequest> requests;
     public List<SerializableSwarm> swarms;
+    public List<SerializableSubSwarm> subSwarms;
+    public List<SerializablePad> pads;
+    public List<SerializableDrone> drones;
+    public List<SerializablePayload> payloads;
 }
 
 [Serializable]
@@ -47,7 +51,7 @@ public class SerializableRequest
     public string id;
     public string startNode;
     public string destNode;
-    public List<SerializablePayload> payloads;
+    public List<String> payloads;
 }
 
 [Serializable]
@@ -62,7 +66,7 @@ public class SerializableSwarm
 {
     public string id;
     public string request;
-    public List<SerializableSubSwarm> subSwarms;
+    public List<String> subSwarms;
 }
 
 [Serializable]
@@ -70,9 +74,11 @@ public class SerializableSubSwarm
 {
     public string id;
     public Vector3 position;
-    public List<SerializableDrone> drones;
+    public List<String> drones;
     public string node;
     public string edge;
+    public int wayPointIndex;
+    public String currentState;
 }
 
 [Serializable]

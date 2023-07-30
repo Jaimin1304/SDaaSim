@@ -1,7 +1,8 @@
 import json
+from skyway_model import *
 import custom_algorithm
 
-skyway_data = {}
+skyway_data = None
 instructions = []
 
 
@@ -26,15 +27,27 @@ def process_request(msg):
 
 def init_skyway(data):
     global skyway_data
-    skyway_data = data
+
+    payloads = []
+    for r in data.get('requests'):
+        for p in r.get('payloads'):
+            payload = Payload(p.get('id'), p.get('weight'))
+            payloads.append(payload)
+    
+    
+
 
 
 def update_swarm(data):
     print('update swarm')
+    print(data)
 
 
 def update_subswarm(data):
     print('update subswarm')
+    print(skyway_data['swarms']['subSwarms'])
+    print('---')
+    print(data)
 
 
 def get_skyway():

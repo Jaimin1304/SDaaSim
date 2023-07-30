@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -7,30 +6,34 @@ using System.Linq;
 public class Swarm : MonoBehaviour
 {
     [SerializeField]
-    string id;
+    private string id;
 
     [SerializeField]
-    Request request;
+    private Request request;
 
-    //[SerializeField] List<Drone> drones = new List<Drone>();
     [SerializeField]
-    List<SubSwarm> subSwarms = new List<SubSwarm>();
+    private List<SubSwarm> subSwarms = new List<SubSwarm>();
+
+    public string Id
+    {
+        get { return id; }
+    }
+
+    public Request Request
+    {
+        get { return request; }
+        set { request = value; }
+    }
+
+    public List<SubSwarm> SubSwarms
+    {
+        get { return subSwarms; }
+        set { subSwarms = value; }
+    }
 
     void Awake()
     {
         id = Guid.NewGuid().ToString();
-    }
-
-    public string GetId() {
-        return id;
-    }
-
-    public Request GetRequest() {
-        return request;
-    }
-
-    public List<SubSwarm> GetSubSwarms() {
-        return subSwarms;
     }
 
     public SerializableSwarm ToSerializableSwarm()
@@ -38,8 +41,8 @@ public class Swarm : MonoBehaviour
         return new SerializableSwarm()
         {
             id = id,
-            request = request.GetId(),
-            subSwarms = subSwarms.Select(subSwarm => subSwarm.ToSerializableSubSwarm()).ToList(),
+            request = request.Id,
+            subSwarms = subSwarms.Select(subSwarm => subSwarm.Id).ToList(),
         };
     }
 }

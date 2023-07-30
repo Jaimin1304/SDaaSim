@@ -33,7 +33,7 @@ public class SkywaySimulator : MonoBehaviour
         }
         instance = this;
         // start the server
-        pyRunner.ExecutePythonScript();
+        //pyRunner.ExecutePythonScript();
     }
 
     void Start()
