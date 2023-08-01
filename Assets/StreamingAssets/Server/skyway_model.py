@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 
 class Payload:
@@ -13,7 +13,7 @@ class Payload:
 
 
 class Request:
-    def __init__(self, id, startNode, destNode, payloads: List[Payload]):
+    def __init__(self, id, startNode, destNode, payloads: Dict[str, Payload]):
         self.id = id
         self.startNode = startNode
         self.destNode = destNode
@@ -24,7 +24,7 @@ class Request:
         print(self.id)
         print(self.startNode.id)
         print(self.destNode.id)
-        for i in self.payloads:
+        for i in self.payloads.values():
             i.log()
 
 
@@ -55,7 +55,7 @@ class Pad:
 
 
 class Drone:
-    def __init__(self, id, selfWeight, speed, maxPayloadWeight, batteryStatus, payloads: List[Payload]):
+    def __init__(self, id, selfWeight, speed, maxPayloadWeight, batteryStatus, payloads: Dict[str, Payload]):
         self.id = id
         self.selfWeight = selfWeight
         self.speed = speed
@@ -64,18 +64,18 @@ class Drone:
         self.payloads = payloads
 
     def log(self):
-        print('--edge--')
+        print('--drone--')
         print(self.id)
-        print(self.selfWeight)
-        print(self.speed)
-        print(self.maxPayloadWeight)
-        print(self.batteryStatus)
-        for i in self.payloads:
+        print('selfWeight: ' + str(self.selfWeight))
+        print('speed: ' + str(self.speed))
+        print('maxPayloadWeight' + str(self.maxPayloadWeight))
+        print('batteryStatus: ' + str(self.batteryStatus))
+        for i in self.payloads.values():
             i.log()
 
 
 class SubSwarm:
-    def __init__(self, id, position, drones: List[Drone], node, edge, wayPointIndex, currentState):
+    def __init__(self, id, position, drones: Dict[str, Drone], node, edge, wayPointIndex, currentState):
         self.id = id
         self.position = position
         self.drones = drones
@@ -88,7 +88,7 @@ class SubSwarm:
         print('---subSwarm---')
         print(self.id)
         print(self.position)
-        for i in self.drones:
+        for i in self.drones.values():
             i.log()
         print(self.node.id)
 
@@ -102,7 +102,7 @@ class SubSwarm:
 
 
 class Swarm:
-    def __init__(self, id, request, subSwarms: List[SubSwarm]):
+    def __init__(self, id, request, subSwarms: Dict[str, SubSwarm]):
         self.id = id
         self.request = request
         self.subSwarms = subSwarms
@@ -111,12 +111,12 @@ class Swarm:
         print('----swarm----')
         print(self.id)
         print(self.request)
-        for i in self.subSwarms:
+        for i in self.subSwarms.values():
             i.log()
 
 
 class Node:
-    def __init__(self, id, position, pads: List[Pad], drones: List[Drone], edges: List[Edge]):
+    def __init__(self, id, position, pads: Dict[str, Pad], drones: Dict[str, Drone], edges: Dict[str, Edge]):
         self.id = id
         self.position = position
         self.pads = pads
@@ -127,16 +127,16 @@ class Node:
         print('----node----')
         print(self.id)
         print(self.position)
-        for i in self.pads:
+        for i in self.pads.values():
             i.log()
-        for i in self.drones:
+        for i in self.drones.values():
             i.log()
-        for i in self.edges:
-            print(i.id)
+        for i in self.edges.values():
+            i.log()
 
 
 class Skyway:
-    def __init__(self, nodes: List[Node], edges: List[Edge], requests: List[Request], swarms: List[Swarm]):
+    def __init__(self, nodes: Dict[str, Node], edges: Dict[str, Edge], requests: Dict[str, Request], swarms: Dict[str, Swarm]):
         self.nodes = nodes
         self.edges = edges
         self.requests = requests
@@ -144,11 +144,11 @@ class Skyway:
 
     def log(self):
         print('--skyway--')
-        for i in self.nodes:
+        for i in self.nodes.values():
             i.log()
-        for i in self.edges:
+        for i in self.edges.values():
             i.log()
-        for i in self.requests:
+        for i in self.requests.values():
             i.log()
-        for i in self.swarms:
+        for i in self.swarms.values():
             i.log()

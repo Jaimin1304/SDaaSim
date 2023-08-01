@@ -7,6 +7,11 @@ skyway = None
 instructions = []
 
 
+def execute_user_logic():
+    custom_algorithm.run()
+    return instructions
+
+
 def process_request(msg):
     request = json.loads(msg)
     header = request['header']
@@ -41,13 +46,17 @@ def init_skyway(data):
             drone["speed"],
             drone["maxPayloadWeight"],
             drone["batteryStatus"],
-            [payloads[id] for id in drone["payloads"]]
+            {id: payloads[id] for id in drone["payloads"]}
         )
         for drone in data["drones"]
     }
 
     pads: Dict[str, Pad] = {
-        pad["id"]: Pad(pad["id"], pad["node"], pad["isAvailable"])
+        pad["id"]: Pad(
+            pad["id"],
+            pad["node"],
+            pad["isAvailable"]
+        )
         for pad in data["pads"]
     }
 
@@ -55,8 +64,8 @@ def init_skyway(data):
         node["id"]: Node(
             node["id"],
             node["position"],
-            [pads[id] for id in node["pads"]],
-            [drones[id] for id in node["drones"]],
+            {id: pads[id] for id in node["pads"]},
+            {id: drones[id] for id in node["drones"]},
             node["edges"]
         )
         for node in data["nodes"]
@@ -75,14 +84,14 @@ def init_skyway(data):
     }
 
     for node in nodes.values():
-        node.edges = [edges[id] for id in node.edges]
+        node.edges = {id: edges[id] for id in node.edges}
 
     requests: Dict[str, Request] = {
         request["id"]: Request(
             request["id"],
             nodes[request["startNode"]],
             nodes[request["destNode"]],
-            [payloads[id] for id in request["payloads"]]
+            {id: payloads[id] for id in request["payloads"]}
         )
         for request in data["requests"]
     }
@@ -91,7 +100,7 @@ def init_skyway(data):
         subSwarm["id"]: SubSwarm(
             subSwarm["id"],
             subSwarm["position"],
-            [drones[id] for id in subSwarm["drones"]],
+            {id: drones[id] for id in subSwarm["drones"]},
             nodes[subSwarm["node"]],
             # edge could be None
             edges[subSwarm["edge"]] if subSwarm["edge"] != '' else None,
@@ -105,16 +114,16 @@ def init_skyway(data):
         swarm["id"]: Swarm(
             swarm["id"],
             requests[swarm["request"]],
-            [subSwarms[id] for id in swarm["subSwarms"]]
+            {id: subSwarms[id] for id in swarm["subSwarms"]}
         )
         for swarm in data["swarms"]
     }
 
     skyway = Skyway(
-        [nodes[id] for id in nodes],
-        [edges[id] for id in edges],
-        [requests[id] for id in requests],
-        [swarms[id] for id in swarms]
+        nodes,
+        edges,
+        requests,
+        swarms
     )
 
     skyway.log()
@@ -126,6 +135,8 @@ def update_swarm(data):
 
 def update_subswarm(data):
     print('update subswarm')
+    print(data)
+    # find target subswarm in skyway
 
 
 def get_skyway():
@@ -136,8 +147,3 @@ def set_subswarm_targetNode(subswarm_id, node_id):
     instructions.append(
         {"set_subswarm_targetNode": {'subswarm_id': subswarm_id, 'node_id': node_id}}
     )
-
-
-def execute_user_logic():
-    custom_algorithm.run()
-    return instructions
