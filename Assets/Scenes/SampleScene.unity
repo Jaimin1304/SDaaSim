@@ -1958,6 +1958,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 98456346}
     - target: {fileID: 2656165501328597354, guid: d0895ea70758fc0489326871f8765be9, type: 3}
+      propertyPath: currentState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656165501328597354, guid: d0895ea70758fc0489326871f8765be9, type: 3}
       propertyPath: drones.Array.size
       value: 2
       objectReference: {fileID: 0}
