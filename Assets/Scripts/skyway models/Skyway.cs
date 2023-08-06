@@ -7,21 +7,22 @@ using System.Linq;
 public class Skyway : MonoBehaviour
 {
     [SerializeField]
-    List<Node> nodes = new List<Node>();
+    List<Node> nodes = new();
 
     [SerializeField]
-    List<Edge> edges = new List<Edge>();
+    List<Edge> edges = new();
 
     [SerializeField]
-    List<Request> requests = new List<Request>();
+    List<Request> requests = new();
 
     [SerializeField]
-    List<Swarm> swarms = new List<Swarm>();
+    List<Swarm> swarms = new();
 
-    List<SubSwarm> subSwarms = new List<SubSwarm>();
-    List<Pad> pads = new List<Pad>();
-    List<Drone> drones = new List<Drone>();
-    List<Payload> payloads = new List<Payload>();
+    Dictionary<string, Edge> edgeDict = new();
+    Dictionary<string, SubSwarm> subSwarms = new();
+    Dictionary<string, Pad> pads = new();
+    Dictionary<string, Drone> drones = new();
+    Dictionary<string, Payload> payloads = new();
 
     public List<Node> Nodes
     {
@@ -47,14 +48,49 @@ public class Skyway : MonoBehaviour
         set { swarms = value; }
     }
 
-    void Awake()
+    public Dictionary<string, SubSwarm> SubSwarms
     {
+        get { return subSwarms; }
+        set { subSwarms = value; }
+    }
+
+    public Dictionary<string, Pad> Pads
+    {
+        get { return pads; }
+        set { pads = value; }
+    }
+
+    public Dictionary<string, Drone> Drones
+    {
+        get { return drones; }
+        set { drones = value; }
+    }
+
+    public Dictionary<string, Payload> Payloads
+    {
+        get { return payloads; }
+        set { payloads = value; }
+    }
+
+    public Dictionary<string, Edge> EdgeDict
+    {
+        get { return edgeDict; }
+        set { edgeDict = value; }
+    }
+
+    public void InitSkyway()
+    {
+        // init edgeDict
+        foreach (Edge edge in edges)
+        {
+            edgeDict.Add(edge.Id, edge);
+        }
         // init subswarms
         foreach (Swarm swarm in swarms)
         {
             foreach (SubSwarm subSwarm in swarm.SubSwarms)
             {
-                subSwarms.Add(subSwarm);
+                subSwarms.Add(subSwarm.Id, subSwarm);
             }
         }
         // init pads
@@ -62,15 +98,15 @@ public class Skyway : MonoBehaviour
         {
             foreach (Pad pad in node.Pads)
             {
-                pads.Add(pad);
+                pads.Add(pad.Id, pad);
             }
         }
         // init drones
-        foreach (SubSwarm subSwarm in subSwarms)
+        foreach (SubSwarm subSwarm in subSwarms.Values)
         {
             foreach (Drone drone in subSwarm.Drones)
             {
-                drones.Add(drone);
+                drones.Add(drone.Id, drone);
             }
         }
         // init payloads
@@ -78,7 +114,7 @@ public class Skyway : MonoBehaviour
         {
             foreach (Payload payload in request.Payloads)
             {
-                payloads.Add(payload);
+                payloads.Add(payload.Id, payload);
             }
         }
     }
@@ -91,11 +127,12 @@ public class Skyway : MonoBehaviour
             requests = requests.Select(request => request.ToSerializableRequest()).ToList(),
             edges = edges.Select(edge => edge.ToSerializableEdge()).ToList(),
             swarms = swarms.Select(swarm => swarm.ToSerializableSwarm()).ToList(),
-
-            subSwarms = subSwarms.Select(subSwarm => subSwarm.ToSerializableSubSwarm()).ToList(),
-            pads = pads.Select(pad => pad.ToSerializablePad()).ToList(),
-            drones = drones.Select(drone => drone.ToSerializableDrone()).ToList(),
-            payloads = payloads.Select(payload => payload.ToSerializablePayload()).ToList(),
+            subSwarms = subSwarms
+                .Select(subSwarm => subSwarm.Value.ToSerializableSubSwarm())
+                .ToList(),
+            pads = pads.Select(pad => pad.Value.ToSerializablePad()).ToList(),
+            drones = drones.Select(drone => drone.Value.ToSerializableDrone()).ToList(),
+            payloads = payloads.Select(payload => payload.Value.ToSerializablePayload()).ToList(),
         };
     }
 }

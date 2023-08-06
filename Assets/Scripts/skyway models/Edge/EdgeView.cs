@@ -56,8 +56,10 @@ public class EdgeView : MonoBehaviour
         lineRenderer.SetPosition(wayPoints.Count + 1, rightNodePos + heightOffset);
 
         // Position the text in the middle of the edge and slightly above it
-        if (wayPoints.Count > 0) { 
-            Vector3 middlePosition = wayPoints[wayPoints.Count/2].transform.position + heightOffset * 4;
+        if (wayPoints.Count > 0)
+        {
+            Vector3 middlePosition =
+                wayPoints[wayPoints.Count / 2].transform.position + heightOffset * 4;
             lengthText.transform.position = middlePosition;
         }
         else
@@ -66,7 +68,7 @@ public class EdgeView : MonoBehaviour
             lengthText.transform.position = middlePosition;
         }
 
-        lengthText.text = totalLength.ToString("F2");
+        lengthText.text = totalLength.ToString("F2") + "m";
         // Let the length text face the camera
         lengthText.transform.rotation = mainCamera.transform.rotation;
         // Calculate distance from the camera

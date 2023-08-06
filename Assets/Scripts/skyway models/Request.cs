@@ -15,7 +15,7 @@ public class Request : MonoBehaviour
     private Node destNode;
 
     [SerializeField]
-    private List<Payload> payloads = new List<Payload>();
+    List<Payload> payloads = new();
 
     public string Id
     {

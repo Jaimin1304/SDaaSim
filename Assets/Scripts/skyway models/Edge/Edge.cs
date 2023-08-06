@@ -7,27 +7,27 @@ using System.Linq;
 public class Edge : MonoBehaviour
 {
     [SerializeField]
-    private string id;
+    string id;
 
     [SerializeField]
-    private Node leftNode;
+    Node leftNode;
 
     [SerializeField]
-    private Node rightNode;
+    Node rightNode;
 
     [SerializeField]
-    private List<WayPoint> wayPoints = new List<WayPoint>();
+    List<WayPoint> wayPoints = new();
 
     [SerializeField]
-    private List<float> subEdgeLengths = new List<float>();
+    List<float> subEdgeLengths = new();
 
     [SerializeField]
-    private float totalLength;
+    float totalLength;
 
     [SerializeField]
-    private EdgeView edgeView;
+    EdgeView edgeView;
 
-    private List<Vector3> path = new List<Vector3>();
+    List<Vector3> path = new();
 
     public string Id
     {

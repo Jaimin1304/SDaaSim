@@ -12,7 +12,7 @@ public class Swarm : MonoBehaviour
     private Request request;
 
     [SerializeField]
-    private List<SubSwarm> subSwarms = new List<SubSwarm>();
+    List<SubSwarm> subSwarms = new();
 
     public string Id
     {

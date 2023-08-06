@@ -13,10 +13,10 @@ public class ApiLayer : MonoBehaviour
     public string SendRequest(string header, string body) // Changed parameter type from string to object
     {
         JObject bodyJson = JObject.Parse(body);
-        JObject dataPackage = new JObject { { "header", header }, { "body", bodyJson } };
+        JObject dataPackage = new() { { "header", header }, { "body", bodyJson } };
         string jsonMsg = dataPackage.ToString();
         Debug.Log("Msg sent: " + jsonMsg);
-        string jsonResponse = cs.communicate(Globals.ip, Globals.port, jsonMsg);
+        string jsonResponse = cs.Communicate(Globals.ip, Globals.port, jsonMsg);
         return jsonResponse;
     }
 }

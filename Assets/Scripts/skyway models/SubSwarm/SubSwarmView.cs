@@ -16,4 +16,21 @@ public class SubSwarmView : MonoBehaviour
             subSwarm.transform.LookAt(targetPostition);
         }
     }
+
+    public void InitDronePosition(SubSwarm subSwarm)
+    {
+        // Display the subswarm as a wedge formation
+        int centerIndex = subSwarm.Drones.Count / 2;
+        float displayOffset = Globals.droneGapView * centerIndex;
+        for (int i = 0; i < subSwarm.Drones.Count; i++)
+        {
+            subSwarm.Drones[i].transform.position =
+                subSwarm.transform.position
+                + new Vector3(
+                    Globals.droneGapView * i - displayOffset,
+                    Globals.droneHeightOffset,
+                    -Globals.droneGapView * Mathf.Abs(centerIndex - i)
+                );
+        }
+    }
 }

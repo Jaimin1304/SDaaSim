@@ -136,11 +136,12 @@ class Node:
 
 
 class Skyway:
-    def __init__(self, nodes: Dict[str, Node], edges: Dict[str, Edge], requests: Dict[str, Request], swarms: Dict[str, Swarm]):
+    def __init__(self, nodes: Dict[str, Node], edges: Dict[str, Edge], requests: Dict[str, Request], swarms: Dict[str, Swarm], subSwarms: Dict[str, SubSwarm]):
         self.nodes = nodes
         self.edges = edges
         self.requests = requests
         self.swarms = swarms
+        self.subSwarms = subSwarms
 
     def log(self):
         print('--skyway--')
@@ -151,4 +152,6 @@ class Skyway:
         for i in self.requests.values():
             i.log()
         for i in self.swarms.values():
+            i.log()
+        for i in self.subSwarms.values():
             i.log()

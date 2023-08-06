@@ -2,14 +2,14 @@ import json
 from skyway_model import *
 import custom_algorithm
 from typing import Dict
+import globals
 
-skyway = None
-instructions = []
+
+skyway = Skyway(None, None, None, None, None)
 
 
 def execute_user_logic():
-    custom_algorithm.run()
-    return instructions
+    return custom_algorithm.run(skyway)
 
 
 def process_request(msg):
@@ -18,13 +18,13 @@ def process_request(msg):
     body = request['body']
 
     match header:
-        case 'initSkyway':
+        case globals.init_skyway_header:
             init_skyway(body)
 
-        case 'updateSwarm':
+        case globals.update_swarm_header:
             update_swarm(body)
 
-        case 'updateSubSwarm':
+        case globals.update_subswarm_header:
             update_subswarm(body)
 
         case _:
@@ -123,7 +123,8 @@ def init_skyway(data):
         nodes,
         edges,
         requests,
-        swarms
+        swarms,
+        subSwarms
     )
 
     skyway.log()
@@ -136,14 +137,17 @@ def update_swarm(data):
 def update_subswarm(data):
     print('update subswarm')
     print(data)
+    id = data.get('id')
+    newPos = data.get('position')
+    nodeId = data.get('node')
+    edgeId = data.get('edge')
     # find target subswarm in skyway
+    subSwarm = skyway.subSwarms.get(id)
+    # update the subSwarm
+    subSwarm.position = newPos
+    subSwarm.node = skyway.nodes.get(nodeId)
+    subSwarm.edge = skyway.edges.get(edgeId)
 
 
 def get_skyway():
     return skyway
-
-
-def set_subswarm_targetNode(subswarm_id, node_id):
-    instructions.append(
-        {"set_subswarm_targetNode": {'subswarm_id': subswarm_id, 'node_id': node_id}}
-    )

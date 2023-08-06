@@ -16,7 +16,7 @@ public class SubSwarm : MonoBehaviour
     private Swarm parentSwarm;
 
     [SerializeField]
-    private List<Drone> drones = new List<Drone>();
+    List<Drone> drones = new();
 
     [SerializeField]
     private Node node;
@@ -48,6 +48,7 @@ public class SubSwarm : MonoBehaviour
     public State CurrentState
     {
         get { return currentState; }
+        set { currentState = value; }
     }
 
     public Swarm ParentSwarm
@@ -90,6 +91,7 @@ public class SubSwarm : MonoBehaviour
     {
         currentState = State.Operating;
         transform.position = node.transform.position;
+        subSwarmView.InitDronePosition(this);
     }
 
     void Update()
@@ -123,9 +125,15 @@ public class SubSwarm : MonoBehaviour
             indexIncrease = -1;
         }
 
-        if (Vector3.Distance(transform.position, Edge.Path[wayPointIndex]) <= speed)
+        if (
+            Vector3.Distance(transform.position, Edge.Path[wayPointIndex])
+            <= Globals.nodeTouchDistance
+        )
         { // reach milestone
-            if (Vector3.Distance(transform.position, targetNode.transform.position) <= speed)
+            if (
+                Vector3.Distance(transform.position, targetNode.transform.position)
+                <= Globals.nodeTouchDistance
+            )
             { // reach target
                 ToStandby(targetNode);
                 AskForCommand();
@@ -147,6 +155,14 @@ public class SubSwarm : MonoBehaviour
     {
         currentState = State.Operating;
         Edge = edge;
+        if (node == edge.LeftNode)
+        {
+            wayPointIndex = 0;
+        }
+        else
+        {
+            wayPointIndex = edge.Path.Count - 2;
+        }
     }
 
     public void ToStandby(Node node)

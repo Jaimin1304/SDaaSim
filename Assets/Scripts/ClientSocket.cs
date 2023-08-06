@@ -9,13 +9,13 @@ using System.Text;
 
 public class ClientSocket : MonoBehaviour
 {
-    public string communicate(string address, int portNumber, string msg)
+    public string Communicate(string address, int portNumber, string msg)
     {
         // specify server IP and port number
         IPAddress ipAddress = IPAddress.Parse(address);
         int port = portNumber;
         // create a socket object
-        Socket clientSocket = new Socket(
+        Socket clientSocket = new(
             ipAddress.AddressFamily,
             SocketType.Stream,
             ProtocolType.Tcp
@@ -29,10 +29,9 @@ public class ClientSocket : MonoBehaviour
             string request = msg + Globals.endOfFileSignal;
             byte[] requestBytes = Encoding.UTF8.GetBytes(request);
             clientSocket.Send(requestBytes);
-            Debug.Log("message sent");
 
             // receive the response from the server
-            StringBuilder response = new StringBuilder();
+            StringBuilder response = new();
             byte[] responseBytes = new byte[4096];
             int bytesRead = 0;
 

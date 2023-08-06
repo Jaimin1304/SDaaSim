@@ -35,7 +35,7 @@ public class PythonRunner : MonoBehaviour
     {
         if (pythonProcess != null && !pythonProcess.HasExited)
         {
-            cs.communicate(Globals.ip, Globals.port, Globals.quitSignal);
+            cs.Communicate(Globals.ip, Globals.port, Globals.quitSignal);
             UDebug.Log("Quit msg sent");
             pythonProcess.Kill();
         }

@@ -6,22 +6,22 @@ using System.Linq;
 public class Node : MonoBehaviour
 {
     [SerializeField]
-    private string id;
+    string id;
 
     [SerializeField]
-    private List<Pad> pads;
+    List<Pad> pads;
 
     [SerializeField]
-    private List<Drone> drones;
+    List<Drone> drones;
 
     [SerializeField]
-    private List<Edge> edges;
+    List<Edge> edges;
 
     [SerializeField]
-    private Outline outline;
+    Outline outline;
 
     [SerializeField]
-    private Utils utils;
+    Utils utils;
 
     public string Id
     {

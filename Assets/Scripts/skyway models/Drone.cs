@@ -6,25 +6,25 @@ using System.Linq;
 public class Drone : MonoBehaviour
 {
     [SerializeField]
-    private string id;
+    string id;
 
     [SerializeField]
-    private SubSwarm subSwarm;
+    SubSwarm subSwarm;
 
     [SerializeField]
-    private float selfWeight;
+    float selfWeight;
 
     [SerializeField]
-    private float speed;
+    float speed;
 
     [SerializeField]
-    private float maxPayloadWeight;
+    float maxPayloadWeight;
 
     [SerializeField]
-    private float batteryStatus;
+    float batteryStatus;
 
     [SerializeField]
-    private List<Payload> payloads = new List<Payload>();
+    List<Payload> payloads = new();
 
     public string Id
     {
