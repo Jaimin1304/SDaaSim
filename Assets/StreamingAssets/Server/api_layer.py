@@ -78,7 +78,8 @@ def init_skyway(data):
         edge["id"]: Edge(
             edge["id"],
             nodes[edge["leftNode"]],
-            nodes[edge["rightNode"]]
+            nodes[edge["rightNode"]],
+            edge["totalLength"]
         )
         for edge in data["edges"]
     }

@@ -35,6 +35,7 @@ public class SerializableEdge
     public string id;
     public string leftNode;
     public string rightNode;
+    public float totalLength;
 }
 
 [Serializable]

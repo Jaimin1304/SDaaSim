@@ -29,16 +29,18 @@ class Request:
 
 
 class Edge:
-    def __init__(self, id, leftNode, rightNode):
+    def __init__(self, id, leftNode, rightNode, totalLength):
         self.id = id
         self.leftNode = leftNode
         self.rightNode = rightNode
+        self.totalLength = totalLength
 
     def log(self):
         print('----edge----')
         print(self.id)
         print(self.leftNode.id)
         print(self.rightNode.id)
+        print(self.totalLength)
 
 
 class Pad:

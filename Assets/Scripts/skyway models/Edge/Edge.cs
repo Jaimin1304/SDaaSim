@@ -147,6 +147,7 @@ public class Edge : MonoBehaviour
             id = id,
             leftNode = leftNode.Id,
             rightNode = rightNode.Id,
+            totalLength = totalLength,
         };
     }
 }

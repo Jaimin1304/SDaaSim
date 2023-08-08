@@ -3,6 +3,10 @@ from skyway_model import Skyway
 import random
 
 
+def init():
+    print('init your own data structures')
+
+
 def run(skyway: Skyway):
     instructions = []
 

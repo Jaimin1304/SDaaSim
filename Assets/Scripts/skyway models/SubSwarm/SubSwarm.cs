@@ -83,7 +83,7 @@ public class SubSwarm : MonoBehaviour
 
     void Awake()
     {
-        speed = 18;
+        speed = 1;
         id = Guid.NewGuid().ToString();
     }
 
