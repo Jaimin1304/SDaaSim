@@ -83,7 +83,7 @@ public class SubSwarm : MonoBehaviour
 
     void Awake()
     {
-        speed = 1;
+        speed = 3;
         id = Guid.NewGuid().ToString();
     }
 
@@ -94,7 +94,7 @@ public class SubSwarm : MonoBehaviour
         subSwarmView.InitDronePosition(this);
     }
 
-    void Update()
+    public void UpdateLogic()
     {
         switch (currentState)
         {

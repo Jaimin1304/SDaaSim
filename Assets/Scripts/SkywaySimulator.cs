@@ -26,6 +26,22 @@ public class SkywaySimulator : MonoBehaviour
     [SerializeField]
     ClientSocket cs;
 
+    public enum State
+    {
+        Play,
+        Pause,
+        Edit
+    }
+
+    [SerializeField]
+    State currentState;
+
+    public State CurrentState
+    {
+        get { return currentState; }
+        set { currentState = value; }
+    }
+
     void Awake()
     {
         if (instance != null) // Singleton
@@ -40,13 +56,20 @@ public class SkywaySimulator : MonoBehaviour
 
     void Start()
     {
+        currentState = State.Edit;
         skyway.InitSkyway();
         InitSimulation();
     }
 
     void Update()
     {
-        //Debug.Log("update");
+        if (currentState == State.Play)
+        {
+            foreach (SubSwarm subSwarm in skyway.SubSwarms.Values)
+            {
+                subSwarm.UpdateLogic();
+            }
+        }
     }
 
     void InitSimulation()
@@ -95,12 +118,10 @@ public class SkywaySimulator : MonoBehaviour
                     string edgeId = responseBody["edge_id"];
                     Debug.Log("SubSwarm ID: " + subSwarmId);
                     Debug.Log("Edge ID: " + edgeId);
-
                     // Check if the key exists in the SubSwarms dictionary
                     if (skyway.SubSwarms.ContainsKey(subSwarmId))
                     {
                         SubSwarm subSwarm = skyway.SubSwarms[subSwarmId];
-
                         // Check if the key exists in the EdgeDict dictionary
                         if (skyway.EdgeDict.ContainsKey(edgeId))
                         {
@@ -113,7 +134,6 @@ public class SkywaySimulator : MonoBehaviour
                             {
                                 Debug.Log("Key: " + entry.Key + ", Edge: " + entry.Value.Id);
                             }
-
                             Debug.LogError("Edge ID not found in skyway.EdgeDict: " + edgeId);
                         }
                     }
@@ -121,9 +141,7 @@ public class SkywaySimulator : MonoBehaviour
                     {
                         Debug.LogError("SubSwarm ID not found in skyway.SubSwarms: " + subSwarmId);
                     }
-
                     break;
-
                 // Add more cases here if needed
                 default:
                     Debug.Log("Response header not found: " + responseHeader);

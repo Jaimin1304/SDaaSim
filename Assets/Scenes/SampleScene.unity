@@ -711,7 +711,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 975788313850532236, guid: 18c5b841182d68a4fb3824da0c07638a, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 975788313850532236, guid: 18c5b841182d68a4fb3824da0c07638a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -954,7 +954,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 975788313850532236, guid: 18c5b841182d68a4fb3824da0c07638a, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 975788313850532236, guid: 18c5b841182d68a4fb3824da0c07638a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1492,6 +1492,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1775944124337826434, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2609510073405812558, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3164590056791671148, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
       propertyPath: m_Name
       value: Drone
@@ -1528,6 +1536,18 @@ PrefabInstance:
       propertyPath: payloads.Array.data[0]
       value: 
       objectReference: {fileID: 1878301701}
+    - target: {fileID: 7627202656629557178, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8179562351962881272, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8902154385057694580, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
 --- !u!114 &853134407 stripped
@@ -3116,6 +3136,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1775944124337826434, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2609510073405812558, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3164590056791671148, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
       propertyPath: m_Name
       value: Drone (1)
@@ -3148,6 +3176,18 @@ PrefabInstance:
       propertyPath: payloads.Array.data[0]
       value: 
       objectReference: {fileID: 2006059827}
+    - target: {fileID: 7627202656629557178, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8179562351962881272, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8902154385057694580, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4965671eb67f4e14394d72d94cdc779b, type: 3}
 --- !u!1001 &1948859301
