@@ -7,9 +7,9 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Linq;
 
-public class SkywaySimulator : MonoBehaviour
+public class Simulator : MonoBehaviour
 {
-    public static SkywaySimulator instance;
+    public static Simulator instance;
 
     [SerializeField]
     Skyway skyway;
@@ -26,6 +26,8 @@ public class SkywaySimulator : MonoBehaviour
     [SerializeField]
     ClientSocket cs;
 
+    float elapsedTime = 0f;
+
     public enum State
     {
         Play,
@@ -35,6 +37,12 @@ public class SkywaySimulator : MonoBehaviour
 
     [SerializeField]
     State currentState;
+
+    public float ElapsedTime
+    {
+        get { return elapsedTime; }
+        set { elapsedTime = value; }
+    }
 
     public State CurrentState
     {
@@ -64,11 +72,12 @@ public class SkywaySimulator : MonoBehaviour
     void Update()
     {
         if (currentState == State.Play)
-        {
+        { // simulation logic
             foreach (SubSwarm subSwarm in skyway.SubSwarms.Values)
             {
                 subSwarm.UpdateLogic();
             }
+            elapsedTime += Time.deltaTime * Globals.PlaySpeed; // update timer
         }
     }
 

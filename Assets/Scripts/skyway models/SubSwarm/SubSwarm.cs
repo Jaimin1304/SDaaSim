@@ -148,7 +148,7 @@ public class SubSwarm : MonoBehaviour
     public void MoveToTarget(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        transform.position += direction * speed * Time.deltaTime;
+        transform.position += direction * speed * Time.deltaTime * Globals.PlaySpeed;
     }
 
     public void ToOperating(Edge edge)
@@ -176,7 +176,7 @@ public class SubSwarm : MonoBehaviour
 
     public void AskForCommand()
     {
-        SkywaySimulator.instance.UpdateSubSwarm(this);
+        Simulator.instance.UpdateSubSwarm(this);
     }
 
     public SerializableSubSwarm ToSerializableSubSwarm()

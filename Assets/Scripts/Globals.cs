@@ -17,4 +17,12 @@ public class Globals : MonoBehaviour
     public const float camRotateSpeed = 0.2f;
     public const float droneGapView = 2f;
     public const float droneHeightOffset = 3f;
+    public const int playSpeedLimit = 16;
+
+    static int playSpeed = 1;
+    public static int PlaySpeed
+    {
+        get { return playSpeed; }
+        set { playSpeed = value; }
+    }
 }

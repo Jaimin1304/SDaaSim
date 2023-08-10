@@ -9,53 +9,76 @@ public class UIController : MonoBehaviour
     Button playPauseButton;
 
     [SerializeField]
+    Button SpeedUpButton;
+
+    [SerializeField]
+    Button SlowDownButton;
+
+    [SerializeField]
     TextMeshProUGUI timerText;
 
-    private bool isPlaying = false;
-    private float elapsedTime = 0f;
+    [SerializeField]
+    TextMeshProUGUI PlaySpeedText;
 
-    private void Start()
+    void Start()
     {
         playPauseButton.onClick.AddListener(TogglePlayPause);
-        UpdateUI();
+        SpeedUpButton.onClick.AddListener(SpeedUp);
+        SlowDownButton.onClick.AddListener(SlowDown);
     }
 
-    private void Update()
+    void Update()
     {
-        if (isPlaying)
+        if (Simulator.instance.CurrentState == Simulator.State.Play)
         {
-            elapsedTime += Time.deltaTime;
             UpdateTimer();
         }
     }
 
-    private void TogglePlayPause()
+    void TogglePlayPause()
     {
-        if (isPlaying)
+        if (Simulator.instance.CurrentState == Simulator.State.Play)
         {
-            SkywaySimulator.instance.CurrentState = SkywaySimulator.State.Pause;
+            Simulator.instance.CurrentState = Simulator.State.Pause;
         }
         else
         {
-            SkywaySimulator.instance.CurrentState = SkywaySimulator.State.Play;
+            Simulator.instance.CurrentState = Simulator.State.Play;
         }
-        isPlaying = !isPlaying;
         UpdateUI();
     }
 
-    private void UpdateUI()
+    void SpeedUp()
     {
-        playPauseButton.GetComponentInChildren<TextMeshProUGUI>().text = isPlaying
-            ? "Pause"
-            : "Play";
+        if (Globals.PlaySpeed < Globals.playSpeedLimit)
+        {
+            Globals.PlaySpeed *= 2;
+        }
+        PlaySpeedText.text = string.Format("x{0}", Globals.PlaySpeed);
     }
 
-    private void UpdateTimer()
+    void SlowDown()
     {
-        int hours = Mathf.FloorToInt(elapsedTime / 3600f);
+        if (Globals.PlaySpeed > 1)
+        {
+            Globals.PlaySpeed /= 2;
+        }
+        PlaySpeedText.text = string.Format("x{0}", Globals.PlaySpeed);
+    }
+
+    void UpdateUI()
+    {
+        playPauseButton.GetComponentInChildren<TextMeshProUGUI>().text =
+            Simulator.instance.CurrentState == Simulator.State.Play ? "Pause" : "Play";
+        Debug.Log(Simulator.instance.CurrentState);
+    }
+
+    void UpdateTimer()
+    {
+        int hours = Mathf.FloorToInt(Simulator.instance.ElapsedTime / 3600f);
         int hourInSec = hours * 3600;
-        int minutes = Mathf.FloorToInt((elapsedTime - hourInSec) / 60f);
-        int seconds = Mathf.FloorToInt(elapsedTime - hourInSec - minutes * 60);
+        int minutes = Mathf.FloorToInt((Simulator.instance.ElapsedTime - hourInSec) / 60f);
+        int seconds = Mathf.FloorToInt(Simulator.instance.ElapsedTime - hourInSec - minutes * 60);
         timerText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
     }
 }
