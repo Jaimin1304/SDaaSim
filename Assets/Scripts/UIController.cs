@@ -6,6 +6,15 @@ using TMPro;
 public class UIController : MonoBehaviour
 {
     [SerializeField]
+    Button saveSkywayButton;
+
+    [SerializeField]
+    Button loadSkywayButton;
+
+    [SerializeField]
+    Button resetButton;
+
+    [SerializeField]
     Button playPauseButton;
 
     [SerializeField]
@@ -22,6 +31,9 @@ public class UIController : MonoBehaviour
 
     void Start()
     {
+        saveSkywayButton.onClick.AddListener(SaveSkyway);
+        loadSkywayButton.onClick.AddListener(LoadSkyway);
+        resetButton.onClick.AddListener(Reset);
         playPauseButton.onClick.AddListener(TogglePlayPause);
         SpeedUpButton.onClick.AddListener(SpeedUp);
         SlowDownButton.onClick.AddListener(SlowDown);
@@ -33,6 +45,22 @@ public class UIController : MonoBehaviour
         {
             UpdateTimer();
         }
+    }
+
+    void Reset()
+    {
+        Debug.Log("reset");
+    }
+
+    void SaveSkyway()
+    {
+        Debug.Log("SaveSkyway");
+        Simulator.instance.SaveSkyway();
+    }
+
+    void LoadSkyway()
+    {
+        Debug.Log("LoadSkyway");
     }
 
     void TogglePlayPause()

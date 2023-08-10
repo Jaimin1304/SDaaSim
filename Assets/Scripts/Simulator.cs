@@ -159,6 +159,11 @@ public class Simulator : MonoBehaviour
         }
     }
 
+    public void SaveSkyway()
+    {
+        dataManager.SaveSkywayToJson(skyway);
+    }
+
     void QuitGame()
     {
 #if UNITY_EDITOR
