@@ -165,6 +165,8 @@ public class Simulator : MonoBehaviour
         dataManager.SaveSkywayToJson(skyway);
     }
 
+    void CheckComplete() { }
+
     void QuitGame()
     {
 #if UNITY_EDITOR

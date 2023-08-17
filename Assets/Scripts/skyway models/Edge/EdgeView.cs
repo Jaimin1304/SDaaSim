@@ -41,7 +41,8 @@ public class EdgeView : MonoBehaviour
         Vector3 rightNodePos,
         List<WayPoint> wayPoints,
         List<float> lengths,
-        float totalLength
+        float totalLength,
+        string gameObjectName
     )
     {
         Vector3 heightOffset = new Vector3(0, 1, 0);
@@ -68,7 +69,7 @@ public class EdgeView : MonoBehaviour
             lengthText.transform.position = middlePosition;
         }
 
-        lengthText.text = totalLength.ToString("F2") + "m";
+        lengthText.text = gameObjectName + "\n" + totalLength.ToString("F2") + "m";
         // Let the length text face the camera
         lengthText.transform.rotation = mainCamera.transform.rotation;
         // Calculate distance from the camera

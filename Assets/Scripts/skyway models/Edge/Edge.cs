@@ -136,7 +136,8 @@ public class Edge : MonoBehaviour
             rightNode.transform.position,
             WayPoints,
             subEdgeLengths,
-            totalLength
+            totalLength,
+            gameObject.name
         );
     }
 
