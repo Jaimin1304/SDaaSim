@@ -129,7 +129,7 @@ public class UIController : MonoBehaviour
         HidePopUp();
     }
 
-    public void ShowPopUp(string message)
+    void ShowPopUp(string message)
     {
         stateInMemory = Simulator.instance.CurrentState;
         Simulator.instance.CurrentState = Simulator.State.Freeze;
@@ -137,7 +137,7 @@ public class UIController : MonoBehaviour
         popUpPanel.SetActive(true);
     }
 
-    public void HidePopUp()
+    void HidePopUp()
     {
         popUpPanel.SetActive(false);
         Simulator.instance.CurrentState = stateInMemory;
