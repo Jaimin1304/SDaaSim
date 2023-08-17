@@ -22,7 +22,7 @@ public class DataManager : MonoBehaviour
         return jsonConverter.SubSwarmToJson(subSwarm);
     }
 
-    public Skyway LoadSkywayFromJson()
+    public Skyway LoadSkywayFromJson(string skywayJson)
     {
         Skyway skyway = null;
         return skyway;

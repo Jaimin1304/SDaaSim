@@ -29,6 +29,17 @@ public class UIController : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI PlaySpeedText;
 
+    [SerializeField]
+    Button popUpConfirmButton;
+
+    [SerializeField]
+    GameObject popUpPanel;
+
+    [SerializeField]
+    TextMeshProUGUI popUpText;
+
+    Simulator.State stateInMemory = Simulator.State.Pause;
+
     void Start()
     {
         saveSkywayButton.onClick.AddListener(SaveSkyway);
@@ -37,6 +48,7 @@ public class UIController : MonoBehaviour
         playPauseButton.onClick.AddListener(TogglePlayPause);
         SpeedUpButton.onClick.AddListener(SpeedUp);
         SlowDownButton.onClick.AddListener(SlowDown);
+        popUpConfirmButton.onClick.AddListener(PopUpConfirm);
     }
 
     void Update()
@@ -47,20 +59,21 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void Reset()
-    {
-        Debug.Log("reset");
-    }
-
     void SaveSkyway()
     {
         Debug.Log("SaveSkyway");
         Simulator.instance.SaveSkyway();
+        ShowPopUp("Current skyway is saved to 'StreamingAssets/saved skyways'.");
     }
 
     void LoadSkyway()
     {
         Debug.Log("LoadSkyway");
+    }
+
+    void Reset()
+    {
+        Debug.Log("reset");
     }
 
     void TogglePlayPause()
@@ -108,5 +121,25 @@ public class UIController : MonoBehaviour
         int minutes = Mathf.FloorToInt((Simulator.instance.ElapsedTime - hourInSec) / 60f);
         int seconds = Mathf.FloorToInt(Simulator.instance.ElapsedTime - hourInSec - minutes * 60);
         timerText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+    }
+
+    void PopUpConfirm()
+    {
+        Debug.Log("ok");
+        HidePopUp();
+    }
+
+    public void ShowPopUp(string message)
+    {
+        stateInMemory = Simulator.instance.CurrentState;
+        Simulator.instance.CurrentState = Simulator.State.Freeze;
+        popUpText.text = message;
+        popUpPanel.SetActive(true);
+    }
+
+    public void HidePopUp()
+    {
+        popUpPanel.SetActive(false);
+        Simulator.instance.CurrentState = stateInMemory;
     }
 }

@@ -20,6 +20,10 @@ public class CamController : MonoBehaviour
 
     void Update()
     {
+        if (Simulator.instance.CurrentState == Simulator.State.Freeze)
+        {
+            return;
+        }
         // Use WASD to move the camera around.
         if (Input.GetKey(KeyCode.W))
             transform.Translate(Vector3.forward * speed * Time.deltaTime);

@@ -32,7 +32,8 @@ public class Simulator : MonoBehaviour
     {
         Play,
         Pause,
-        Edit
+        Edit,
+        Freeze
     }
 
     [SerializeField]
