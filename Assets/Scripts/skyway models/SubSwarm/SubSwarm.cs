@@ -7,22 +7,22 @@ using System.Linq;
 public class SubSwarm : MonoBehaviour
 {
     [SerializeField]
-    private string id;
+    string id;
 
     [SerializeField]
-    private SubSwarmView subSwarmView;
+    SubSwarmView subSwarmView;
 
     [SerializeField]
-    private Swarm parentSwarm;
+    Swarm parentSwarm;
 
     [SerializeField]
     List<Drone> drones = new();
 
     [SerializeField]
-    private Node node;
+    Node node;
 
     [SerializeField]
-    private Edge edge;
+    Edge edge;
 
     public enum State
     {
@@ -33,12 +33,12 @@ public class SubSwarm : MonoBehaviour
     [SerializeField]
     State currentState;
 
-    private int wayPointIndex;
+    int wayPointIndex;
 
     [SerializeField]
-    private float speed;
+    float speed;
 
-    private bool destReached;
+    bool destReached;
 
     public string Id
     {
@@ -92,6 +92,12 @@ public class SubSwarm : MonoBehaviour
         currentState = State.Operating;
         transform.position = node.transform.position;
         subSwarmView.InitDronePosition(this);
+        subSwarmView.InitVisual(gameObject.name);
+    }
+
+    void Update()
+    {
+        subSwarmView.UpdateVisual(); // update nametag
     }
 
     public void UpdateLogic()

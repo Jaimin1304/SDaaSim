@@ -30,8 +30,8 @@ public class EdgeView : MonoBehaviour
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.positionCount = 2;
-        lineRenderer.startWidth = 0.1f;
-        lineRenderer.endWidth = 0.1f;
+        lineRenderer.startWidth = 0.3f;
+        lineRenderer.endWidth = 0.3f;
         lineRenderer.startColor = Color.green;
         lineRenderer.endColor = Color.green;
     }

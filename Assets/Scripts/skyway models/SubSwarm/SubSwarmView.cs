@@ -1,9 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SubSwarmView : MonoBehaviour
 {
+    [SerializeField]
+    TextMeshPro nameTag;
+
+    Camera mainCamera;
+
+    void Awake()
+    {
+        mainCamera = Camera.main;
+    }
+
+    public void InitVisual(string tagName)
+    {
+        nameTag.text = tagName;
+    }
+
+    public void UpdateVisual()
+    {
+        // Calculate distance from the camera
+        float distance = Vector3.Distance(
+            nameTag.transform.position,
+            mainCamera.transform.position
+        );
+        // Let the name tag face the camera
+        nameTag.transform.rotation = mainCamera.transform.rotation;
+        // Scale text size based on distance
+        float scaleValue = distance * 0.03f;
+        nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+    }
+
     public void Visual(SubSwarm subSwarm)
     {
         if (subSwarm.CurrentState == SubSwarm.State.Operating)

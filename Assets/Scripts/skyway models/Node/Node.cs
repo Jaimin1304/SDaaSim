@@ -23,6 +23,9 @@ public class Node : MonoBehaviour
     [SerializeField]
     Utils utils;
 
+    [SerializeField]
+    NodeView nodeView;
+
     public string Id
     {
         get { return id; }
@@ -51,11 +54,16 @@ public class Node : MonoBehaviour
         id = Guid.NewGuid().ToString();
     }
 
-    void Start() { }
+    void Start()
+    {
+        nodeView.initVisual(gameObject.name);
+        nodeView.UpdateVisual();
+    }
 
     void Update()
     {
         utils.Outline(outline, this.gameObject);
+        nodeView.UpdateVisual();
     }
 
     public SerializableNode ToSerializableNode()

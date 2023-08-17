@@ -26,6 +26,9 @@ public class Drone : MonoBehaviour
     [SerializeField]
     List<Payload> payloads = new();
 
+    [SerializeField]
+    DroneView droneView;
+
     public string Id
     {
         get { return id; }
@@ -72,9 +75,16 @@ public class Drone : MonoBehaviour
         id = Guid.NewGuid().ToString();
     }
 
-    void Start() { }
+    void Start()
+    {
+        droneView.initVisual(gameObject.name);
+        droneView.UpdateVisual();
+    }
 
-    void Update() { }
+    void Update()
+    {
+        droneView.UpdateVisual();
+    }
 
     public SerializableDrone ToSerializableDrone()
     {
