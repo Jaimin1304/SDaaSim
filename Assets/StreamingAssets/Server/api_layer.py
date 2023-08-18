@@ -20,6 +20,7 @@ def process_request(msg):
     match header:
         case globals.init_skyway_header:
             init_skyway(body)
+            custom_algorithm.init(skyway)
 
         case globals.update_swarm_header:
             update_swarm(body)
