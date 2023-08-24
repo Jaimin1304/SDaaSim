@@ -64,6 +64,22 @@ public class Node : MonoBehaviour
     {
         utils.Outline(outline, this.gameObject);
         nodeView.UpdateVisual(this);
+        if (Simulator.instance.CurrentState == Simulator.State.Play)
+        {
+            RechargeDrones();
+        }
+    }
+
+    void RechargeDrones()
+    {
+        if (landedDrones.Count <= 0)
+        {
+            return;
+        }
+        foreach (Drone drone in landedDrones)
+        {
+            drone.Recharge(0.01f);
+        }
     }
 
     public SerializableNode ToSerializableNode()

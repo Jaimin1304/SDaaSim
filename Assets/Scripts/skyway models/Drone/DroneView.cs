@@ -19,12 +19,12 @@ public class DroneView : MonoBehaviour
         mainCamera = Camera.main;
     }
 
-    public void initVisual(string tagName)
+    public void initVisual(Drone drone)
     {
-        nameTag.text = tagName;
+        nameTag.text = drone.name;
     }
 
-    public void UpdateVisual()
+    public void UpdateVisual(Drone drone)
     {
         // Calculate distance from the camera
         float distance = Vector3.Distance(
@@ -46,5 +46,6 @@ public class DroneView : MonoBehaviour
         // Scale text size based on distance
         float scaleValue = distance * 0.03f;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        nameTag.text = string.Format("{0} {1}%", drone.name, drone.BatteryStatus*100);
     }
 }

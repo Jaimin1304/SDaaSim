@@ -77,13 +77,30 @@ public class Drone : MonoBehaviour
 
     void Start()
     {
-        droneView.initVisual(gameObject.name);
-        droneView.UpdateVisual();
+        droneView.initVisual(this);
+        droneView.UpdateVisual(this);
+        batteryStatus = 1;
     }
 
     void Update()
     {
-        droneView.UpdateVisual();
+        droneView.UpdateVisual(this);
+        if (
+            Simulator.instance.CurrentState == Simulator.State.Play
+            && subSwarm.CurrentState != SubSwarm.State.Landed
+        )
+        {
+            batteryStatus -= 0.01f * Time.deltaTime;
+        }
+    }
+
+    public void Recharge(float amount)
+    {
+        if (batteryStatus > 1)
+        {
+            return;
+        }
+        batteryStatus += amount * Time.deltaTime;
     }
 
     public SerializableDrone ToSerializableDrone()
