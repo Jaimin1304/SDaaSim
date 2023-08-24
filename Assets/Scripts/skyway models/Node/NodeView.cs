@@ -15,12 +15,12 @@ public class NodeView : MonoBehaviour
         mainCamera = Camera.main;
     }
 
-    public void initVisual(string tagName)
+    public void initVisual(Node node)
     {
-        nameTag.text = tagName;
+        nameTag.text = string.Format("{0} [{1}/{2}]", node.name, node.LandedDrones.Count, node.Capacity);
     }
 
-    public void UpdateVisual()
+    public void UpdateVisual(Node node)
     {
         // Let the name tag face the camera
         nameTag.transform.rotation = mainCamera.transform.rotation;
@@ -32,5 +32,6 @@ public class NodeView : MonoBehaviour
         // Scale text size based on distance
         float scaleValue = distance * 0.03f;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        nameTag.text = string.Format("{0} [{1}/{2}]", node.name, node.LandedDrones.Count, node.Capacity);
     }
 }

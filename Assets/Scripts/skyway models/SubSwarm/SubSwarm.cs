@@ -146,8 +146,15 @@ public class SubSwarm : MonoBehaviour
                 <= Globals.nodeTouchDistance
             )
             { // reach target
-                ToStandby(targetNode);
-                AskForCommand();
+                if (targetNode == parentSwarm.Request.DestNode)
+                {
+                    ToLanded(targetNode);
+                }
+                else
+                {
+                    ToStandby(targetNode);
+                    AskForCommand();
+                }
                 return;
             }
             transform.position = Edge.Path[wayPointIndex];
@@ -174,6 +181,8 @@ public class SubSwarm : MonoBehaviour
         {
             wayPointIndex = edge.Path.Count - 2;
         }
+        // restart drone animations
+        subSwarmView.ToggleDroneAnimation(this, 1);
     }
 
     public void ToStandby(Node node)
@@ -183,13 +192,15 @@ public class SubSwarm : MonoBehaviour
         transform.position = node.transform.position;
         Edge = null;
         wayPointIndex = 0;
+        // restart drone animations
+        subSwarmView.ToggleDroneAnimation(this, 1);
     }
 
     public bool ToLanded(Node node)
     {
         if (node.Capacity < node.LandedDrones.Count + drones.Count)
         {
-            Debug.Log(string.Format("Can't land at node {0}, low capacity", node.name));
+            Debug.Log(string.Format("Can't land at node {0}, due to low capacity", node.name));
             return false;
         }
         currentState = State.Landed;
@@ -198,6 +209,10 @@ public class SubSwarm : MonoBehaviour
         Edge = null;
         wayPointIndex = 0;
         node.LandedDrones.AddRange(drones);
+        Debug.Log(node.name);
+        Debug.Log(node.LandedDrones.Count);
+        subSwarmView.LandVisualUpdate(this);
+        Debug.Log("landed!");
         return true;
     }
 

@@ -56,14 +56,14 @@ public class Node : MonoBehaviour
 
     void Start()
     {
-        nodeView.initVisual(gameObject.name);
-        nodeView.UpdateVisual();
+        nodeView.initVisual(this);
+        nodeView.UpdateVisual(this);
     }
 
     void Update()
     {
         utils.Outline(outline, this.gameObject);
-        nodeView.UpdateVisual();
+        nodeView.UpdateVisual(this);
     }
 
     public SerializableNode ToSerializableNode()

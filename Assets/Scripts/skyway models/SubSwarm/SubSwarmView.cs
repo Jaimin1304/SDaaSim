@@ -47,6 +47,30 @@ public class SubSwarmView : MonoBehaviour
         }
     }
 
+    public void LandVisualUpdate(SubSwarm subSwarm)
+    {
+        // stop animation
+        ToggleDroneAnimation(subSwarm, 0);
+        //subSwarm.transform.position = subSwarm.Node.transform.position;
+        subSwarm.transform.position = new Vector3(
+            subSwarm.Node.transform.position.x,
+            subSwarm.Node.transform.position.y - 2.2f,
+            subSwarm.Node.transform.position.z
+        );
+    }
+
+    public void ToggleDroneAnimation(SubSwarm subSwarm, float start)
+    {
+        foreach (Drone drone in subSwarm.Drones)
+        {
+            Animator droneAnimator = drone.GetComponentInChildren<Animator>();
+            if (droneAnimator != null)
+            {
+                droneAnimator.speed = start;
+            }
+        }
+    }
+
     public void InitDronePosition(SubSwarm subSwarm)
     {
         // Display the subswarm as a wedge formation

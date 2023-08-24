@@ -6,10 +6,10 @@ using System.Linq;
 public class Swarm : MonoBehaviour
 {
     [SerializeField]
-    private string id;
+    string id;
 
     [SerializeField]
-    private Request request;
+    Request request;
 
     [SerializeField]
     List<SubSwarm> subSwarms = new();
