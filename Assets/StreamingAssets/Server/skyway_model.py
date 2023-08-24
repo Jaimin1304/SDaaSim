@@ -43,17 +43,17 @@ class Edge:
         print(self.totalLength)
 
 
-class Pad:
-    def __init__(self, id, node, isAvailable):
-        self.id = id
-        self.node = node
-        self.isAvailable = isAvailable
-
-    def log(self):
-        print('--pad--')
-        print(self.id)
-        print(self.node.id)
-        print(self.isAvailable)
+#class Pad:
+#    def __init__(self, id, node, isAvailable):
+#        self.id = id
+#        self.node = node
+#        self.isAvailable = isAvailable
+#
+#    def log(self):
+#        print('--pad--')
+#        print(self.id)
+#        print(self.node.id)
+#        print(self.isAvailable)
 
 
 class Drone:
@@ -118,20 +118,20 @@ class Swarm:
 
 
 class Node:
-    def __init__(self, id, position, pads: Dict[str, Pad], drones: Dict[str, Drone], edges: Dict[str, Edge]):
+    def __init__(self, id, position, landedDrones: Dict[str, Drone], edges: Dict[str, Edge]):
         self.id = id
         self.position = position
-        self.pads = pads
-        self.drones = drones
+        #self.pads = pads
+        self.landedDrones = landedDrones
         self.edges = edges
 
     def log(self):
         print('----node----')
         print(self.id)
         print(self.position)
-        for i in self.pads.values():
-            i.log()
-        for i in self.drones.values():
+        #for i in self.pads.values():
+        #    i.log()
+        for i in self.landedDrones.values():
             i.log()
         for i in self.edges.values():
             i.log()

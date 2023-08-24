@@ -19,8 +19,9 @@ public class Skyway : MonoBehaviour
     List<Swarm> swarms = new();
 
     Dictionary<string, Edge> edgeDict = new();
+    Dictionary<string, Node> nodeDict = new();
     Dictionary<string, SubSwarm> subSwarms = new();
-    Dictionary<string, Pad> pads = new();
+    //Dictionary<string, Pad> pads = new();
     Dictionary<string, Drone> drones = new();
     Dictionary<string, Payload> payloads = new();
 
@@ -54,11 +55,11 @@ public class Skyway : MonoBehaviour
         set { subSwarms = value; }
     }
 
-    public Dictionary<string, Pad> Pads
-    {
-        get { return pads; }
-        set { pads = value; }
-    }
+    //public Dictionary<string, Pad> Pads
+    //{
+    //    get { return pads; }
+    //    set { pads = value; }
+    //}
 
     public Dictionary<string, Drone> Drones
     {
@@ -78,12 +79,23 @@ public class Skyway : MonoBehaviour
         set { edgeDict = value; }
     }
 
+    public Dictionary<string, Node> NodeDict
+    {
+        get { return nodeDict; }
+        set { nodeDict = value; }
+    }
+
     public void InitSkyway()
     {
         // init edgeDict
         foreach (Edge edge in edges)
         {
             edgeDict.Add(edge.Id, edge);
+        }
+        // init nodeDict
+        foreach (Node node in nodes)
+        {
+            nodeDict.Add(node.Id, node);
         }
         // init subswarms
         foreach (Swarm swarm in swarms)
@@ -93,14 +105,14 @@ public class Skyway : MonoBehaviour
                 subSwarms.Add(subSwarm.Id, subSwarm);
             }
         }
-        // init pads
-        foreach (Node node in nodes)
-        {
-            foreach (Pad pad in node.Pads)
-            {
-                pads.Add(pad.Id, pad);
-            }
-        }
+        //// init pads
+        //foreach (Node node in nodes)
+        //{
+        //    foreach (Pad pad in node.Pads)
+        //    {
+        //        pads.Add(pad.Id, pad);
+        //    }
+        //}
         // init drones
         foreach (SubSwarm subSwarm in subSwarms.Values)
         {
@@ -130,7 +142,7 @@ public class Skyway : MonoBehaviour
             subSwarms = subSwarms
                 .Select(subSwarm => subSwarm.Value.ToSerializableSubSwarm())
                 .ToList(),
-            pads = pads.Select(pad => pad.Value.ToSerializablePad()).ToList(),
+            //pads = pads.Select(pad => pad.Value.ToSerializablePad()).ToList(),
             drones = drones.Select(drone => drone.Value.ToSerializableDrone()).ToList(),
             payloads = payloads.Select(payload => payload.Value.ToSerializablePayload()).ToList(),
         };

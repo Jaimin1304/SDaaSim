@@ -87,12 +87,14 @@ public class Simulator : MonoBehaviour
         // sent entire skyway to server
         string skywayJson = dataManager.RecordCurrentStateToJson(skyway);
         string response = api.SendRequest(Globals.initSkywayHeader, skywayJson);
+        ProcessResponse(response);
     }
 
     public void UpdateSwarm(Swarm swarm)
     {
         string swarmJson = dataManager.SwarmToJson(swarm);
         string response = api.SendRequest(Globals.updateSwarmHeader, swarmJson);
+        ProcessResponse(response);
     }
 
     public void UpdateSubSwarm(SubSwarm subSwarm)
@@ -120,10 +122,11 @@ public class Simulator : MonoBehaviour
         {
             string responseHeader = operation.Keys.First();
             Dictionary<string, string> responseBody = operation[responseHeader];
+            Debug.Log("Operation: " + responseHeader);
             switch (responseHeader)
             {
                 case Globals.setSubswarmEdge:
-                    Debug.Log("Operation: " + responseHeader);
+                    Debug.Log("Operation: ");
                     string subSwarmId = responseBody["subswarm_id"];
                     string edgeId = responseBody["edge_id"];
                     Debug.Log("SubSwarm ID: " + subSwarmId);
@@ -140,10 +143,6 @@ public class Simulator : MonoBehaviour
                         }
                         else
                         {
-                            foreach (KeyValuePair<string, Edge> entry in skyway.EdgeDict)
-                            {
-                                Debug.Log("Key: " + entry.Key + ", Edge: " + entry.Value.Id);
-                            }
                             Debug.LogError("Edge ID not found in skyway.EdgeDict: " + edgeId);
                         }
                     }
@@ -152,9 +151,78 @@ public class Simulator : MonoBehaviour
                         Debug.LogError("SubSwarm ID not found in skyway.SubSwarms: " + subSwarmId);
                     }
                     break;
+
+                case Globals.subswarmLand:
+                    subSwarmId = responseBody["subswarm_id"];
+                    string nodeId = responseBody["node_id"];
+                    Debug.Log("SubSwarm ID: " + subSwarmId);
+                    Debug.Log("Edge ID: " + nodeId);
+                    // Check if the key exists in the SubSwarms dictionary
+                    if (skyway.SubSwarms.ContainsKey(subSwarmId))
+                    {
+                        SubSwarm subSwarm = skyway.SubSwarms[subSwarmId];
+                        // Check if the key exists in the NodeDict dictionary
+                        if (skyway.NodeDict.ContainsKey(nodeId))
+                        {
+                            Node node = skyway.NodeDict[nodeId];
+                            subSwarm.ToLanded(node);
+                        }
+                        else
+                        {
+                            Debug.LogError("Node ID not found in skyway.NodeDict: " + nodeId);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("SubSwarm ID not found in skyway.SubSwarms: " + subSwarmId);
+                    }
+                    break;
+
+                case Globals.splitSubswarm:
+                    subSwarmId = responseBody["subswarm_id"];
+                    string droneLst = responseBody["drone_lst"];
+                    Debug.Log("SubSwarm ID: " + subSwarmId);
+                    Debug.Log("Drone list: " + droneLst);
+                    // Check if the key exists in the SubSwarms dictionary
+                    if (skyway.SubSwarms.ContainsKey(subSwarmId))
+                    {
+                        SubSwarm subSwarm = skyway.SubSwarms[subSwarmId];
+                        Debug.Log("split according to drone list");
+                    }
+                    else
+                    {
+                        Debug.LogError("SubSwarm ID not found in skyway.SubSwarms: " + subSwarmId);
+                    }
+                    break;
+
+                case Globals.mergeTwoSubswarms:
+                    String subSwarmAId = responseBody["subswarmA_id"];
+                    String subSwarmBId = responseBody["subswarmB_id"];
+                    Debug.Log("SubSwarmA ID: " + subSwarmAId);
+                    Debug.Log("SubSwarmB ID: " + subSwarmBId);
+                    // Check if the key exists in the SubSwarms dictionary
+                    if (
+                        skyway.SubSwarms.ContainsKey(subSwarmAId)
+                        && skyway.SubSwarms.ContainsKey(subSwarmBId)
+                    )
+                    {
+                        Debug.Log("merge");
+                    }
+                    else
+                    {
+                        Debug.LogError(
+                            string.Format(
+                                "SubSwarm ID not found in skyway.SubSwarms, could be {0} or {1}",
+                                subSwarmAId,
+                                subSwarmBId
+                            )
+                        );
+                    }
+                    break;
+
                 // Add more cases here if needed
                 default:
-                    Debug.Log("Response header not found: " + responseHeader);
+                    Debug.LogError("Response header not found: " + responseHeader);
                     break;
             }
         }

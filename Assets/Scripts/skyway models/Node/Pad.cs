@@ -50,13 +50,13 @@ public class Pad : MonoBehaviour
         IsAvailable = true;
     }
 
-    public SerializablePad ToSerializablePad()
-    {
-        return new SerializablePad()
-        {
-            id = this.id,
-            node = this.node.Id,
-            isAvailable = this.isAvailable,
-        };
-    }
+    //public SerializablePad ToSerializablePad()
+    //{
+    //    return new SerializablePad()
+    //    {
+    //        id = this.id,
+    //        node = this.node.Id,
+    //        isAvailable = this.isAvailable,
+    //    };
+    //}
 }

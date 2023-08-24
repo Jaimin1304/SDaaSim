@@ -14,7 +14,7 @@ public class SerializableSkyway
     public List<SerializableRequest> requests;
     public List<SerializableSwarm> swarms;
     public List<SerializableSubSwarm> subSwarms;
-    public List<SerializablePad> pads;
+    //public List<SerializablePad> pads;
     public List<SerializableDrone> drones;
     public List<SerializablePayload> payloads;
 }
@@ -24,9 +24,9 @@ public class SerializableNode
 {
     public string id;
     public Vector3 position;
-    public List<string> pads;
-    public List<string> drones;
+    public List<string> landedDrones;
     public List<string> edges;
+    public int capacity;
 }
 
 [Serializable]
@@ -38,13 +38,13 @@ public class SerializableEdge
     public float totalLength;
 }
 
-[Serializable]
-public class SerializablePad
-{
-    public string id;
-    public string node;
-    public bool isAvailable;
-}
+//[Serializable]
+//public class SerializablePad
+//{
+//    public string id;
+//    public string node;
+//    public bool isAvailable;
+//}
 
 [Serializable]
 public class SerializableRequest

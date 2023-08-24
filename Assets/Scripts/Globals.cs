@@ -12,6 +12,9 @@ public class Globals : MonoBehaviour
     public const string updateSwarmHeader = "updateSwarm";
     public const string updateSubSwarmHeader = "updateSubSwarm";
     public const string setSubswarmEdge = "set_subswarm_edge";
+    public const string subswarmLand = "subswarm_land";
+    public const string splitSubswarm = "split_subswarm";
+    public const string mergeTwoSubswarms = "merge_two_subswarms";
     public const float camMovSpeed = 120;
     public const float nodeTouchDistance = 1;
     public const float camRotateSpeed = 0.2f;

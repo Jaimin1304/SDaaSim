@@ -27,7 +27,8 @@ public class SubSwarm : MonoBehaviour
     public enum State
     {
         Standby,
-        Operating
+        Operating,
+        Landed
     }
 
     [SerializeField]
@@ -112,6 +113,10 @@ public class SubSwarm : MonoBehaviour
                 // move along path, once reach node, switch to standby
                 Tick(Node == Edge.LeftNode);
                 break;
+
+            case State.Landed:
+                // Land at a node and wait for command
+                break;
         }
         subSwarmView.Visual(this);
     }
@@ -178,6 +183,22 @@ public class SubSwarm : MonoBehaviour
         transform.position = node.transform.position;
         Edge = null;
         wayPointIndex = 0;
+    }
+
+    public bool ToLanded(Node node)
+    {
+        if (node.Capacity < node.LandedDrones.Count + drones.Count)
+        {
+            Debug.Log(string.Format("Can't land at node {0}, low capacity", node.name));
+            return false;
+        }
+        currentState = State.Landed;
+        Node = node;
+        transform.position = node.transform.position;
+        Edge = null;
+        wayPointIndex = 0;
+        node.LandedDrones.AddRange(drones);
+        return true;
     }
 
     public void AskForCommand()

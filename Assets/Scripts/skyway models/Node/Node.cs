@@ -9,10 +9,7 @@ public class Node : MonoBehaviour
     string id;
 
     [SerializeField]
-    List<Pad> pads;
-
-    [SerializeField]
-    List<Drone> drones;
+    List<Drone> landedDrones;
 
     [SerializeField]
     List<Edge> edges;
@@ -26,27 +23,30 @@ public class Node : MonoBehaviour
     [SerializeField]
     NodeView nodeView;
 
+    [SerializeField]
+    int capacity;
+
     public string Id
     {
         get { return id; }
     }
 
-    public List<Pad> Pads
+    public List<Drone> LandedDrones
     {
-        get { return pads; }
-        set { pads = value; }
-    }
-
-    public List<Drone> Drones
-    {
-        get { return drones; }
-        set { drones = value; }
+        get { return landedDrones; }
+        set { landedDrones = value; }
     }
 
     public List<Edge> Edges
     {
         get { return edges; }
         set { edges = value; }
+    }
+
+    public int Capacity
+    {
+        get { return capacity; }
+        set { capacity = value; }
     }
 
     void Awake()
@@ -72,9 +72,9 @@ public class Node : MonoBehaviour
         {
             id = id,
             position = transform.position,
-            pads = pads.Select(pad => pad.Id).ToList(),
-            drones = drones.Select(drone => drone.Id).ToList(),
+            landedDrones = landedDrones.Select(drone => drone.Id).ToList(),
             edges = edges.Select(edge => edge.Id).ToList(),
+            capacity = capacity
         };
     }
 }

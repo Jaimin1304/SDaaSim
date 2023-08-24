@@ -12,24 +12,23 @@ def execute_user_logic():
     return custom_algorithm.run(skyway)
 
 
-def process_request(msg):
-    request = json.loads(msg)
-    header = request['header']
-    body = request['body']
+def update_swarm(data):
+    print('update swarm')
 
-    match header:
-        case globals.init_skyway_header:
-            init_skyway(body)
-            custom_algorithm.init(skyway)
 
-        case globals.update_swarm_header:
-            update_swarm(body)
-
-        case globals.update_subswarm_header:
-            update_subswarm(body)
-
-        case _:
-            print(f'unknown header: {header}')
+def update_subswarm(data):
+    print('update subswarm')
+    print(data)
+    id = data.get('id')
+    newPos = data.get('position')
+    nodeId = data.get('node')
+    edgeId = data.get('edge')
+    # find target subswarm in skyway
+    subSwarm = skyway.subSwarms.get(id)
+    # update the subSwarm
+    subSwarm.position = newPos
+    subSwarm.node = skyway.nodes.get(nodeId)
+    subSwarm.edge = skyway.edges.get(edgeId)
 
 
 def init_skyway(data):
@@ -52,28 +51,28 @@ def init_skyway(data):
         for drone in data["drones"]
     }
 
-    pads: Dict[str, Pad] = {
-        pad["id"]: Pad(
-            pad["id"],
-            pad["node"],
-            pad["isAvailable"]
-        )
-        for pad in data["pads"]
-    }
+    #pads: Dict[str, Pad] = {
+    #    pad["id"]: Pad(
+    #        pad["id"],
+    #        pad["node"],
+    #        pad["isAvailable"]
+    #    )
+    #    for pad in data["pads"]
+    #}
 
     nodes: Dict[str, Node] = {
         node["id"]: Node(
             node["id"],
             node["position"],
-            {id: pads[id] for id in node["pads"]},
-            {id: drones[id] for id in node["drones"]},
+            #{id: pads[id] for id in node["pads"]},
+            {id: drones[id] for id in node["landedDrones"]},
             node["edges"]
         )
         for node in data["nodes"]
     }
 
-    for pad in pads.values():
-        pad.node = nodes[pad.node]
+    #for pad in pads.values():
+    #    pad.node = nodes[pad.node]
 
     edges: Dict[str, Edge] = {
         edge["id"]: Edge(
@@ -132,23 +131,26 @@ def init_skyway(data):
     skyway.log()
 
 
-def update_swarm(data):
-    print('update swarm')
+def process_request(msg):
+    request = json.loads(msg)
+    header = request['header']
+    body = request['body']
 
+    match header:
+        case globals.init_skyway_header:
+            init_skyway(body)
+            custom_algorithm.init(skyway)
 
-def update_subswarm(data):
-    print('update subswarm')
-    print(data)
-    id = data.get('id')
-    newPos = data.get('position')
-    nodeId = data.get('node')
-    edgeId = data.get('edge')
-    # find target subswarm in skyway
-    subSwarm = skyway.subSwarms.get(id)
-    # update the subSwarm
-    subSwarm.position = newPos
-    subSwarm.node = skyway.nodes.get(nodeId)
-    subSwarm.edge = skyway.edges.get(edgeId)
+        case globals.update_swarm_header:
+            update_swarm(body)
+
+        case globals.update_subswarm_header:
+            update_subswarm(body)
+
+        case _:
+            print(f'unknown header: {header}')
+
+    return
 
 
 def get_skyway():

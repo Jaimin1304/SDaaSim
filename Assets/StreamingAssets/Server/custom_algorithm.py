@@ -92,7 +92,9 @@ def run(skyway: Skyway):
     instructions = []
     print('run user logic')
 
-    # write your algorithm here
+    ###############################
+    #  write your algorithm here  #
+    ###############################
 
     for subSwarm in skyway.subSwarms.values():
         # find next edge to go
