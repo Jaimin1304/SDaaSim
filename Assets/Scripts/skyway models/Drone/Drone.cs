@@ -90,17 +90,18 @@ public class Drone : MonoBehaviour
             && subSwarm.CurrentState != SubSwarm.State.Landed
         )
         {
-            batteryStatus -= 0.01f * Time.deltaTime;
+            batteryStatus -= 0.01f * Time.deltaTime * Globals.PlaySpeed;
         }
     }
 
     public void Recharge(float amount)
     {
-        if (batteryStatus > 1)
+        if (batteryStatus >= 1)
         {
+            batteryStatus = 1;
             return;
         }
-        batteryStatus += amount * Time.deltaTime;
+        batteryStatus += amount * Time.deltaTime * Globals.PlaySpeed;
     }
 
     public SerializableDrone ToSerializableDrone()
