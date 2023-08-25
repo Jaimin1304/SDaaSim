@@ -104,6 +104,13 @@ public class Simulator : MonoBehaviour
         ProcessResponse(response);
     }
 
+    public void UpdateDrones()
+    {
+        string dronesJson = dataManager.DronesToJson(skyway);
+        string response = api.SendRequest(Globals.updateDronesHeader, dronesJson);
+        ProcessResponse(response);
+    }
+
     void ProcessResponse(string response)
     {
         Debug.Log("Response: " + response); // print the entire response
@@ -121,6 +128,11 @@ public class Simulator : MonoBehaviour
         foreach (var operation in operations)
         {
             string responseHeader = operation.Keys.First();
+            // pass if proceed
+            if (responseHeader == Globals.proceed)
+            {
+                return;
+            }
             Dictionary<string, string> responseBody = operation[responseHeader];
             Debug.Log("Operation: " + responseHeader);
             switch (responseHeader)

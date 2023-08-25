@@ -1,4 +1,4 @@
-from api import set_subswarm_edge
+import api
 from skyway_model import Skyway
 from typing import List, Dict, Tuple
 import random
@@ -97,6 +97,12 @@ def run(skyway: Skyway):
     ###############################
 
     for subSwarm in skyway.subSwarms.values():
+        # land and recharge if low power
+        for drone in subSwarm.drones.values():
+            if drone.batteryStatus < 0.4:
+                api.subswarm_land(subSwarm.id, subSwarm.node.id, instructions)
+                print("subswarm landed")
+                return instructions
         # find next edge to go
         next_node_id = None
         for i in range(len(computed_path)):
@@ -111,7 +117,7 @@ def run(skyway: Skyway):
                 next_edge_id = edge.id
         print(next_node_id)
         print(next_edge_id)
-        set_subswarm_edge(subSwarm.id, next_edge_id, instructions)
+        api.set_subswarm_edge(subSwarm.id, next_edge_id, instructions)
 
     # for subSwarm in skyway.subSwarms.values():
     #    # find next edge to go

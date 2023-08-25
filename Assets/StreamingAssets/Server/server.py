@@ -25,7 +25,9 @@ while True:
         clientsocket.send(bytes('Server terminated', 'utf-8'))
         break
 
-    api.process_request(msg)
-    response = json.dumps(api.execute_user_logic())
+    # api.process_request(msg)
+    # response = json.dumps(api.execute_user_logic())
+    response = json.dumps(api.process_request(msg))
+
     clientsocket.send(bytes(response, 'utf-8'))
     clientsocket.close()

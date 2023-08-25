@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.IO;
-using System.Text;
-using Newtonsoft.Json;
+using System.Linq;
 
 [Serializable]
 public class SerializableSkyway
@@ -14,6 +11,7 @@ public class SerializableSkyway
     public List<SerializableRequest> requests;
     public List<SerializableSwarm> swarms;
     public List<SerializableSubSwarm> subSwarms;
+
     //public List<SerializablePad> pads;
     public List<SerializableDrone> drones;
     public List<SerializablePayload> payloads;
@@ -114,5 +112,16 @@ public class JsonConverter : MonoBehaviour
         SerializableSubSwarm currSubSwarm = subSwarm.ToSerializableSubSwarm();
         string subSwarmJson = JsonUtility.ToJson(currSubSwarm);
         return subSwarmJson;
+    }
+
+    public string DronesToJson(Skyway skyway)
+    {
+        List<SerializableDrone> serializableDrones = skyway.Drones.Values
+            .Select(drone => drone.ToSerializableDrone())
+            .ToList();
+        Debug.Log(serializableDrones.Count);
+        string dronesJson = JsonUtility.ToJson(serializableDrones);
+        Debug.Log(dronesJson);
+        return dronesJson;
     }
 }

@@ -91,6 +91,9 @@ public class Drone : MonoBehaviour
         )
         {
             batteryStatus -= 0.01f * Time.deltaTime * Globals.PlaySpeed;
+            if (batteryStatus < 0) {
+                Debug.LogError(string.Format("{0} is out of battery!", this.name));
+            }
         }
     }
 

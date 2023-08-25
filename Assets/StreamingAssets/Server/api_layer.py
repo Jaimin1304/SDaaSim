@@ -31,6 +31,11 @@ def update_subswarm(data):
     subSwarm.edge = skyway.edges.get(edgeId)
 
 
+def update_drones(data):
+    print('update drones')
+    print(data)
+
+
 def init_skyway(data):
     global skyway
 
@@ -51,14 +56,14 @@ def init_skyway(data):
         for drone in data["drones"]
     }
 
-    #pads: Dict[str, Pad] = {
+    # pads: Dict[str, Pad] = {
     #    pad["id"]: Pad(
     #        pad["id"],
     #        pad["node"],
     #        pad["isAvailable"]
     #    )
     #    for pad in data["pads"]
-    #}
+    # }
 
     nodes: Dict[str, Node] = {
         node["id"]: Node(
@@ -71,7 +76,7 @@ def init_skyway(data):
         for node in data["nodes"]
     }
 
-    #for pad in pads.values():
+    # for pad in pads.values():
     #    pad.node = nodes[pad.node]
 
     edges: Dict[str, Edge] = {
@@ -147,10 +152,15 @@ def process_request(msg):
         case globals.update_subswarm_header:
             update_subswarm(body)
 
+        case globals.update_drones_header:
+            update_drones(body)
+            print(globals.proceed_header)
+            return [{globals.proceed_header: ""}]
+
         case _:
             print(f'unknown header: {header}')
 
-    return
+    return custom_algorithm.run(skyway)
 
 
 def get_skyway():

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
@@ -20,6 +21,11 @@ public class DataManager : MonoBehaviour
     public string SubSwarmToJson(SubSwarm subSwarm)
     {
         return jsonConverter.SubSwarmToJson(subSwarm);
+    }
+
+    public string DronesToJson(Skyway skyway)
+    {
+        return jsonConverter.DronesToJson(skyway);
     }
 
     public Skyway LoadSkywayFromJson(string skywayJson)

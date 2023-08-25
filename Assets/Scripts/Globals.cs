@@ -11,10 +11,12 @@ public class Globals : MonoBehaviour
     public const string initSkywayHeader = "initSkyway";
     public const string updateSwarmHeader = "updateSwarm";
     public const string updateSubSwarmHeader = "updateSubSwarm";
+    public const string updateDronesHeader = "updateDrones";
     public const string setSubswarmEdge = "set_subswarm_edge";
     public const string subswarmLand = "subswarm_land";
     public const string splitSubswarm = "split_subswarm";
     public const string mergeTwoSubswarms = "merge_two_subswarms";
+    public const string proceed = "proceed";
     public const float camMovSpeed = 120;
     public const float camRotateSpeed = 0.2f;
     public const float nodeTouchDistance = 1;
