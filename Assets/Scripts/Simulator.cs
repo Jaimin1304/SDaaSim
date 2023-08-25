@@ -104,9 +104,9 @@ public class Simulator : MonoBehaviour
         ProcessResponse(response);
     }
 
-    public void UpdateDrones()
+    public void UpdateDrones(SubSwarm subSwarm)
     {
-        string dronesJson = dataManager.DronesToJson(skyway);
+        string dronesJson = dataManager.DronesToJson(subSwarm);
         string response = api.SendRequest(Globals.updateDronesHeader, dronesJson);
         ProcessResponse(response);
     }

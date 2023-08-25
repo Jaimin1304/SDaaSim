@@ -23,9 +23,9 @@ public class DataManager : MonoBehaviour
         return jsonConverter.SubSwarmToJson(subSwarm);
     }
 
-    public string DronesToJson(Skyway skyway)
+    public string DronesToJson(SubSwarm subSwarm)
     {
-        return jsonConverter.DronesToJson(skyway);
+        return jsonConverter.DronesToJson(subSwarm);
     }
 
     public Skyway LoadSkywayFromJson(string skywayJson)

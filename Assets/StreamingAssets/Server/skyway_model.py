@@ -43,7 +43,7 @@ class Edge:
         print(self.totalLength)
 
 
-#class Pad:
+# class Pad:
 #    def __init__(self, id, node, isAvailable):
 #        self.id = id
 #        self.node = node
@@ -129,7 +129,7 @@ class Node:
         print('----node----')
         print(self.id)
         print(self.position)
-        #for i in self.pads.values():
+        # for i in self.pads.values():
         #    i.log()
         for i in self.landedDrones.values():
             i.log()
@@ -138,12 +138,14 @@ class Node:
 
 
 class Skyway:
-    def __init__(self, nodes: Dict[str, Node], edges: Dict[str, Edge], requests: Dict[str, Request], swarms: Dict[str, Swarm], subSwarms: Dict[str, SubSwarm]):
+    def __init__(self, nodes: Dict[str, Node], edges: Dict[str, Edge], requests: Dict[str, Request], swarms: Dict[str, Swarm], subSwarms: Dict[str, SubSwarm], drones: Dict[str, Drone], payloads: Dict[str, Payload]):
         self.nodes = nodes
         self.edges = edges
         self.requests = requests
         self.swarms = swarms
         self.subSwarms = subSwarms
+        self.drones = drones
+        self.payloads = payloads
 
     def log(self):
         print('--skyway--')
@@ -156,4 +158,8 @@ class Skyway:
         for i in self.swarms.values():
             i.log()
         for i in self.subSwarms.values():
+            i.log()
+        for i in self.drones.values():
+            i.log()
+        for i in self.payloads.values():
             i.log()

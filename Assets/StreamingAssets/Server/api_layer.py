@@ -5,7 +5,7 @@ from typing import Dict
 import globals
 
 
-skyway = Skyway(None, None, None, None, None)
+skyway = Skyway(None, None, None, None, None, None, None)
 
 
 def execute_user_logic():
@@ -33,14 +33,27 @@ def update_subswarm(data):
 
 def update_drones(data):
     print('update drones')
-    print(data)
+    print(data['drones'])
+    for droneData in data['drones']:
+        print(droneData)
+        droneId = droneData.get('id')
+        batteryStatus = droneData.get('batteryStatus')
+        # find drone subswarm in skyway
+        drone = skyway.drones.get(droneId)
+        drone.log()
+        # update battery status
+        drone.batteryStatus = batteryStatus
+        drone.log()
 
 
 def init_skyway(data):
     global skyway
 
     payloads: Dict[str, Payload] = {
-        payload["id"]: Payload(payload["id"], payload["weight"])
+        payload["id"]: Payload(
+            payload["id"],
+            payload["weight"]
+        )
         for payload in data["payloads"]
     }
 
@@ -130,7 +143,9 @@ def init_skyway(data):
         edges,
         requests,
         swarms,
-        subSwarms
+        subSwarms,
+        drones,
+        payloads
     )
 
     skyway.log()
@@ -154,7 +169,6 @@ def process_request(msg):
 
         case globals.update_drones_header:
             update_drones(body)
-            print(globals.proceed_header)
             return [{globals.proceed_header: ""}]
 
         case _:

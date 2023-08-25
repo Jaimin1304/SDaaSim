@@ -91,6 +91,17 @@ public class SerializableDrone
     public List<string> payloads;
 }
 
+[Serializable]
+public class SerializableDrones
+{
+    public List<SerializableDrone> drones;
+
+    public SerializableDrones(List<SerializableDrone> drones)
+    {
+        this.drones = drones;
+    }
+}
+
 public class JsonConverter : MonoBehaviour
 {
     public string RecordCurrentStateToJson(Skyway skyway)
@@ -114,13 +125,11 @@ public class JsonConverter : MonoBehaviour
         return subSwarmJson;
     }
 
-    public string DronesToJson(Skyway skyway)
+    public string DronesToJson(SubSwarm subSwarm)
     {
-        List<SerializableDrone> serializableDrones = skyway.Drones.Values
-            .Select(drone => drone.ToSerializableDrone())
-            .ToList();
-        Debug.Log(serializableDrones.Count);
-        string dronesJson = JsonUtility.ToJson(serializableDrones);
+        List<SerializableDrone> serializableDrones = subSwarm.Drones.Select(drone => drone.ToSerializableDrone()).ToList();
+        SerializableDrones drones = new(serializableDrones);
+        string dronesJson = JsonUtility.ToJson(drones);
         Debug.Log(dronesJson);
         return dronesJson;
     }

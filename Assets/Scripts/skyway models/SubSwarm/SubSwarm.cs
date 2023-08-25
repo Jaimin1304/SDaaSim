@@ -218,7 +218,7 @@ public class SubSwarm : MonoBehaviour
 
     public void AskForCommand()
     {
-        Simulator.instance.UpdateDrones();
+        Simulator.instance.UpdateDrones(this);
         Simulator.instance.UpdateSubSwarm(this);
     }
 
