@@ -19,6 +19,9 @@ public class Globals : MonoBehaviour
     public const string proceed = "proceed";
     public const float camMovSpeed = 120;
     public const float camRotateSpeed = 0.2f;
+    public const float camZoomSpeed = 200;
+    public const float camMaxZoomDistance = 200;
+    public const float camMinZoomDistance = 3;
     public const float nodeTouchDistance = 1;
     public const float droneGapView = 2f;
     public const float droneHeightOffset = 3f;
