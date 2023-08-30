@@ -48,20 +48,23 @@ public class CamController : MonoBehaviour
             return;
         }
         // Use WASD to move the camera around.
+        float speed = Globals.camMovSpeed;
+        if (Input.GetKey(KeyCode.LeftShift))
+            speed = Globals.camSprintSpeed;
         if (Input.GetKey(KeyCode.W))
-            transform.Translate(Vector3.forward * Globals.camMovSpeed * Time.deltaTime);
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
         if (Input.GetKey(KeyCode.S))
-            transform.Translate(Vector3.back * Globals.camMovSpeed * Time.deltaTime);
+            transform.Translate(Vector3.back * speed * Time.deltaTime);
         if (Input.GetKey(KeyCode.A))
-            transform.Translate(Vector3.left * Globals.camMovSpeed * Time.deltaTime);
+            transform.Translate(Vector3.left * speed * Time.deltaTime);
         if (Input.GetKey(KeyCode.D))
-            transform.Translate(Vector3.right * Globals.camMovSpeed * Time.deltaTime);
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
 
         // Use space and left control to move the camera up and down.
         if (Input.GetKey(KeyCode.LeftControl))
-            transform.Translate(Vector3.down * Globals.camMovSpeed * Time.deltaTime);
+            transform.Translate(Vector3.down * speed * Time.deltaTime);
         if (Input.GetKey(KeyCode.Space))
-            transform.Translate(Vector3.up * Globals.camMovSpeed * Time.deltaTime);
+            transform.Translate(Vector3.up * speed * Time.deltaTime);
 
         // Use the mouse to rotate the camera.
         if (Input.GetMouseButtonDown(1))
@@ -86,7 +89,19 @@ public class CamController : MonoBehaviour
 
     void FocusModeLogic()
     {
-        Debug.Log("focus mode");
+        // Check for key presses to switch back to free mode
+        if (
+            Input.GetKey(KeyCode.W)
+            || Input.GetKey(KeyCode.A)
+            || Input.GetKey(KeyCode.S)
+            || Input.GetKey(KeyCode.D)
+            || Input.GetKey(KeyCode.LeftControl)
+            || Input.GetKey(KeyCode.Space)
+        )
+        {
+            ToFreeMode();
+            return;
+        }
         // Assuming centerObject is the object you want to rotate around.
         Vector3 rotateAroundPoint = centerObject.transform.position;
 
@@ -143,5 +158,15 @@ public class CamController : MonoBehaviour
         }
 
         transform.LookAt(rotateAroundPoint);
+    }
+
+    void ToFreeMode()
+    {
+        currentState = State.Free;
+    }
+
+    void ToFocusMode()
+    {
+        currentState = State.Focus;
     }
 }
