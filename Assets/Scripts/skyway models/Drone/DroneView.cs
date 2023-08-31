@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DroneView : MonoBehaviour
+public class DroneView : MonoBehaviour, Highlightable
 {
+    [SerializeField]
+    Outline outline;
+
     [SerializeField]
     TextMeshPro nameTag;
 
@@ -17,6 +20,7 @@ public class DroneView : MonoBehaviour
     void Awake()
     {
         mainCamera = Camera.main;
+        outline = GetComponentInChildren<Outline>();
     }
 
     public void initVisual(Drone drone)
@@ -44,8 +48,18 @@ public class DroneView : MonoBehaviour
         // Let the name tag face the camera
         nameTag.transform.rotation = mainCamera.transform.rotation;
         // Scale text size based on distance
-        float scaleValue = distance * 0.03f;
+        float scaleValue = distance * Globals.textScaleValue;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
-        nameTag.text = string.Format("{0} {1}%", drone.name, drone.BatteryStatus*100);
+        nameTag.text = string.Format("{0} {1}%", drone.name, drone.BatteryStatus * 100);
+    }
+
+    public void Highlight()
+    {
+        outline.enabled = true;
+    }
+
+    public void Unhighlight()
+    {
+        outline.enabled = false;
     }
 }

@@ -78,7 +78,7 @@ public class EdgeView : MonoBehaviour
             mainCamera.transform.position
         );
         // Scale text size based on distance
-        float scaleValue = distance * 0.03f;
+        float scaleValue = distance * Globals.textScaleValue;
         lengthText.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
     }
 }

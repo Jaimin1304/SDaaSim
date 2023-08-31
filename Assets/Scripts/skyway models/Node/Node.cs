@@ -15,9 +15,6 @@ public class Node : MonoBehaviour
     List<Edge> edges;
 
     [SerializeField]
-    Outline outline;
-
-    [SerializeField]
     Utils utils;
 
     [SerializeField]
@@ -62,7 +59,6 @@ public class Node : MonoBehaviour
 
     void Update()
     {
-        utils.Outline(outline, this.gameObject);
         nodeView.UpdateVisual(this);
         if (Simulator.instance.CurrentState == Simulator.State.Play)
         {

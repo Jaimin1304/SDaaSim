@@ -30,7 +30,7 @@ public class SubSwarmView : MonoBehaviour
         // Let the name tag face the camera
         nameTag.transform.rotation = mainCamera.transform.rotation;
         // Scale text size based on distance
-        float scaleValue = distance * 0.03f;
+        float scaleValue = distance * Globals.textScaleValue;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
     }
 

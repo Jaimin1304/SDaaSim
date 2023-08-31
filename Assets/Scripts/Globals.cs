@@ -22,10 +22,14 @@ public class Globals : MonoBehaviour
     public const float camRotateSpeed = 0.2f;
     public const float camZoomSpeed = 200;
     public const float camMaxZoomDistance = 200;
+    public const float camMaxPitch = 80;
     public const float camMinZoomDistance = 3;
+    public const float camDefaultZoomDistance = 70;
     public const float nodeTouchDistance = 1;
     public const float droneGapView = 2f;
     public const float droneHeightOffset = 3f;
+    public const float textScaleValue = 0.015f;
+    public const float doubleClickGap = 0.25f;
     public const int playSpeedLimit = 32;
 
     static int playSpeed = 1;

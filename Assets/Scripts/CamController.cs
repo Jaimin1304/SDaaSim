@@ -19,9 +19,11 @@ public class CamController : MonoBehaviour
     [SerializeField]
     GameObject centerObject;
 
+    Vector3 focusModeOffset;
+
     void Start()
     {
-        currentState = State.Focus;
+        ToFocusMode(centerObject);
     }
 
     void Update()
@@ -32,7 +34,6 @@ public class CamController : MonoBehaviour
                 FreeModeLogic();
                 break;
             case State.Focus:
-                Debug.Log("Focus mode");
                 FocusModeLogic();
                 break;
             default:
@@ -89,6 +90,7 @@ public class CamController : MonoBehaviour
 
     void FocusModeLogic()
     {
+        transform.position = centerObject.transform.position + focusModeOffset;
         // Check for key presses to switch back to free mode
         if (
             Input.GetKey(KeyCode.W)
@@ -156,17 +158,30 @@ public class CamController : MonoBehaviour
                 distance - Globals.camMinZoomDistance
             );
         }
+        focusModeOffset = transform.position - centerObject.transform.position;
 
         transform.LookAt(rotateAroundPoint);
     }
 
-    void ToFreeMode()
+    public void ToFreeMode()
     {
         currentState = State.Free;
     }
 
-    void ToFocusMode()
+    public void ToFocusMode(GameObject focusObject)
     {
         currentState = State.Focus;
+        centerObject = focusObject;
+
+        // reset camera position
+        Vector3 rotateAroundPoint = focusObject.transform.position;
+        float distance = Vector3.Distance(transform.position, rotateAroundPoint);
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            rotateAroundPoint,
+            distance - Globals.camDefaultZoomDistance
+        );
+
+        focusModeOffset = transform.position - focusObject.transform.position;
     }
 }

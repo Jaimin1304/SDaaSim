@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1887037584120794179}
   - component: {fileID: 7288984174959562937}
   - component: {fileID: 1375592718180873916}
+  - component: {fileID: 4803645750830759226}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -83,6 +84,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4803645750830759226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6547689482047196147}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 0, b: 0, a: 1}
+  outlineWidth: 4
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &8430027768929803261
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,8 +113,8 @@ GameObject:
   - component: {fileID: 1470704209888209579}
   - component: {fileID: 1125438576788691061}
   - component: {fileID: 460858313497153811}
-  - component: {fileID: 845629464158843084}
-  m_Layer: 0
+  - component: {fileID: 9131785002773228412}
+  m_Layer: 3
   m_Name: WayPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +148,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.7
+  m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &460858313497153811
 MonoBehaviour:
@@ -143,9 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f4d56d4a56ba84479de36db8399987a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 845629464158843084}
-  utils: {fileID: 8006760440081949815, guid: b3a41e0fb5837924080f57f86b3c20c1, type: 3}
---- !u!114 &845629464158843084
+--- !u!114 &9131785002773228412
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,12 +171,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8430027768929803261}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Script: {fileID: 11500000, guid: aa366a6616f3ed149811ce82beb21d20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 1, g: 0, b: 0, a: 1}
-  outlineWidth: 8
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
+  outline: {fileID: 0}
