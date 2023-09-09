@@ -23,7 +23,7 @@ public class CamController : MonoBehaviour
 
     void Start()
     {
-        ToFocusMode(centerObject);
+        ToFreeMode();
     }
 
     void Update()
@@ -44,7 +44,7 @@ public class CamController : MonoBehaviour
 
     void FreeModeLogic()
     {
-        if (Simulator.instance.CurrentState == Simulator.State.Freeze)
+        if (Simulator.instance != null && Simulator.instance.CurrentState == Simulator.State.Freeze)
         {
             return;
         }

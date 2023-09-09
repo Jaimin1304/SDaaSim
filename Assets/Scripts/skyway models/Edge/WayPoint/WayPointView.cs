@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WayPointView : MonoBehaviour, Highlightable
+public class WayPointView : MonoBehaviour, IHighlightable
 {
     [SerializeField]
     Outline outline;

@@ -7,7 +7,7 @@ public class RaycastHandler : MonoBehaviour
     [SerializeField]
     LayerMask layersToHit;
 
-    Highlightable lastHitObject; // Keep track of the last object you hit
+    IHighlightable lastHitObject; // Keep track of the last object you hit
 
     float lastClickTime = 0f; // Time of the last click
 
@@ -16,7 +16,7 @@ public class RaycastHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, layersToHit))
         {
-            Highlightable hitObject = hit.transform.GetComponent<Highlightable>();
+            IHighlightable hitObject = hit.transform.GetComponent<IHighlightable>();
             if (hitObject != null)
             {
                 hitObject.Highlight();

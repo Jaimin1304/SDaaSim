@@ -59,25 +59,26 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void SaveSkyway()
+    public void SaveSkyway()
     {
         Debug.Log("SaveSkyway");
         Simulator.instance.SaveSkyway();
         ShowPopUp("Current skyway is saved to 'StreamingAssets/saved skyways'.");
     }
 
-    void LoadSkyway()
+    public void LoadSkyway()
     {
         Debug.Log("LoadSkyway");
     }
 
-    void Reset()
+    public void Reset()
     {
         Debug.Log("reset");
     }
 
-    void TogglePlayPause()
+    public void TogglePlayPause()
     {
+        Debug.Log("TogglePlayPause");
         if (Simulator.instance.CurrentState == Simulator.State.Play)
         {
             Simulator.instance.CurrentState = Simulator.State.Pause;
@@ -89,7 +90,7 @@ public class UIController : MonoBehaviour
         UpdateUI();
     }
 
-    void SpeedUp()
+    public void SpeedUp()
     {
         if (Globals.PlaySpeed < Globals.playSpeedLimit)
         {
@@ -98,7 +99,7 @@ public class UIController : MonoBehaviour
         PlaySpeedText.text = string.Format("x{0}", Globals.PlaySpeed);
     }
 
-    void SlowDown()
+    public void SlowDown()
     {
         if (Globals.PlaySpeed > 1)
         {

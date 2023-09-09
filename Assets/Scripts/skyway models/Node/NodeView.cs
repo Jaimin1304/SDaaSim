@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class NodeView : MonoBehaviour, Highlightable
+public class NodeView : MonoBehaviour, IHighlightable
 {
     [SerializeField]
     Outline outline;

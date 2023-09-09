@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Stylesheet.uss?fileID=7433441132597879392&amp;guid=652b4bd2ebaa83b498a38b566449b61b&amp;type=3#Stylesheet" />
+    <ui:VisualElement name="contentWrap">
+        <ui:VisualElement name="topBar" class="container">
+            <ui:Button text="Start" display-tooltip-when-elided="true" name="start" enable-rich-text="true" class="button" />
+            <ui:Button text="Load" display-tooltip-when-elided="true" name="load" class="button" />
+            <ui:Button text="Save" display-tooltip-when-elided="true" name="save" class="button" />
+            <ui:Button text="Settings" display-tooltip-when-elided="true" name="settings" class="button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

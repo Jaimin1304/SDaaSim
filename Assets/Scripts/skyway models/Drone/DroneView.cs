@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DroneView : MonoBehaviour, Highlightable
+public class DroneView : MonoBehaviour, IHighlightable
 {
     [SerializeField]
     Outline outline;

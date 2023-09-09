@@ -66,6 +66,7 @@ public class Simulator : MonoBehaviour
     void Start()
     {
         currentState = State.Edit;
+        //skyway = FindObjectOfType<Skyway>();
         skyway.InitSkyway();
         InitSimulation();
     }
