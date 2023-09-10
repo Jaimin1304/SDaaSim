@@ -53,7 +53,7 @@ MonoBehaviour:
   edges: []
   utils: {fileID: 8006760440081949815, guid: b3a41e0fb5837924080f57f86b3c20c1, type: 3}
   nodeView: {fileID: 3922244908923170588}
-  capacity: 0
+  capacity: 5
 --- !u!65 &40989279504155355
 BoxCollider:
   m_ObjectHideFlags: 0

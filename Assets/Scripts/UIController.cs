@@ -18,16 +18,16 @@ public class UIController : MonoBehaviour
     Button playPauseButton;
 
     [SerializeField]
-    Button SpeedUpButton;
+    Button speedUpButton;
 
     [SerializeField]
-    Button SlowDownButton;
+    Button slowDownButton;
 
     [SerializeField]
     TextMeshProUGUI timerText;
 
     [SerializeField]
-    TextMeshProUGUI PlaySpeedText;
+    TextMeshProUGUI playSpeedText;
 
     [SerializeField]
     Button popUpConfirmButton;
@@ -40,15 +40,27 @@ public class UIController : MonoBehaviour
 
     Simulator.State stateInMemory = Simulator.State.Pause;
 
+    [SerializeField]
+    Button nodeBtn;
+
+    [SerializeField]
+    Button wayPointBtn;
+
     void Start()
     {
+        // top bar
         saveSkywayButton.onClick.AddListener(SaveSkyway);
         loadSkywayButton.onClick.AddListener(LoadSkyway);
         resetButton.onClick.AddListener(Reset);
         playPauseButton.onClick.AddListener(TogglePlayPause);
-        SpeedUpButton.onClick.AddListener(SpeedUp);
-        SlowDownButton.onClick.AddListener(SlowDown);
+        speedUpButton.onClick.AddListener(SpeedUp);
+        slowDownButton.onClick.AddListener(SlowDown);
+        // pop up panel
         popUpConfirmButton.onClick.AddListener(PopUpConfirm);
+        // left bar
+        nodeBtn.onClick.AddListener(AddNode);
+        wayPointBtn.onClick.AddListener(AddWayPoint);
+        // right bar
     }
 
     void Update()
@@ -96,7 +108,7 @@ public class UIController : MonoBehaviour
         {
             Globals.PlaySpeed *= 2;
         }
-        PlaySpeedText.text = string.Format("x{0}", Globals.PlaySpeed);
+        playSpeedText.text = string.Format("x{0}", Globals.PlaySpeed);
     }
 
     public void SlowDown()
@@ -105,7 +117,7 @@ public class UIController : MonoBehaviour
         {
             Globals.PlaySpeed /= 2;
         }
-        PlaySpeedText.text = string.Format("x{0}", Globals.PlaySpeed);
+        playSpeedText.text = string.Format("x{0}", Globals.PlaySpeed);
     }
 
     void UpdateUI()
@@ -142,5 +154,21 @@ public class UIController : MonoBehaviour
     {
         popUpPanel.SetActive(false);
         Simulator.instance.CurrentState = stateInMemory;
+    }
+
+    void AddNode()
+    {
+        Debug.Log("add node");
+        Simulator.instance.CreateNode();
+    }
+
+    void AddWayPoint()
+    {
+        Debug.Log("add waypoint");
+    }
+
+    public void DisplayDetails(GameObject gameObject)
+    {
+        Debug.Log("DisplayDetails for " + gameObject.name);
     }
 }

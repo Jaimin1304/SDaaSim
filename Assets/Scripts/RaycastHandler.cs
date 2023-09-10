@@ -7,9 +7,14 @@ public class RaycastHandler : MonoBehaviour
     [SerializeField]
     LayerMask layersToHit;
 
-    IHighlightable lastHitObject; // Keep track of the last object you hit
+    IHighlightable lastHitObject; // Keep track of the last object hit
 
     float lastClickTime = 0f; // Time of the last click
+
+    [SerializeField]
+    UIController uiController;
+
+    IHighlightable selectedObject;
 
     void Update()
     {
@@ -20,18 +25,34 @@ public class RaycastHandler : MonoBehaviour
             if (hitObject != null)
             {
                 hitObject.Highlight();
-                if (lastHitObject != null && lastHitObject != hitObject)
+                if (
+                    lastHitObject != null
+                    && lastHitObject != hitObject
+                    && lastHitObject != selectedObject
+                )
                 {
                     lastHitObject.Unhighlight();
                 }
                 lastHitObject = hitObject;
             }
-            // Check for double click
             if (Input.GetMouseButtonDown(0))
             {
+                // Check for single click
+                if (hit.transform != null)
+                {
+                    uiController.DisplayDetails(hit.transform.gameObject);
+                    // Set the selected object and highlight it
+                    if (selectedObject != null)
+                    {
+                        selectedObject.Unhighlight();
+                    }
+                    selectedObject = hitObject;
+                    Debug.Log(selectedObject);
+                    selectedObject.Highlight();
+                }
+                // Check for double click
                 if (Time.time - lastClickTime < Globals.doubleClickGap)
                 {
-                    // Double click detected
                     EnterFocusMode(hit.transform.gameObject);
                 }
                 lastClickTime = Time.time;
@@ -41,7 +62,10 @@ public class RaycastHandler : MonoBehaviour
         {
             if (lastHitObject != null)
             {
-                lastHitObject.Unhighlight();
+                if (lastHitObject != selectedObject)
+                {
+                    lastHitObject.Unhighlight();
+                }
                 lastHitObject = null;
             }
         }

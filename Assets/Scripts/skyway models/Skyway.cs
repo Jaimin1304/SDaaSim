@@ -21,6 +21,7 @@ public class Skyway : MonoBehaviour
     Dictionary<string, Edge> edgeDict = new();
     Dictionary<string, Node> nodeDict = new();
     Dictionary<string, SubSwarm> subSwarms = new();
+
     //Dictionary<string, Pad> pads = new();
     Dictionary<string, Drone> drones = new();
     Dictionary<string, Payload> payloads = new();
@@ -129,6 +130,20 @@ public class Skyway : MonoBehaviour
                 payloads.Add(payload.Id, payload);
             }
         }
+    }
+
+    public bool AddNode(Node node)
+    {
+        nodes.Add(node);
+        nodeDict.Add(node.Id, node);
+        return true;
+    }
+
+    public bool AddEdge(Edge edge)
+    {
+        edges.Add(edge);
+        edgeDict.Add(edge.Id, edge);
+        return true;
     }
 
     public SerializableSkyway ToSerializableSkyway()

@@ -30,6 +30,7 @@ public class Globals : MonoBehaviour
     public const float droneHeightOffset = 3f;
     public const float textScaleValue = 0.015f;
     public const float doubleClickGap = 0.25f;
+    public const float objectCreationDistance = 15f;
     public const int playSpeedLimit = 32;
 
     static int playSpeed = 1;

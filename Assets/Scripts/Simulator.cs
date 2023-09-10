@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 
 public class Simulator : MonoBehaviour
 {
@@ -25,6 +26,12 @@ public class Simulator : MonoBehaviour
 
     [SerializeField]
     ClientSocket cs;
+
+    [SerializeField]
+    Node nodePrefab;
+
+    [SerializeField]
+    WayPoint wayPointPrefab;
 
     float elapsedTime = 0f;
 
@@ -240,6 +247,34 @@ public class Simulator : MonoBehaviour
             }
         }
     }
+
+    Vector3 CamFrontPosition()
+    {
+        Vector3 cameraPosition = Camera.main.transform.position;
+        Vector3 cameraForward = Camera.main.transform.forward;
+        // Calculate the position in the front of the camera
+        return cameraPosition + cameraForward * Globals.objectCreationDistance;
+    }
+
+    public void CreateNode()
+    {
+        Debug.Log("CreateNode");
+        Vector3 creationPosition = CamFrontPosition();
+        // Instantiate the node at the calculated position
+        Node newNode = Instantiate(nodePrefab, creationPosition, Quaternion.identity);
+        newNode.gameObject.name = String.Format("Node ({0})", skyway.Nodes.Count.ToString());
+        skyway.AddNode(newNode);
+    }
+
+    //public void CreateWayPoint()
+    //{
+    //    Debug.Log("CreateWayPoint");
+    //    Vector3 creationPosition = CamFrontPosition();
+    //    // Instantiate the wayPoint at the calculated position
+    //    WayPoint newWayPoint = Instantiate(wayPointPrefab, creationPosition, Quaternion.identity);
+    //    newWayPoint.gameObject.name = String.Format("Node ({0})", skyway.Nodes.Count.ToString());
+    //    //skyway.Nodes.Add(newWayPoint);
+    //}
 
     public void SaveSkyway()
     {
