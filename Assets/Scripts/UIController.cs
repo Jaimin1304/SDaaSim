@@ -95,6 +95,11 @@ public class UIController : MonoBehaviour
         {
             Simulator.instance.CurrentState = Simulator.State.Pause;
         }
+        else if (Simulator.instance.CurrentState == Simulator.State.Edit)
+        {
+            //Simulator.instance.InitSimulation();
+            Simulator.instance.CurrentState = Simulator.State.Play;
+        }
         else
         {
             Simulator.instance.CurrentState = Simulator.State.Play;

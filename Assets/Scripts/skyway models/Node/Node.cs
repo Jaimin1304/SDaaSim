@@ -66,6 +66,11 @@ public class Node : MonoBehaviour
         }
     }
 
+    public bool HasEdgeTo(Node otherNode)
+    {
+        return edges.Any(edge => edge.LeftNode == otherNode || edge.RightNode == otherNode);
+    }
+
     void RechargeDrones()
     {
         if (landedDrones.Count <= 0)

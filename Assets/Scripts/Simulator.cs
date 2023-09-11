@@ -31,6 +31,9 @@ public class Simulator : MonoBehaviour
     Node nodePrefab;
 
     [SerializeField]
+    Edge edgePrefab;
+
+    [SerializeField]
     WayPoint wayPointPrefab;
 
     float elapsedTime = 0f;
@@ -90,7 +93,7 @@ public class Simulator : MonoBehaviour
         }
     }
 
-    void InitSimulation()
+    public void InitSimulation()
     {
         // sent entire skyway to server
         string skywayJson = dataManager.RecordCurrentStateToJson(skyway);
@@ -264,6 +267,20 @@ public class Simulator : MonoBehaviour
         Node newNode = Instantiate(nodePrefab, creationPosition, Quaternion.identity);
         newNode.gameObject.name = String.Format("Node ({0})", skyway.Nodes.Count.ToString());
         skyway.AddNode(newNode);
+    }
+
+    public void CreateEdge(Node a, Node b)
+    {
+        if (Utils.HasEdgeBetween(a, b))
+        {
+            return;
+        }
+        Debug.Log("CreateEdge");
+        Edge newEdge = Instantiate(edgePrefab, Vector3.zero, Quaternion.identity);
+        newEdge.gameObject.name = String.Format("Edge ({0})", skyway.Edges.Count.ToString());
+        newEdge.LeftNode = a;
+        newEdge.RightNode = b;
+        skyway.AddEdge(newEdge);
     }
 
     //public void CreateWayPoint()

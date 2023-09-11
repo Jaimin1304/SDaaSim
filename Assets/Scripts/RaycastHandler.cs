@@ -6,15 +6,13 @@ public class RaycastHandler : MonoBehaviour
 {
     [SerializeField]
     LayerMask layersToHit;
-
     IHighlightable lastHitObject; // Keep track of the last object hit
-
     float lastClickTime = 0f; // Time of the last click
+    IHighlightable selectedObject;
+    IHighlightable draggingNode;
 
     [SerializeField]
     UIController uiController;
-
-    IHighlightable selectedObject;
 
     void Update()
     {
@@ -22,6 +20,7 @@ public class RaycastHandler : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, layersToHit))
         {
             IHighlightable hitObject = hit.transform.GetComponent<IHighlightable>();
+
             if (hitObject != null)
             {
                 hitObject.Highlight();
@@ -35,6 +34,7 @@ public class RaycastHandler : MonoBehaviour
                 }
                 lastHitObject = hitObject;
             }
+
             if (Input.GetMouseButtonDown(0))
             {
                 // Check for single click
@@ -45,6 +45,7 @@ public class RaycastHandler : MonoBehaviour
                     if (selectedObject != null)
                     {
                         selectedObject.Unhighlight();
+                        draggingNode = hitObject;
                     }
                     selectedObject = hitObject;
                     Debug.Log(selectedObject);
@@ -57,6 +58,21 @@ public class RaycastHandler : MonoBehaviour
                 }
                 lastClickTime = Time.time;
             }
+
+            // Handle the drop action
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (draggingNode != null && hitObject != null && hitObject != draggingNode)
+                {
+                    Node selectedNode = ((MonoBehaviour)draggingNode).GetComponent<Node>();
+                    Node hitNode = ((MonoBehaviour)hitObject).GetComponent<Node>();
+                    if (selectedNode != null && hitNode != null)
+                    {
+                        Simulator.instance.CreateEdge(selectedNode, hitNode);
+                    }
+                }
+                draggingNode = null;
+            }
         }
         else
         {
@@ -67,6 +83,14 @@ public class RaycastHandler : MonoBehaviour
                     lastHitObject.Unhighlight();
                 }
                 lastHitObject = null;
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log("cancel selection");
+                if (selectedObject != null)
+                {
+                    selectedObject.Unhighlight();
+                }
             }
         }
     }
