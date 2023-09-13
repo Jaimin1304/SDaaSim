@@ -36,6 +36,9 @@ public class Simulator : MonoBehaviour
     [SerializeField]
     WayPoint wayPointPrefab;
 
+    [SerializeField]
+    RaycastHandler raycastHandler;
+
     float elapsedTime = 0f;
 
     public enum State
@@ -78,7 +81,7 @@ public class Simulator : MonoBehaviour
         currentState = State.Edit;
         //skyway = FindObjectOfType<Skyway>();
         skyway.InitSkyway();
-        InitSimulation();
+        //InitSimulation();
     }
 
     void Update()
@@ -251,6 +254,25 @@ public class Simulator : MonoBehaviour
         }
     }
 
+    public void Play()
+    {
+        if (currentState == State.Edit)
+        {
+            InitSimulation();
+        }
+        currentState = State.Play;
+    }
+
+    public void Pause()
+    {
+        currentState = State.Pause;
+    }
+
+    public void Freeze()
+    {
+        currentState = State.Freeze;
+    }
+
     Vector3 CamFrontPosition()
     {
         Vector3 cameraPosition = Camera.main.transform.position;
@@ -280,7 +302,23 @@ public class Simulator : MonoBehaviour
         newEdge.gameObject.name = String.Format("Edge ({0})", skyway.Edges.Count.ToString());
         newEdge.LeftNode = a;
         newEdge.RightNode = b;
+        a.Edges.Add(newEdge);
+        b.Edges.Add(newEdge);
         skyway.AddEdge(newEdge);
+    }
+
+    public void DeleteNode(Node node)
+    {
+        Debug.Log("DeleteNode");
+        raycastHandler.SelectedObject = null;
+        skyway.RemoveNode(node);
+    }
+
+    public void DeleteEdge(Edge edge)
+    {
+        Debug.Log("DeleteEdge");
+        raycastHandler.SelectedObject = null;
+        skyway.RemoveEdge(edge);
     }
 
     //public void CreateWayPoint()

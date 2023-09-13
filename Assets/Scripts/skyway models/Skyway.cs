@@ -146,6 +146,50 @@ public class Skyway : MonoBehaviour
         return true;
     }
 
+    public bool RemoveNode(Node node)
+    {
+        // Remove the node from the nodes list
+        if (!nodes.Remove(node))
+        {
+            Debug.LogWarning("Node not found in the nodes list");
+            return false;
+        }
+        // Remove the node from the nodeDict dictionary
+        if (!nodeDict.Remove(node.Id))
+        {
+            Debug.LogWarning("Node not found in the nodeDict dictionary");
+            return false;
+        }
+        // Remove any edges connected to this node
+        for (int i = node.Edges.Count - 1; i >= 0; i--)
+        {
+            RemoveEdge(node.Edges[i]);
+        }
+        Destroy(node.gameObject);
+        return true;
+    }
+
+    public bool RemoveEdge(Edge edge)
+    {
+        // Remove the edge from the edges list
+        if (!edges.Remove(edge))
+        {
+            Debug.LogWarning("Edge not found in the edges list");
+            return false;
+        }
+        // Remove the edge from the edgeDict dictionary
+        if (!edgeDict.Remove(edge.Id))
+        {
+            Debug.LogWarning("Edge not found in the edgeDict dictionary");
+            return false;
+        }
+        // Remove this edge from the nodes it is connected to
+        edge.LeftNode.Edges.Remove(edge);
+        edge.RightNode.Edges.Remove(edge);
+        Destroy(edge.gameObject);
+        return true;
+    }
+
     public SerializableSkyway ToSerializableSkyway()
     {
         return new SerializableSkyway()

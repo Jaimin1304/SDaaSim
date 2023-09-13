@@ -43,8 +43,13 @@ public class UIController : MonoBehaviour
     [SerializeField]
     Button nodeBtn;
 
-    [SerializeField]
-    Button wayPointBtn;
+    GameObject selectedComponent;
+
+    public GameObject SelectedComponent
+    {
+        get { return selectedComponent; }
+        set { selectedComponent = value; }
+    }
 
     void Start()
     {
@@ -59,7 +64,6 @@ public class UIController : MonoBehaviour
         popUpConfirmButton.onClick.AddListener(PopUpConfirm);
         // left bar
         nodeBtn.onClick.AddListener(AddNode);
-        wayPointBtn.onClick.AddListener(AddWayPoint);
         // right bar
     }
 
@@ -68,6 +72,34 @@ public class UIController : MonoBehaviour
         if (Simulator.instance.CurrentState == Simulator.State.Play)
         {
             UpdateTimer();
+        }
+        // delete operation
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            DeleteSelectedComponent();
+        }
+    }
+
+    public void DeleteSelectedComponent()
+    {
+        if (selectedComponent == null)
+        {
+            return;
+        }
+        Node nodeComponent = selectedComponent.GetComponent<Node>();
+        Edge edgeComponent = selectedComponent.GetComponent<Edge>();
+        selectedComponent = null;
+        if (nodeComponent != null)
+        {
+            Simulator.instance.DeleteNode(nodeComponent);
+        }
+        else if (edgeComponent != null)
+        {
+            Simulator.instance.DeleteEdge(edgeComponent);
+        }
+        else
+        {
+            Debug.Log("Selected object is neither a Node nor an Edge");
         }
     }
 
@@ -93,18 +125,13 @@ public class UIController : MonoBehaviour
         Debug.Log("TogglePlayPause");
         if (Simulator.instance.CurrentState == Simulator.State.Play)
         {
-            Simulator.instance.CurrentState = Simulator.State.Pause;
-        }
-        else if (Simulator.instance.CurrentState == Simulator.State.Edit)
-        {
-            //Simulator.instance.InitSimulation();
-            Simulator.instance.CurrentState = Simulator.State.Play;
+            Simulator.instance.Pause();
         }
         else
         {
-            Simulator.instance.CurrentState = Simulator.State.Play;
+            Simulator.instance.Play();
         }
-        UpdateUI();
+        UpdatePlayPauseUI();
     }
 
     public void SpeedUp()
@@ -125,7 +152,7 @@ public class UIController : MonoBehaviour
         playSpeedText.text = string.Format("x{0}", Globals.PlaySpeed);
     }
 
-    void UpdateUI()
+    void UpdatePlayPauseUI()
     {
         playPauseButton.GetComponentInChildren<TextMeshProUGUI>().text =
             Simulator.instance.CurrentState == Simulator.State.Play ? "Pause" : "Play";

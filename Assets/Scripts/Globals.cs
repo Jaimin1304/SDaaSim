@@ -17,7 +17,7 @@ public class Globals : MonoBehaviour
     public const string splitSubswarm = "split_subswarm";
     public const string mergeTwoSubswarms = "merge_two_subswarms";
     public const string proceed = "proceed";
-    public const float camMovSpeed = 80;
+    public const float camMovSpeed = 100;
     public const float camSprintSpeed = 300;
     public const float camRotateSpeed = 0.2f;
     public const float camZoomSpeed = 200;

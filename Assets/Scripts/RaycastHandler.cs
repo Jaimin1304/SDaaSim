@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,12 @@ public class RaycastHandler : MonoBehaviour
 
     [SerializeField]
     UIController uiController;
+
+    public IHighlightable SelectedObject
+    {
+        get { return selectedObject; }
+        set { selectedObject = value; }
+    }
 
     void Update()
     {
@@ -42,14 +49,8 @@ public class RaycastHandler : MonoBehaviour
                 {
                     uiController.DisplayDetails(hit.transform.gameObject);
                     // Set the selected object and highlight it
-                    if (selectedObject != null)
-                    {
-                        selectedObject.Unhighlight();
-                        draggingNode = hitObject;
-                    }
-                    selectedObject = hitObject;
-                    Debug.Log(selectedObject);
-                    selectedObject.Highlight();
+                    draggingNode = hitObject;
+                    Select(hitObject);
                 }
                 // Check for double click
                 if (Time.time - lastClickTime < Globals.doubleClickGap)
@@ -79,28 +80,35 @@ public class RaycastHandler : MonoBehaviour
             if (lastHitObject != null)
             {
                 if (lastHitObject != selectedObject)
-                {
                     lastHitObject.Unhighlight();
-                }
                 lastHitObject = null;
             }
+            // handle cancel selection
             if (Input.GetMouseButtonDown(0))
-            {
-                Debug.Log("cancel selection");
-                if (selectedObject != null)
-                {
-                    selectedObject.Unhighlight();
-                }
-            }
+                UnSelect();
         }
+    }
+
+    void Select(IHighlightable obj)
+    {
+        Debug.Log(String.Format("select {0}", obj));
+        selectedObject?.Unhighlight();
+        selectedObject = obj;
+        obj.Highlight();
+        uiController.SelectedComponent = ((MonoBehaviour)obj).gameObject;
+    }
+
+    void UnSelect()
+    {
+        Debug.Log("cancel selection");
+        selectedObject?.Unhighlight();
+        selectedObject = null;
+        uiController.SelectedComponent = null;
     }
 
     void EnterFocusMode(GameObject centerObject)
     {
         CamController camController = Camera.main.GetComponent<CamController>();
-        if (camController != null)
-        {
-            camController.ToFocusMode(centerObject);
-        }
+        camController?.ToFocusMode(centerObject);
     }
 }
