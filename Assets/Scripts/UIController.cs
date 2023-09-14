@@ -5,6 +5,8 @@ using TMPro;
 
 public class UIController : MonoBehaviour
 {
+    public static UIController instance;
+
     [SerializeField]
     Button saveSkywayButton;
 
@@ -73,7 +75,6 @@ public class UIController : MonoBehaviour
         {
             UpdateTimer();
         }
-        // delete operation
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             DeleteSelectedComponent();

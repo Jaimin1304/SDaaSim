@@ -6,11 +6,29 @@ using UnityEngine;
 public class RaycastHandler : MonoBehaviour
 {
     [SerializeField]
-    LayerMask layersToHit;
+    GameObject arrow3D;
+
+    [SerializeField]
+    Material arrowHovered;
+
+    [SerializeField]
+    Material arrowDefault;
+
+    [SerializeField]
+    LayerMask arrow3DLayer;
+    GameObject lastHitArrow;
+    Vector3 initialMousePos;
+    Vector3 initialObjectPos;
+    string selectedAxis;
+    bool isInteractingWithArrow = false;
+
+    [SerializeField]
+    LayerMask skywayObjectLayer;
+
     IHighlightable lastHitObject; // Keep track of the last object hit
     float lastClickTime = 0f; // Time of the last click
     IHighlightable selectedObject;
-    IHighlightable draggingNode;
+    IHighlightable draggingObject;
 
     [SerializeField]
     UIController uiController;
@@ -24,10 +42,15 @@ public class RaycastHandler : MonoBehaviour
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, layersToHit))
+        HandleSkywayObjectHit(ray);
+        Handle3DArrowHit(ray);
+    }
+
+    void HandleSkywayObjectHit(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, skywayObjectLayer))
         {
             IHighlightable hitObject = hit.transform.GetComponent<IHighlightable>();
-
             if (hitObject != null)
             {
                 hitObject.Highlight();
@@ -41,16 +64,13 @@ public class RaycastHandler : MonoBehaviour
                 }
                 lastHitObject = hitObject;
             }
-
             if (Input.GetMouseButtonDown(0))
             {
                 // Check for single click
                 if (hit.transform != null)
                 {
-                    uiController.DisplayDetails(hit.transform.gameObject);
                     // Set the selected object and highlight it
-                    draggingNode = hitObject;
-                    Select(hitObject);
+                    draggingObject = hitObject;
                 }
                 // Check for double click
                 if (Time.time - lastClickTime < Globals.doubleClickGap)
@@ -59,20 +79,25 @@ public class RaycastHandler : MonoBehaviour
                 }
                 lastClickTime = Time.time;
             }
-
-            // Handle the drop action
             if (Input.GetMouseButtonUp(0))
             {
-                if (draggingNode != null && hitObject != null && hitObject != draggingNode)
+                // Handle the drop action
+                if (draggingObject != null && hitObject != null && hitObject != draggingObject)
                 {
-                    Node selectedNode = ((MonoBehaviour)draggingNode).GetComponent<Node>();
+                    Node selectedNode = ((MonoBehaviour)draggingObject).GetComponent<Node>();
                     Node hitNode = ((MonoBehaviour)hitObject).GetComponent<Node>();
                     if (selectedNode != null && hitNode != null)
                     {
                         Simulator.instance.CreateEdge(selectedNode, hitNode);
                     }
                 }
-                draggingNode = null;
+                // handle select and 3D arrow action
+                if (hitObject == draggingObject)
+                {
+                    Select(hitObject);
+                    Show3DArrow(hit.transform.gameObject.transform.position);
+                }
+                draggingObject = null;
             }
         }
         else
@@ -84,8 +109,83 @@ public class RaycastHandler : MonoBehaviour
                 lastHitObject = null;
             }
             // handle cancel selection
+            if (Input.GetMouseButtonDown(0) && !isInteractingWithArrow)
+            {
+                DeSelect();
+            }
+        }
+    }
+
+    void Show3DArrow(Vector3 position)
+    {
+        arrow3D.transform.position = position;
+        arrow3D.SetActive(true);
+    }
+
+    void Hide3DArrow()
+    {
+        arrow3D.SetActive(false);
+    }
+
+    void Handle3DArrowHit(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, arrow3DLayer))
+        {
+            isInteractingWithArrow = true;
+            GameObject arrow = hit.transform.gameObject;
+            Renderer renderer = arrow.GetComponent<Renderer>();
+            renderer.material = arrowHovered;
+            lastHitArrow = arrow;
+
             if (Input.GetMouseButtonDown(0))
-                UnSelect();
+            {
+                selectedAxis = arrow.name; // Assuming arrows are named "X", "Y", "Z"
+                initialMousePos = Input.mousePosition;
+                initialObjectPos = uiController.SelectedComponent.transform.position;
+            }
+        }
+        else
+        {
+            isInteractingWithArrow = false;
+            if (Input.GetMouseButtonDown(0))
+            {
+                Hide3DArrow();
+            }
+            if (lastHitArrow != null)
+            {
+                Renderer renderer = lastHitArrow.GetComponent<Renderer>();
+                renderer.material = arrowDefault;
+                lastHitArrow = null;
+            }
+        }
+        if (Input.GetMouseButton(0) && selectedAxis != null)
+        {
+            Vector3 deltaMousePos = Input.mousePosition - initialMousePos;
+            Vector3 axis = Vector3.zero;
+            float dragDistance = 0f;
+
+            switch (selectedAxis)
+            {
+                case "X":
+                    axis = Vector3.right;
+                    dragDistance = deltaMousePos.y * Globals.editModeDragMultiplier;
+                    break;
+                case "Y":
+                    axis = Vector3.up;
+                    dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
+                    break;
+                case "Z":
+                    axis = Vector3.forward;
+                    dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier; // Using y here as a placeholder, you might want to find a better solution for Z axis control
+                    break;
+            }
+            uiController.SelectedComponent.transform.position =
+                initialObjectPos + axis * dragDistance;
+            arrow3D.transform.position = uiController.SelectedComponent.transform.position;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            selectedAxis = null;
         }
     }
 
@@ -98,7 +198,7 @@ public class RaycastHandler : MonoBehaviour
         uiController.SelectedComponent = ((MonoBehaviour)obj).gameObject;
     }
 
-    void UnSelect()
+    void DeSelect()
     {
         Debug.Log("cancel selection");
         selectedObject?.Unhighlight();
