@@ -40,6 +40,14 @@ public class UIController : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI popUpText;
 
+    [SerializeField]
+    TextMeshProUGUI objectInfo;
+    public TextMeshProUGUI ObjectInfo
+    {
+        get { return objectInfo; }
+        set { objectInfo = value; }
+    }
+
     Simulator.State stateInMemory = Simulator.State.Pause;
 
     [SerializeField]
@@ -79,6 +87,7 @@ public class UIController : MonoBehaviour
         {
             DeleteSelectedComponent();
         }
+        UpdateObjectInfo(selectedComponent);
     }
 
     public void DeleteSelectedComponent()
@@ -200,8 +209,19 @@ public class UIController : MonoBehaviour
         Debug.Log("add waypoint");
     }
 
-    public void DisplayDetails(GameObject gameObject)
+    void UpdateObjectInfo(GameObject gameObject)
     {
-        Debug.Log("DisplayDetails for " + gameObject.name);
+        if (gameObject == null)
+        {
+            objectInfo.text = "No object selected";
+            return;
+        }
+        Vector3 position = gameObject.transform.position;
+        objectInfo.text = string.Format(
+            "Position: X: {0:F2}, Y: {1:F2}, Z: {2:F2}",
+            position.x,
+            position.y,
+            position.z
+        );
     }
 }

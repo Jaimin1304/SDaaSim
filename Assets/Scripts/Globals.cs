@@ -28,7 +28,8 @@ public class Globals : MonoBehaviour
     public const float nodeTouchDistance = 1;
     public const float droneGapView = 2f;
     public const float droneHeightOffset = 3f;
-    public const float textScaleValue = 0.015f;
+    public const float textScaleValue = 0.013f;
+    public const float arrow3DScaleValue = 0.02f;
     public const float doubleClickGap = 0.25f;
     public const float objectCreationDistance = 15f;
     public const float editModeDragMultiplier = 0.2f;

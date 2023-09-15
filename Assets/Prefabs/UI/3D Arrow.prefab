@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9113400460185161632}
   - component: {fileID: 1606280246425906160}
   - component: {fileID: 2114257045059723089}
+  - component: {fileID: 3860236566204168335}
   m_Layer: 7
   m_Name: Y
   m_TagString: Untagged
@@ -98,6 +99,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &3860236566204168335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2515758732528351416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0.18039216, g: 0.8352941, b: 0.4509804, a: 1}
+  outlineWidth: 3
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &3993076922408295576
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,6 +129,7 @@ GameObject:
   - component: {fileID: 1304437590084830676}
   - component: {fileID: 1441442640845706889}
   - component: {fileID: 1961067223097505896}
+  - component: {fileID: 2240680709818784120}
   m_Layer: 7
   m_Name: Z
   m_TagString: Untagged
@@ -196,6 +216,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &2240680709818784120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3993076922408295576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0.18039216, g: 0.8352941, b: 0.4509804, a: 1}
+  outlineWidth: 3
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7244317859918395767
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,6 +246,7 @@ GameObject:
   - component: {fileID: 8812861308760990485}
   - component: {fileID: 6771668736798437153}
   - component: {fileID: 1131290153646448526}
+  - component: {fileID: 8349527420709948432}
   m_Layer: 7
   m_Name: X
   m_TagString: Untagged
@@ -294,6 +333,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &8349527420709948432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7244317859918395767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0.18039216, g: 0.8352941, b: 0.4509804, a: 1}
+  outlineWidth: 3
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7649370032327403447
 GameObject:
   m_ObjectHideFlags: 0

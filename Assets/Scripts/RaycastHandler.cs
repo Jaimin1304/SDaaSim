@@ -44,6 +44,9 @@ public class RaycastHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         HandleSkywayObjectHit(ray);
         Handle3DArrowHit(ray);
+        if (arrow3D.activeSelf)
+            Adjust3DArrowsScale();
+        
     }
 
     void HandleSkywayObjectHit(Ray ray)
@@ -168,15 +171,15 @@ public class RaycastHandler : MonoBehaviour
             {
                 case "X":
                     axis = Vector3.right;
-                    dragDistance = deltaMousePos.y * Globals.editModeDragMultiplier;
+                    dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
                     break;
                 case "Y":
                     axis = Vector3.up;
-                    dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
+                    dragDistance = deltaMousePos.y * Globals.editModeDragMultiplier;
                     break;
                 case "Z":
                     axis = Vector3.forward;
-                    dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier; // Using y here as a placeholder, you might want to find a better solution for Z axis control
+                    dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
                     break;
             }
             uiController.SelectedComponent.transform.position =
@@ -210,5 +213,15 @@ public class RaycastHandler : MonoBehaviour
     {
         CamController camController = Camera.main.GetComponent<CamController>();
         camController?.ToFocusMode(centerObject);
+    }
+
+    void Adjust3DArrowsScale()
+    {
+        float distanceFromCamera = Vector3.Distance(
+            Camera.main.transform.position,
+            arrow3D.transform.position
+        );
+        float scaleFactor = distanceFromCamera * Globals.arrow3DScaleValue;
+        arrow3D.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
     }
 }
