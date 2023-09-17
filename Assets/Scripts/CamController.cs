@@ -125,7 +125,7 @@ public class CamController : MonoBehaviour
         // get the distance
         float distance = Vector3.Distance(transform.position, rotateAroundPoint);
         // apply zoom smoother
-        float smoothZoomApeed =
+        float smoothZoomSpeed =
             (
                 -1
                 * Globals.camZoomSpeed
@@ -134,11 +134,45 @@ public class CamController : MonoBehaviour
                 / (Globals.camMaxZoomDistance * Globals.camMaxZoomDistance)
             ) + (2 * Globals.camZoomSpeed * distance / Globals.camMaxZoomDistance);
         // Zoom in/out based on the mouse wheel movement
-        float zoomAmount = Input.GetAxis("Mouse ScrollWheel") * smoothZoomApeed;
+        float zoomAmount = Input.GetAxis("Mouse ScrollWheel") * smoothZoomSpeed;
         transform.Translate(0, 0, zoomAmount, Space.Self);
 
         // check if the distance exceeds the limit
         distance = Vector3.Distance(transform.position, rotateAroundPoint);
+        RestrictCam(distance, rotateAroundPoint);
+        focusModeOffset = transform.position - centerObject.transform.position;
+        transform.LookAt(rotateAroundPoint);
+    }
+
+    public void ToFreeMode()
+    {
+        currentState = State.Free;
+    }
+
+    public void ToFocusMode(GameObject focusObject)
+    {
+        currentState = State.Focus;
+        centerObject = focusObject;
+        // reset camera position
+        Vector3 rotateAroundPoint = focusObject.transform.position;
+        float distance = Vector3.Distance(transform.position, rotateAroundPoint);
+        if (focusModeOffset == Vector3.zero)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                rotateAroundPoint,
+                distance - Globals.camDefaultZoomDistance
+            );
+            focusModeOffset = transform.position - focusObject.transform.position;
+        }
+        Debug.Log(focusModeOffset);
+        transform.position = centerObject.transform.position + focusModeOffset;
+        Debug.Log(centerObject.transform.position);
+        Debug.Log(transform.position);
+    }
+
+    void RestrictCam(float distance, Vector3 rotateAroundPoint)
+    {
         if (distance > Globals.camMaxZoomDistance)
         {
             transform.position = Vector3.MoveTowards(
@@ -155,30 +189,5 @@ public class CamController : MonoBehaviour
                 distance - Globals.camMinZoomDistance
             );
         }
-        focusModeOffset = transform.position - centerObject.transform.position;
-
-        transform.LookAt(rotateAroundPoint);
-    }
-
-    public void ToFreeMode()
-    {
-        currentState = State.Free;
-    }
-
-    public void ToFocusMode(GameObject focusObject)
-    {
-        currentState = State.Focus;
-        centerObject = focusObject;
-
-        // reset camera position
-        Vector3 rotateAroundPoint = focusObject.transform.position;
-        float distance = Vector3.Distance(transform.position, rotateAroundPoint);
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            rotateAroundPoint,
-            distance - Globals.camDefaultZoomDistance
-        );
-
-        focusModeOffset = transform.position - focusObject.transform.position;
     }
 }

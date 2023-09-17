@@ -17,13 +17,13 @@ public class Globals : MonoBehaviour
     public const string splitSubswarm = "split_subswarm";
     public const string mergeTwoSubswarms = "merge_two_subswarms";
     public const string proceed = "proceed";
-    public const float camMovSpeed = 100;
+    public const float camMovSpeed = 80;
     public const float camSprintSpeed = 300;
-    public const float camRotateSpeed = 0.2f;
+    public const float camRotateSpeed = 0.15f;
     public const float camZoomSpeed = 200;
-    public const float camMaxZoomDistance = 200;
+    public const float camMaxZoomDistance = 150;
     public const float camMaxPitch = 80;
-    public const float camMinZoomDistance = 5;
+    public const float camMinZoomDistance = 6;
     public const float camDefaultZoomDistance = 70;
     public const float nodeTouchDistance = 1;
     public const float droneGapView = 2f;
