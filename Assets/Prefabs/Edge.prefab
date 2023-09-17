@@ -67,6 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 0}
   lengthText: {fileID: 4127955355439910064}
+  material: {fileID: 2100000, guid: df3ebf63a6178474d932e7cc5fcfd9e5, type: 2}
 --- !u!1 &6911040821040444656
 GameObject:
   m_ObjectHideFlags: 0

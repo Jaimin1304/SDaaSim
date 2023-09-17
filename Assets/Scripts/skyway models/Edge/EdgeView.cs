@@ -14,6 +14,9 @@ public class EdgeView : MonoBehaviour
     [SerializeField]
     TextMeshPro lengthText;
 
+    [SerializeField]
+    Material material;
+
     Camera mainCamera;
 
     void Awake()
@@ -28,12 +31,12 @@ public class EdgeView : MonoBehaviour
     void CreateLineRenderer()
     {
         lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.material = material;
         lineRenderer.positionCount = 2;
-        lineRenderer.startWidth = 0.3f;
-        lineRenderer.endWidth = 0.3f;
-        lineRenderer.startColor = Color.green;
-        lineRenderer.endColor = Color.green;
+        lineRenderer.startWidth = Globals.edgeLineWidth;
+        lineRenderer.endWidth = Globals.edgeLineWidth;
+        lineRenderer.startColor = material.color;
+        lineRenderer.endColor = material.color;
     }
 
     public void UpdateVisual(

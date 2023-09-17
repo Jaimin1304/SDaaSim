@@ -33,6 +33,7 @@ public class Globals : MonoBehaviour
     public const float doubleClickGap = 0.25f;
     public const float objectCreationDistance = 15f;
     public const float editModeDragMultiplier = 0.2f;
+    public const float edgeLineWidth = 0.8f;
     public const int playSpeedLimit = 32;
 
     static int playSpeed = 1;
