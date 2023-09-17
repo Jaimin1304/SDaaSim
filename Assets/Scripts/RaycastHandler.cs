@@ -46,7 +46,6 @@ public class RaycastHandler : MonoBehaviour
         Handle3DArrowHit(ray);
         if (arrow3D.activeSelf)
             Adjust3DArrowsScale();
-        
     }
 
     void HandleSkywayObjectHit(Ray ray)
@@ -98,7 +97,7 @@ public class RaycastHandler : MonoBehaviour
                 if (hitObject == draggingObject)
                 {
                     Select(hitObject);
-                    Show3DArrow(hit.transform.gameObject.transform.position);
+                    Show3DArrow(((MonoBehaviour)hitObject).transform.position);
                 }
                 draggingObject = null;
             }
@@ -165,12 +164,14 @@ public class RaycastHandler : MonoBehaviour
         {
             Vector3 deltaMousePos = Input.mousePosition - initialMousePos;
             Vector3 axis = Vector3.zero;
+            Vector3 camPosition = Camera.main.transform.position;
+            Vector3 objPosition = ((MonoBehaviour)selectedObject).transform.position;
             float dragDistance = 0f;
 
             switch (selectedAxis)
             {
                 case "X":
-                    axis = Vector3.right;
+                    axis = (objPosition.z - camPosition.z > 0) ? Vector3.right: Vector3.left;
                     dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
                     break;
                 case "Y":
@@ -178,7 +179,7 @@ public class RaycastHandler : MonoBehaviour
                     dragDistance = deltaMousePos.y * Globals.editModeDragMultiplier;
                     break;
                 case "Z":
-                    axis = Vector3.forward;
+                    axis = (objPosition.x - camPosition.x > 0) ? Vector3.back: Vector3.forward;
                     dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
                     break;
             }
