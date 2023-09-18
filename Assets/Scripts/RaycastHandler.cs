@@ -191,13 +191,13 @@ public class RaycastHandler : MonoBehaviour
             Node node = uiController.SelectedComponent.GetComponent<Node>();
             if (wayPoint != null)
             {
-                wayPoint.Edge.CalLengths();
+                wayPoint.Edge.UpdateEdge();
             }
             else if (node != null)
             {
                 foreach (Edge edge in node.Edges)
                 {
-                    edge.CalLengths();
+                    edge.UpdateEdge();
                 }
             }
         }

@@ -70,7 +70,7 @@ public class Edge : MonoBehaviour
     void Start()
     {
         CalLengths();
-        InitPath();
+        CalPath();
         UpdateEdgeVisual();
     }
 
@@ -118,8 +118,9 @@ public class Edge : MonoBehaviour
         totalLength = subEdgeLengths.Sum();
     }
 
-    void InitPath()
+    void CalPath()
     {
+        path.Clear();
         path.Add(leftNode.transform.position);
         for (int i = 0; i < wayPoints.Count; i++)
         {
@@ -127,6 +128,12 @@ public class Edge : MonoBehaviour
             wayPoints[i].Edge = this;
         }
         path.Add(rightNode.transform.position);
+    }
+
+    public void UpdateEdge()
+    {
+        CalLengths();
+        CalPath();
     }
 
     void UpdateEdgeVisual()
