@@ -158,17 +158,10 @@ public class CamController : MonoBehaviour
         float distance = Vector3.Distance(transform.position, rotateAroundPoint);
         if (focusModeOffset == Vector3.zero)
         {
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                rotateAroundPoint,
-                distance - Globals.camDefaultZoomDistance
-            );
+            RestrictCam(distance, rotateAroundPoint);
             focusModeOffset = transform.position - focusObject.transform.position;
         }
-        Debug.Log(focusModeOffset);
         transform.position = centerObject.transform.position + focusModeOffset;
-        Debug.Log(centerObject.transform.position);
-        Debug.Log(transform.position);
     }
 
     void RestrictCam(float distance, Vector3 rotateAroundPoint)

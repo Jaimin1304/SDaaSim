@@ -69,7 +69,7 @@ public class Edge : MonoBehaviour
 
     void Start()
     {
-        InitLengths();
+        CalLengths();
         InitPath();
         UpdateEdgeVisual();
     }
@@ -79,42 +79,41 @@ public class Edge : MonoBehaviour
         UpdateEdgeVisual();
     }
 
-    void InitLengths()
+    public void CalLengths()
     {
         subEdgeLengths.Clear(); // Clear any previous lengths
-        // If there are WayPoints, calculate subedge lengths
-        if (WayPoints.Count > 0)
-        {
-            // Calculate the length from the left node to the first waypoint
-            float firstLength = Vector3.Distance(
-                leftNode.transform.position,
-                WayPoints[0].transform.position
-            );
-            subEdgeLengths.Add(firstLength);
-            // Calculate lengths between each pair of WayPoints
-            for (int i = 0; i < WayPoints.Count - 1; i++)
-            {
-                float subEdgeLength = Vector3.Distance(
-                    WayPoints[i].transform.position,
-                    WayPoints[i + 1].transform.position
-                );
-                subEdgeLengths.Add(subEdgeLength);
-            }
-            // Calculate the length from the last waypoint to the right node
-            float lastLength = Vector3.Distance(
-                WayPoints[WayPoints.Count - 1].transform.position,
-                rightNode.transform.position
-            );
-            subEdgeLengths.Add(lastLength);
-        }
-        else // If there are no WayPoints, just calculate length from left node to right node
+        // If there are no WayPoints, just calculate length from left node to right node
+        if (WayPoints.Count == 0)
         {
             float length = Vector3.Distance(
                 leftNode.transform.position,
                 rightNode.transform.position
             );
             subEdgeLengths.Add(length);
+            totalLength = subEdgeLengths.Sum();
+            return;
         }
+        // Calculate the length from the left node to the first waypoint
+        float firstLength = Vector3.Distance(
+            leftNode.transform.position,
+            WayPoints[0].transform.position
+        );
+        subEdgeLengths.Add(firstLength);
+        // Calculate lengths between each pair of WayPoints
+        for (int i = 0; i < WayPoints.Count - 1; i++)
+        {
+            float subEdgeLength = Vector3.Distance(
+                WayPoints[i].transform.position,
+                WayPoints[i + 1].transform.position
+            );
+            subEdgeLengths.Add(subEdgeLength);
+        }
+        // Calculate the length from the last waypoint to the right node
+        float lastLength = Vector3.Distance(
+            WayPoints[WayPoints.Count - 1].transform.position,
+            rightNode.transform.position
+        );
+        subEdgeLengths.Add(lastLength);
         // calculate the total length
         totalLength = subEdgeLengths.Sum();
     }
@@ -125,6 +124,7 @@ public class Edge : MonoBehaviour
         for (int i = 0; i < wayPoints.Count; i++)
         {
             path.Add(wayPoints[i].transform.position);
+            wayPoints[i].Edge = this;
         }
         path.Add(rightNode.transform.position);
     }

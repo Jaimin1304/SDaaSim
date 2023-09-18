@@ -24,7 +24,7 @@ public class Globals : MonoBehaviour
     public const float camMaxZoomDistance = 150;
     public const float camMaxPitch = 80;
     public const float camMinZoomDistance = 6;
-    public const float camDefaultZoomDistance = 70;
+    public const float camDefaultZoomDistance = 50;
     public const float nodeTouchDistance = 1;
     public const float droneGapView = 2f;
     public const float droneHeightOffset = 3f;

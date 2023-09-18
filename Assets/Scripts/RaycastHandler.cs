@@ -171,7 +171,7 @@ public class RaycastHandler : MonoBehaviour
             switch (selectedAxis)
             {
                 case "X":
-                    axis = (objPosition.z - camPosition.z > 0) ? Vector3.right: Vector3.left;
+                    axis = (objPosition.z - camPosition.z > 0) ? Vector3.right : Vector3.left;
                     dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
                     break;
                 case "Y":
@@ -179,13 +179,27 @@ public class RaycastHandler : MonoBehaviour
                     dragDistance = deltaMousePos.y * Globals.editModeDragMultiplier;
                     break;
                 case "Z":
-                    axis = (objPosition.x - camPosition.x > 0) ? Vector3.back: Vector3.forward;
+                    axis = (objPosition.x - camPosition.x > 0) ? Vector3.back : Vector3.forward;
                     dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
                     break;
             }
             uiController.SelectedComponent.transform.position =
                 initialObjectPos + axis * dragDistance;
             arrow3D.transform.position = uiController.SelectedComponent.transform.position;
+            // update affected edge lengths
+            WayPoint wayPoint = uiController.SelectedComponent.GetComponent<WayPoint>();
+            Node node = uiController.SelectedComponent.GetComponent<Node>();
+            if (wayPoint != null)
+            {
+                wayPoint.Edge.CalLengths();
+            }
+            else if (node != null)
+            {
+                foreach (Edge edge in node.Edges)
+                {
+                    edge.CalLengths();
+                }
+            }
         }
         if (Input.GetMouseButtonUp(0))
         {

@@ -93,3 +93,21 @@ MonoBehaviour:
     m_Color: {r: 0.20784314, g: 0.23137255, b: 0.28235295, a: 1}
   - m_Name: 
     m_Color: {r: 0.18431373, g: 0.21176471, b: 0.2509804, a: 1}
+  - m_Name: 
+    m_Color: {r: 0.18431373, g: 0.21176471, b: 0.2509804, a: 1}
+  - m_Name: 
+    m_Color: {r: 0, g: 1, b: 0, a: 1}
+  - m_Name: 
+    m_Color: {r: 0, g: 0, b: 1, a: 1}
+  - m_Name: 
+    m_Color: {r: 1, g: 0, b: 0, a: 1}
+  - m_Name: 
+    m_Color: {r: 0, g: 0, b: 0, a: 1}
+  - m_Name: 
+    m_Color: {r: 1, g: 1, b: 1, a: 1}
+  - m_Name: 
+    m_Color: {r: 1, g: 1, b: 0, a: 1}
+  - m_Name: 
+    m_Color: {r: 1, g: 0, b: 1, a: 1}
+  - m_Name: 
+    m_Color: {r: 0, g: 1, b: 1, a: 1}
