@@ -7,6 +7,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine.Events;
 
 public class Simulator : MonoBehaviour
 {
@@ -52,6 +53,12 @@ public class Simulator : MonoBehaviour
     [SerializeField]
     State currentState;
 
+    // Define UnityEvents for each state change
+    public UnityEvent OnPlayEvent;
+    public UnityEvent OnPauseEvent;
+    public UnityEvent OnFreezeEvent;
+    public UnityEvent OnEditEvent;
+
     public float ElapsedTime
     {
         get { return elapsedTime; }
@@ -74,6 +81,12 @@ public class Simulator : MonoBehaviour
         instance = this;
         // start the server
         //pyRunner.ExecutePythonScript();
+
+        // Initialize the UnityEvents
+        OnPlayEvent = new UnityEvent();
+        OnPauseEvent = new UnityEvent();
+        OnFreezeEvent = new UnityEvent();
+        OnEditEvent = new UnityEvent();
     }
 
     void Start()
@@ -261,16 +274,25 @@ public class Simulator : MonoBehaviour
             InitSimulation();
         }
         currentState = State.Play;
+        OnPlayEvent.Invoke(); // Invoke the OnPlayEvent
     }
 
     public void Pause()
     {
         currentState = State.Pause;
+        OnPauseEvent.Invoke(); // Invoke the OnPauseEvent
     }
 
     public void Freeze()
     {
         currentState = State.Freeze;
+        OnFreezeEvent.Invoke(); // Invoke the OnFreezeEvent
+    }
+
+    public void ToEditMode()
+    {
+        currentState = State.Edit;
+        OnEditEvent.Invoke(); // Invoke the OnEditEvent
     }
 
     Vector3 CamFrontPosition()

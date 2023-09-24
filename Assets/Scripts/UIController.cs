@@ -8,10 +8,16 @@ public class UIController : MonoBehaviour
     public static UIController instance;
 
     [SerializeField]
-    Button saveSkywayButton;
+    TextMeshProUGUI gameModeText;
+
+    [SerializeField]
+    Button settingsButton;
 
     [SerializeField]
     Button loadSkywayButton;
+
+    [SerializeField]
+    Button saveSkywayButton;
 
     [SerializeField]
     Button resetButton;
@@ -61,8 +67,22 @@ public class UIController : MonoBehaviour
         set { selectedComponent = value; }
     }
 
+    void OnDestroy()
+    {
+        // Unsubscribe from UnityEvents
+        Simulator.instance.OnPlayEvent.RemoveListener(HandlePlay);
+        Simulator.instance.OnPauseEvent.RemoveListener(HandlePause);
+        Simulator.instance.OnFreezeEvent.RemoveListener(HandleFreeze);
+        Simulator.instance.OnEditEvent.RemoveListener(HandleEdit);
+    }
+
     void Start()
     {
+        // Subscribe to UnityEvents
+        Simulator.instance.OnPlayEvent.AddListener(HandlePlay);
+        Simulator.instance.OnPauseEvent.AddListener(HandlePause);
+        Simulator.instance.OnFreezeEvent.AddListener(HandleFreeze);
+        Simulator.instance.OnEditEvent.AddListener(HandleEdit);
         // top bar
         saveSkywayButton.onClick.AddListener(SaveSkyway);
         loadSkywayButton.onClick.AddListener(LoadSkyway);
@@ -70,11 +90,40 @@ public class UIController : MonoBehaviour
         playPauseButton.onClick.AddListener(TogglePlayPause);
         speedUpButton.onClick.AddListener(SpeedUp);
         slowDownButton.onClick.AddListener(SlowDown);
+        settingsButton.onClick.AddListener(OpenSettings);
         // pop up panel
         popUpConfirmButton.onClick.AddListener(PopUpConfirm);
         // left bar
         nodeBtn.onClick.AddListener(AddNode);
         // right bar
+    }
+
+    void HandlePlay()
+    {
+        Debug.Log("Simulation started");
+        // Handle Play state change
+        gameModeText.text = "System status: Playing";
+    }
+
+    void HandlePause()
+    {
+        Debug.Log("Simulation paused");
+        // Handle Pause state change
+        gameModeText.text = "System status: Paused";
+    }
+
+    void HandleFreeze()
+    {
+        Debug.Log("Simulation frozen");
+        // Handle Freeze state change
+        gameModeText.text = "System status: Frozen";
+    }
+
+    void HandleEdit()
+    {
+        Debug.Log("Switched to Edit Mode");
+        // Handle Edit state change
+        gameModeText.text = "System status: Editing";
     }
 
     void Update()
@@ -190,12 +239,27 @@ public class UIController : MonoBehaviour
         Simulator.instance.CurrentState = Simulator.State.Freeze;
         popUpText.text = message;
         popUpPanel.SetActive(true);
+        gameModeText.text = "System status: Frozen";
     }
 
     void HidePopUp()
     {
         popUpPanel.SetActive(false);
-        Simulator.instance.CurrentState = stateInMemory;
+        switch (stateInMemory)
+        {
+            case Simulator.State.Play:
+                Simulator.instance.Play();
+                break;
+            case Simulator.State.Edit:
+                Simulator.instance.ToEditMode();
+                break;
+            case Simulator.State.Pause:
+                Simulator.instance.Pause();
+                break;
+            case Simulator.State.Freeze:
+                Simulator.instance.Freeze();
+                break;
+        }
     }
 
     void AddNode()
@@ -223,5 +287,10 @@ public class UIController : MonoBehaviour
             position.y,
             position.z
         );
+    }
+
+    void OpenSettings()
+    {
+        Debug.Log("open settings");
     }
 }
