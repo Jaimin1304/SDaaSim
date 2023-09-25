@@ -39,6 +39,9 @@ public class SubSwarm : MonoBehaviour
     [SerializeField]
     float speed;
 
+    [SerializeField]
+    float epm;
+
     bool destReached;
 
     public string Id
@@ -82,9 +85,15 @@ public class SubSwarm : MonoBehaviour
         set { wayPointIndex = value; }
     }
 
+    public float Epm
+    {
+        get { return Epm; }
+        set { Epm = value; }
+    }
+
     void Awake()
     {
-        speed = 5;
+        speed = 15;
         id = Guid.NewGuid().ToString();
     }
 
@@ -183,6 +192,11 @@ public class SubSwarm : MonoBehaviour
         }
         // restart drone animations
         subSwarmView.ToggleDroneAnimation(this, 1);
+    }
+
+    void updateEpm()
+    {
+        epm = KirchsteinECM.instance.CalculateEpm();
     }
 
     public void ToStandby(Node node)

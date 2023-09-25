@@ -103,6 +103,9 @@ public class UIController : MonoBehaviour
         Debug.Log("Simulation started");
         // Handle Play state change
         gameModeText.text = "System status: Playing";
+        loadSkywayButton.enabled = false;
+        saveSkywayButton.enabled = false;
+        nodeBtn.enabled = false;
     }
 
     void HandlePause()
@@ -124,6 +127,9 @@ public class UIController : MonoBehaviour
         Debug.Log("Switched to Edit Mode");
         // Handle Edit state change
         gameModeText.text = "System status: Editing";
+        loadSkywayButton.enabled = true;
+        saveSkywayButton.enabled = true;
+        nodeBtn.enabled = true;
     }
 
     void Update()

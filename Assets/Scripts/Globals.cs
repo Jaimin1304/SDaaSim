@@ -35,6 +35,9 @@ public class Globals : MonoBehaviour
     public const float editModeDragMultiplier = 0.2f;
     public const float edgeLineWidth = 0.7f;
     public const int playSpeedLimit = 32;
+    public const float droneBatteryJoule = 200000;
+    public const float windSpeed = 5;
+    public static Vector3 windDirection = Vector3.left;
 
     static int playSpeed = 1;
     public static int PlaySpeed

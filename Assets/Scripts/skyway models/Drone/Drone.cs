@@ -24,6 +24,12 @@ public class Drone : MonoBehaviour
     float batteryStatus;
 
     [SerializeField]
+    float currBatteryJoule;
+
+    [SerializeField]
+    float batteryCapacityJoule;
+
+    [SerializeField]
     List<Payload> payloads = new();
 
     [SerializeField]
@@ -70,6 +76,18 @@ public class Drone : MonoBehaviour
         set { payloads = value; }
     }
 
+    public float CurrBatteryJoule
+    {
+        get { return currBatteryJoule; }
+        set { currBatteryJoule = value; }
+    }
+
+    public float BatteryCapacityJoule
+    {
+        get { return batteryCapacityJoule; }
+        set { batteryCapacityJoule = value; }
+    }
+
     void Awake()
     {
         id = Guid.NewGuid().ToString();
@@ -80,6 +98,8 @@ public class Drone : MonoBehaviour
         droneView.initVisual(this);
         droneView.UpdateVisual(this);
         batteryStatus = 1;
+        batteryCapacityJoule = Globals.droneBatteryJoule;
+        Debug.Log(batteryCapacityJoule);
     }
 
     void Update()
@@ -91,7 +111,8 @@ public class Drone : MonoBehaviour
         )
         {
             batteryStatus -= 0.01f * Time.deltaTime * Globals.PlaySpeed;
-            if (batteryStatus < 0) {
+            if (batteryStatus < 0)
+            {
                 Debug.LogError(string.Format("{0} is out of battery!", this.name));
             }
         }

@@ -97,7 +97,10 @@ public class RaycastHandler : MonoBehaviour
                 if (hitObject == draggingObject)
                 {
                     Select(hitObject);
-                    Show3DArrow(((MonoBehaviour)hitObject).transform.position);
+                    if (Simulator.instance.CurrentState == Simulator.State.Edit)
+                    {
+                        Show3DArrow(((MonoBehaviour)hitObject).transform.position);
+                    }
                 }
                 draggingObject = null;
             }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 /*
 The applied anergy consumption model is derived from kirchstein's approach mentioned in paper:
@@ -10,11 +11,12 @@ Energy consumption models for delivery drones: A comparison and assessment
 
 public class KirchsteinECM : MonoBehaviour
 {
+    public static KirchsteinECM instance;
     public float eta = 0.73f; // Power transfer efficiency from battery to propeller
     public float k = 1; // Lifting power markup
     public float T; // Thrust
-    public float w; // Downwash coefficient
-    public float va = 5; // Airspeed
+    public float w = 1f; // Downwash coefficient
+    public float va = 1; // Airspeed
     public float rho = 1.225f; // Air density
     public float[] mk = { 1.07f, 1f, 1.5f }; // Mass array for drone components
     public float[] Ak = { 0.0599f, 0.0037f, 0.0135f }; // Area array for drone components
@@ -24,19 +26,25 @@ public class KirchsteinECM : MonoBehaviour
     public float g = 9.807f; // Gravitational acceleration
     public float Pavio = 10f; // Avionics power, power consumption of electronic equipmentF
     public float etaC = 0.9f; // Battery charging efficiency
-    public float theta = 0.9f; // Flight angle
+    public float theta = 0f; // Flight angle
     public float m = 3.57f; // Total mass
-    public float n; // Number of rotors
-    public float alpha; // Angle of attack, needs to be converted to radians
-    public float varsigma; // Rotor area
+    public float n = 4; // Number of rotors
+    public float alpha; // Angle of attack in radians
+    public float varsigma = 0.0507f; // Spinning area of one rotor [m2]
 
     void Start()
     {
-        float Epm = CalculateEpm();
-        Debug.Log("Energy per meter: " + Epm);
+        // test different va
+        float[] vaValues = { 0.3f, 5, 10, 15, 25 };
+        foreach (float vaValue in vaValues)
+        {
+            va = vaValue; // set va
+            float Epm = CalculateEpm();
+            Debug.Log("For va = " + va + ", Energy per meter: " + Epm);
+        }
     }
 
-    float CalculateEpm()
+    public float CalculateEpm()
     {
         float sumCDkAk = 0;
         float sumMk = 0;
@@ -51,15 +59,16 @@ public class KirchsteinECM : MonoBehaviour
                 + Mathf.Pow(0.5f * rho * sumCDkAk * Mathf.Pow(va, 2), 2)
                 + rho * sumCDkAk * Mathf.Pow(va, 2) * m * g * (float)Math.Sin((float)theta)
         );
+        Debug.Log(String.Format("Thrust T: {0}", T));
         // Calculate downwash coefficient
         // Calculate the angle of attack alpha in radians
         float numerator = 0.5f * rho * sumCDkAk * Mathf.Pow(va, 2);
         float denominator = sumMk * g;
-        float alpha = Mathf.Atan(numerator / denominator);
-        // Convert alpha from radians to degrees if needed
-        float alphaDegrees = alpha * Mathf.Rad2Deg;
+        alpha = Mathf.Atan(numerator / denominator);
+        Debug.Log(String.Format("Angle of attack Alpha: {0}", alpha));
         // Calculate downwash coefficient using attack angle
-        CalculateDownwashCoefficient(out float w1, out float w2);
+        // CalculateDownwashCoefficient(out List<float> wSolutions);
+        // Debug.Log("Possible w: " + string.Join(", ", wSolutions));
         // Calculate Epm
         float Epm =
             (1 / eta)
@@ -70,29 +79,64 @@ public class KirchsteinECM : MonoBehaviour
                     + (k3 * Mathf.Sqrt(g * sumMk) * va)
                 )
             + (Pavio / (etaC * va));
-
+        //Debug.Log(String.Format("Joule per meter Epm: {0}", Epm));
         return Epm;
     }
 
-    void CalculateDownwashCoefficient(out float w1, out float w2)
+    void CalculateDownwashCoefficient(out List<float> wSolutions)
     {
-        // Convert angle alpha to radians
-        float alphaRad = Mathf.Deg2Rad * alpha;
-        // Calculate the coefficients of the quadratic equation
-        float A = 4 * n * n * rho * rho * varsigma * varsigma - T * T;
-        float B = -2 * T * T * va * Mathf.Sin(alphaRad);
-        float C = -T * T * va * va;
-        // Calculate the discriminant
-        float discriminant = B * B - 4 * A * C;
-        // Check if the discriminant is negative, if so, the equation has no real roots
-        if (discriminant < 0)
+        Debug.Log("w cal start");
+        // Define ν (nu) and R (rotor disc area)
+        float nu = va; // Assuming ν is the airspeed va, adjust as needed based on actual scenario
+        float R = n * varsigma; // Assuming R is n times the spinning area of one rotor, adjust as needed based on actual scenario
+
+        // Define the function representing the quartic equation and its derivative
+        Func<float, float> f = w =>
+            w * w * (w * w - 2 * w * nu * Mathf.Sin(alpha) + nu * nu)
+            - (T * T) / (4 * rho * rho * R * R);
+        Func<float, float> df = w =>
+            4 * w * (w * w - 2 * w * nu * Mathf.Sin(alpha) + nu * nu)
+            + 2 * w * w * (2 * w - 2 * nu * Mathf.Sin(alpha));
+
+        // Initialize the list of solutions
+        wSolutions = new List<float>();
+
+        // Define the initial guess and tolerance
+        float initialGuess = 1.0f; // Adjust as needed
+        float tolerance = 0.01f;
+
+        // Implement Newton's method
+        float w = initialGuess;
+        for (int i = 0; i < 10000; i++) // Limit the number of iterations to avoid infinite loop
         {
-            Debug.LogError("The equation has no real roots.");
-            w1 = w2 = float.NaN;
-            return;
+            float wNext = w - f(w) / df(w);
+            if (Mathf.Abs(wNext - w) < tolerance)
+            {
+                wSolutions.Add(wNext);
+                Debug.Log("new w added");
+                break;
+            }
+            w = wNext;
         }
-        // Calculate the two possible values of w
-        w1 = (-B + Mathf.Sqrt(discriminant)) / (2 * A);
-        w2 = (-B - Mathf.Sqrt(discriminant)) / (2 * A);
+        // Check the found solutions and determine which one is physically feasible based on the actual scenario
     }
+
+    //void CalculateDownwashCoefficient(out float[] wSolutions)
+    //{
+    //    // Define ν (nu) and R (rotor disc area)
+    //    float nu = va; // Assuming ν is the airspeed va, adjust as needed based on actual scenario
+    //    float R = n * varsigma; // Assuming R is n times the spinning area of one rotor, adjust as needed based on actual //scenario
+    //
+    //    // Calculate the coefficients of the equation
+    //    float A = (nu * Mathf.Sin(alpha)) * (nu * Mathf.Sin(alpha));
+    //    float B = 2 * (nu * Mathf.Sin(alpha)) * (nu * Mathf.Cos(alpha));
+    //    float C = (nu * Mathf.Cos(alpha)) * (nu * Mathf.Cos(alpha));
+    //    float D = -(T * T) / (4 * rho * rho * R * R);
+    //
+    //    // Use numerical methods to solve the quartic equation, such as Newton's method, Durand-Kerner method, etc.
+    //    // This might require support from some mathematical libraries, or you can implement your own solver
+    //    // wSolutions = SolveQuarticEquation(A, B, C, D);
+    //
+    //    // Here, wSolutions should contain all the roots of the quartic equation, and you need to determine which one is //physically feasible based on the actual scenario
+    //}
 }
