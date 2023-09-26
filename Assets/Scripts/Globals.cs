@@ -40,24 +40,34 @@ public class Globals : MonoBehaviour
     }
 
     // Define keys for PlayerPrefs
-    private const string CamMovSpeedKey = "CamMovSpeed";
-    private const string CamSprintSpeedKey = "CamSprintSpeed";
-    private const string CamRotateSpeedKey = "CamRotateSpeed";
-    private const string CamZoomSpeedKey = "CamZoomSpeed";
-    private const string EdgeThicknessKey = "EdgeThickness";
-    private const string DroneBatteryJouleKey = "DroneBatteryJoule";
-    private const string WindSpeedKey = "WindSpeed";
-    private const string BatChargingEfficKey = "BatChargingEffic";
+    const string CamMovSpeedKey = "CamMovSpeed";
+    const string CamSprintSpeedKey = "CamSprintSpeed";
+    const string CamRotateSpeedKey = "CamRotateSpeed";
+    const string CamZoomSpeedKey = "CamZoomSpeed";
+    const string EdgeThicknessKey = "EdgeThickness";
+    const string DroneBatCapKey = "DroneBatCap"; // Drone battery capacity in Wh
+    const string WindSpeedKey = "WindSpeed";
+    const string BatChargingEfficKey = "BatChargingEffic"; // Battery charging efficiency
+    const string RotorNumKey = "RotorNum"; // Number of rotors
+    const string AirDensityKey = "AirDensity"; // Air density
+    const string DownwashCoeffKey = "DownwashCoeff"; // Downwash coefficient
+    const string PwrXferEfficKey = "PwrXferEffic"; // Power transfer efficiency from battery to propeller
+    const string AvionicsPwrKey = "AvionicsPwr"; // Avionics power, power consumption of electronic equipmentF
 
     // Define default values
-    private const float DefaultCamMovSpeed = 80;
-    private const float DefaultCamSprintSpeed = 300;
-    private const float DefaultCamRotateSpeed = 0.15f;
-    private const float DefaultCamZoomSpeed = 200;
-    private const float DefaultEdgeThickness = 0.7f;
-    private const float DefaultDroneBatteryJoule = 200000;
-    private const float DefaultWindSpeed = 5;
-    private const float DefaultBatChargingEffic = 0.85f;
+    const float DefaultCamMovSpeed = 80;
+    const float DefaultCamSprintSpeed = 300;
+    const float DefaultCamRotateSpeed = 0.15f;
+    const float DefaultCamZoomSpeed = 200;
+    const float DefaultEdgeThickness = 0.7f;
+    const float DefaultDroneBatCap = 200000;
+    const float DefaultWindSpeed = 5;
+    const float DefaultBatChargingEffic = 0.85f;
+    const float DefaultRotorNum = 4f;
+    const float DefaultAirDensity = 1.225f;
+    const float DefaultDownwashCoeff = 1f;
+    const float DefaultPwrXferEffic = 0.73f;
+    const float DefaultAvionicsPwr = 10f;
 
     // Properties with PlayerPrefs saving in setters
     public static float CamMovSpeed
@@ -90,10 +100,10 @@ public class Globals : MonoBehaviour
         set => PlayerPrefs.SetFloat(EdgeThicknessKey, value);
     }
 
-    public static float DroneBatteryJoule
+    public static float DroneBatCap
     {
-        get => PlayerPrefs.GetFloat(DroneBatteryJouleKey, DefaultDroneBatteryJoule);
-        set => PlayerPrefs.SetFloat(DroneBatteryJouleKey, value);
+        get => PlayerPrefs.GetFloat(DroneBatCapKey, DefaultDroneBatCap);
+        set => PlayerPrefs.SetFloat(DroneBatCapKey, value);
     }
 
     public static float WindSpeed
@@ -106,5 +116,35 @@ public class Globals : MonoBehaviour
     {
         get => PlayerPrefs.GetFloat(BatChargingEfficKey, DefaultBatChargingEffic);
         set => PlayerPrefs.SetFloat(BatChargingEfficKey, value);
+    }
+
+    public static float RotorNum
+    {
+        get => PlayerPrefs.GetFloat(RotorNumKey, DefaultRotorNum);
+        set => PlayerPrefs.SetFloat(RotorNumKey, value);
+    }
+
+    public static float AirDensity
+    {
+        get => PlayerPrefs.GetFloat(AirDensityKey, DefaultAirDensity);
+        set => PlayerPrefs.SetFloat(AirDensityKey, value);
+    }
+
+    public static float DownwashCoeff
+    {
+        get => PlayerPrefs.GetFloat(DownwashCoeffKey, DefaultDownwashCoeff);
+        set => PlayerPrefs.SetFloat(DownwashCoeffKey, value);
+    }
+
+    public static float PwrXferEffic
+    {
+        get => PlayerPrefs.GetFloat(PwrXferEfficKey, DefaultPwrXferEffic);
+        set => PlayerPrefs.SetFloat(PwrXferEfficKey, value);
+    }
+
+    public static float AvionicsPwr
+    {
+        get => PlayerPrefs.GetFloat(AvionicsPwrKey, DefaultAvionicsPwr);
+        set => PlayerPrefs.SetFloat(AvionicsPwrKey, value);
     }
 }

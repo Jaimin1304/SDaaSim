@@ -52,7 +52,6 @@ public class SettingsController : MonoBehaviour
 
     public void SetEdgeThickness(float value)
     {
-        Debug.Log("thickness set");
         Globals.EdgeThickness = value;
         // update thickness for all edges
         foreach (Edge edge in Simulator.instance.Skyway.Edges)

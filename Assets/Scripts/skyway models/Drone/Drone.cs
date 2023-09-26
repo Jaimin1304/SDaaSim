@@ -24,10 +24,10 @@ public class Drone : MonoBehaviour
     float batteryStatus;
 
     [SerializeField]
-    float currBatteryJoule;
+    float currBatteryWh;
 
     [SerializeField]
-    float batteryCapacityJoule;
+    float batteryCapacityWh;
 
     [SerializeField]
     List<Payload> payloads = new();
@@ -76,16 +76,16 @@ public class Drone : MonoBehaviour
         set { payloads = value; }
     }
 
-    public float CurrBatteryJoule
+    public float CurrBatteryWh
     {
-        get { return currBatteryJoule; }
-        set { currBatteryJoule = value; }
+        get { return currBatteryWh; }
+        set { currBatteryWh = value; }
     }
 
-    public float BatteryCapacityJoule
+    public float BatteryCapacityWh
     {
-        get { return batteryCapacityJoule; }
-        set { batteryCapacityJoule = value; }
+        get { return batteryCapacityWh; }
+        set { batteryCapacityWh = value; }
     }
 
     void Awake()
@@ -98,8 +98,8 @@ public class Drone : MonoBehaviour
         droneView.initVisual(this);
         droneView.UpdateVisual(this);
         batteryStatus = 1;
-        batteryCapacityJoule = Globals.DroneBatteryJoule;
-        Debug.Log(batteryCapacityJoule);
+        batteryCapacityWh = Globals.DroneBatCap;
+        Debug.Log(batteryCapacityWh);
     }
 
     void Update()

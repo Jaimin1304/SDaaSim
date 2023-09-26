@@ -33,7 +33,6 @@ public class SliderController : MonoBehaviour
 
     void UpdateValueText(float value)
     {
-        Debug.Log(value);
         valueText.text = value.ToString("0.00");
     }
 }
