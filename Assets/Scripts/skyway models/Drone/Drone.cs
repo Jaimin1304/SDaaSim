@@ -98,7 +98,7 @@ public class Drone : MonoBehaviour
         droneView.initVisual(this);
         droneView.UpdateVisual(this);
         batteryStatus = 1;
-        batteryCapacityJoule = Globals.droneBatteryJoule;
+        batteryCapacityJoule = Globals.DroneBatteryJoule;
         Debug.Log(batteryCapacityJoule);
     }
 

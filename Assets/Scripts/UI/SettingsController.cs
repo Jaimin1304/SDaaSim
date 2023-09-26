@@ -44,8 +44,20 @@ public class SettingsController : MonoBehaviour
         DronePanel.SetActive(true);
     }
 
-    public void Back()
+    public void HideSettings()
     {
-        Debug.Log("close settings");
+        gameObject.SetActive(false);
+        Simulator.instance.ToLastState();
+    }
+
+    public void SetEdgeThickness(float value)
+    {
+        Debug.Log("thickness set");
+        Globals.EdgeThickness = value;
+        // update thickness for all edges
+        foreach (Edge edge in Simulator.instance.Skyway.Edges)
+        {
+            edge.EdgeView.UpdateEdgeThickness(value);
+        }
     }
 }

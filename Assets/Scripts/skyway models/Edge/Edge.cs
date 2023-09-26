@@ -34,6 +34,12 @@ public class Edge : MonoBehaviour
         get { return id; }
     }
 
+    public EdgeView EdgeView
+    {
+        get { return edgeView; }
+        set { edgeView = value; }
+    }
+
     public Node LeftNode
     {
         get { return leftNode; }

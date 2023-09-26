@@ -47,6 +47,9 @@ public class UIController : MonoBehaviour
     TextMeshProUGUI popUpText;
 
     [SerializeField]
+    private GameObject settingsWindow;
+
+    [SerializeField]
     TextMeshProUGUI objectInfo;
     public TextMeshProUGUI ObjectInfo
     {
@@ -106,6 +109,7 @@ public class UIController : MonoBehaviour
         loadSkywayButton.enabled = false;
         saveSkywayButton.enabled = false;
         nodeBtn.enabled = false;
+        settingsButton.enabled = false;
     }
 
     void HandlePause()
@@ -130,6 +134,7 @@ public class UIController : MonoBehaviour
         loadSkywayButton.enabled = true;
         saveSkywayButton.enabled = true;
         nodeBtn.enabled = true;
+        settingsButton.enabled = true;
     }
 
     void Update()
@@ -190,11 +195,11 @@ public class UIController : MonoBehaviour
         Debug.Log("TogglePlayPause");
         if (Simulator.instance.CurrentState == Simulator.State.Play)
         {
-            Simulator.instance.Pause();
+            Simulator.instance.ToPause();
         }
         else
         {
-            Simulator.instance.Play();
+            Simulator.instance.ToPlay();
         }
         UpdatePlayPauseUI();
     }
@@ -254,16 +259,16 @@ public class UIController : MonoBehaviour
         switch (stateInMemory)
         {
             case Simulator.State.Play:
-                Simulator.instance.Play();
+                Simulator.instance.ToPlay();
                 break;
             case Simulator.State.Edit:
-                Simulator.instance.ToEditMode();
+                Simulator.instance.ToEdit();
                 break;
             case Simulator.State.Pause:
-                Simulator.instance.Pause();
+                Simulator.instance.ToPause();
                 break;
             case Simulator.State.Freeze:
-                Simulator.instance.Freeze();
+                Simulator.instance.ToFreeze();
                 break;
         }
     }
@@ -297,6 +302,7 @@ public class UIController : MonoBehaviour
 
     void OpenSettings()
     {
-        Debug.Log("open settings");
+        settingsWindow.SetActive(true);
+        Simulator.instance.ToFreeze();
     }
 }

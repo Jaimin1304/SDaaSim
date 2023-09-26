@@ -53,11 +53,20 @@ public class Simulator : MonoBehaviour
     [SerializeField]
     State currentState;
 
+    [SerializeField]
+    State lastState;
+
     // Define UnityEvents for each state change
     public UnityEvent OnPlayEvent;
     public UnityEvent OnPauseEvent;
     public UnityEvent OnFreezeEvent;
     public UnityEvent OnEditEvent;
+
+    public Skyway Skyway
+    {
+        get { return skyway; }
+        set { skyway = value; }
+    }
 
     public float ElapsedTime
     {
@@ -69,6 +78,12 @@ public class Simulator : MonoBehaviour
     {
         get { return currentState; }
         set { currentState = value; }
+    }
+
+    public State LastState
+    {
+        get { return lastState; }
+        set { lastState = value; }
     }
 
     void Awake()
@@ -92,6 +107,7 @@ public class Simulator : MonoBehaviour
     void Start()
     {
         currentState = State.Edit;
+        lastState = State.Edit;
         //skyway = FindObjectOfType<Skyway>();
         skyway.InitSkyway();
         //InitSimulation();
@@ -267,32 +283,58 @@ public class Simulator : MonoBehaviour
         }
     }
 
-    public void Play()
+    public void ToPlay()
     {
         if (currentState == State.Edit)
         {
             InitSimulation();
         }
+        lastState = currentState;
         currentState = State.Play;
         OnPlayEvent.Invoke(); // Invoke the OnPlayEvent
     }
 
-    public void Pause()
+    public void ToPause()
     {
+        lastState = currentState;
         currentState = State.Pause;
         OnPauseEvent.Invoke(); // Invoke the OnPauseEvent
     }
 
-    public void Freeze()
+    public void ToFreeze()
     {
+        lastState = currentState;
         currentState = State.Freeze;
         OnFreezeEvent.Invoke(); // Invoke the OnFreezeEvent
     }
 
-    public void ToEditMode()
+    public void ToEdit()
     {
+        lastState = currentState;
         currentState = State.Edit;
         OnEditEvent.Invoke(); // Invoke the OnEditEvent
+    }
+
+    public void ToLastState()
+    {
+        switch (lastState)
+        {
+            case State.Play:
+                ToPlay();
+                break;
+            case State.Edit:
+                ToEdit();
+                break;
+            case State.Pause:
+                ToPause();
+                break;
+            case State.Freeze:
+                ToFreeze();
+                break;
+            default:
+                Debug.LogError("Invalid simulator state");
+                break;
+        }
     }
 
     Vector3 CamFrontPosition()

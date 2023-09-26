@@ -21,6 +21,7 @@ public class EdgeView : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("Awake called");
         mainCamera = Camera.main;
         if (lineRenderer == null)
         {
@@ -33,8 +34,8 @@ public class EdgeView : MonoBehaviour
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = material;
         lineRenderer.positionCount = 2;
-        lineRenderer.startWidth = Globals.edgeLineWidth;
-        lineRenderer.endWidth = Globals.edgeLineWidth;
+        lineRenderer.startWidth = Globals.EdgeThickness;
+        lineRenderer.endWidth = Globals.EdgeThickness;
         lineRenderer.startColor = material.color;
         lineRenderer.endColor = material.color;
     }
@@ -83,5 +84,15 @@ public class EdgeView : MonoBehaviour
         // Scale text size based on distance
         float scaleValue = distance * Globals.textScaleValue;
         lengthText.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+    }
+
+    public void UpdateEdgeThickness(float value)
+    {
+        if (lineRenderer == null)
+        {
+            CreateLineRenderer();
+        }
+        lineRenderer.startWidth = value;
+        lineRenderer.endWidth = value;
     }
 }

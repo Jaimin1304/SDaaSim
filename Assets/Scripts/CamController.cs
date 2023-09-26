@@ -46,9 +46,9 @@ public class CamController : MonoBehaviour
             return;
         }
         // Use WASD to move the camera around.
-        float speed = Globals.camMovSpeed;
+        float speed = Globals.CamMovSpeed;
         if (Input.GetKey(KeyCode.LeftShift))
-            speed = Globals.camSprintSpeed;
+            speed = Globals.CamSprintSpeed;
         if (Input.GetKey(KeyCode.W))
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
         if (Input.GetKey(KeyCode.S))
@@ -74,8 +74,8 @@ public class CamController : MonoBehaviour
         {
             Vector3 delta = Input.mousePosition - lastMousePosition;
             transform.Rotate(
-                -delta.y * Globals.camRotateSpeed,
-                delta.x * Globals.camRotateSpeed,
+                -delta.y * Globals.CamRotateSpeed,
+                delta.x * Globals.CamRotateSpeed,
                 0
             );
             Vector3 rotationInEulerAngles = transform.rotation.eulerAngles;
@@ -113,12 +113,12 @@ public class CamController : MonoBehaviour
         {
             Vector3 delta = Input.mousePosition - lastMousePosition;
             // Rotate around the up axis of the world based on horizontal mouse movement
-            transform.RotateAround(rotateAroundPoint, Vector3.up, delta.x * Globals.camRotateSpeed);
+            transform.RotateAround(rotateAroundPoint, Vector3.up, delta.x * Globals.CamRotateSpeed);
             // Rotate around the right axis of the camera based on vertical mouse movement
             transform.RotateAround(
                 rotateAroundPoint,
                 transform.right,
-                -delta.y * Globals.camRotateSpeed
+                -delta.y * Globals.CamRotateSpeed
             );
             lastMousePosition = Input.mousePosition;
         }
@@ -128,11 +128,11 @@ public class CamController : MonoBehaviour
         float smoothZoomSpeed =
             (
                 -1
-                * Globals.camZoomSpeed
+                * Globals.CamZoomSpeed
                 * distance
                 * distance
                 / (Globals.camMaxZoomDistance * Globals.camMaxZoomDistance)
-            ) + (2 * Globals.camZoomSpeed * distance / Globals.camMaxZoomDistance);
+            ) + (2 * Globals.CamZoomSpeed * distance / Globals.camMaxZoomDistance);
         // Zoom in/out based on the mouse wheel movement
         float zoomAmount = Input.GetAxis("Mouse ScrollWheel") * smoothZoomSpeed;
         transform.Translate(0, 0, zoomAmount, Space.Self);
