@@ -73,78 +73,130 @@ public class Globals : MonoBehaviour
     public static float CamMovSpeed
     {
         get => PlayerPrefs.GetFloat(CamMovSpeedKey, DefaultCamMovSpeed);
-        set => PlayerPrefs.SetFloat(CamMovSpeedKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(CamMovSpeedKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float CamSprintSpeed
     {
         get => PlayerPrefs.GetFloat(CamSprintSpeedKey, DefaultCamSprintSpeed);
-        set => PlayerPrefs.SetFloat(CamSprintSpeedKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(CamSprintSpeedKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float CamRotateSpeed
     {
         get => PlayerPrefs.GetFloat(CamRotateSpeedKey, DefaultCamRotateSpeed);
-        set => PlayerPrefs.SetFloat(CamRotateSpeedKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(CamRotateSpeedKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float CamZoomSpeed
     {
         get => PlayerPrefs.GetFloat(CamZoomSpeedKey, DefaultCamZoomSpeed);
-        set => PlayerPrefs.SetFloat(CamZoomSpeedKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(CamZoomSpeedKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float EdgeThickness
     {
         get => PlayerPrefs.GetFloat(EdgeThicknessKey, DefaultEdgeThickness);
-        set => PlayerPrefs.SetFloat(EdgeThicknessKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(EdgeThicknessKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float DroneBatCap
     {
         get => PlayerPrefs.GetFloat(DroneBatCapKey, DefaultDroneBatCap);
-        set => PlayerPrefs.SetFloat(DroneBatCapKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(DroneBatCapKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float WindSpeed
     {
         get => PlayerPrefs.GetFloat(WindSpeedKey, DefaultWindSpeed);
-        set => PlayerPrefs.SetFloat(WindSpeedKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(WindSpeedKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float BatteryChargingEffic
     {
         get => PlayerPrefs.GetFloat(BatChargingEfficKey, DefaultBatChargingEffic);
-        set => PlayerPrefs.SetFloat(BatChargingEfficKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(BatChargingEfficKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float RotorNum
     {
         get => PlayerPrefs.GetFloat(RotorNumKey, DefaultRotorNum);
-        set => PlayerPrefs.SetFloat(RotorNumKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(RotorNumKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float AirDensity
     {
         get => PlayerPrefs.GetFloat(AirDensityKey, DefaultAirDensity);
-        set => PlayerPrefs.SetFloat(AirDensityKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(AirDensityKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float DownwashCoeff
     {
         get => PlayerPrefs.GetFloat(DownwashCoeffKey, DefaultDownwashCoeff);
-        set => PlayerPrefs.SetFloat(DownwashCoeffKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(DownwashCoeffKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float PwrXferEffic
     {
         get => PlayerPrefs.GetFloat(PwrXferEfficKey, DefaultPwrXferEffic);
-        set => PlayerPrefs.SetFloat(PwrXferEfficKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(PwrXferEfficKey, value);
+            PlayerPrefs.Save();
+        }
     }
 
     public static float AvionicsPwr
     {
         get => PlayerPrefs.GetFloat(AvionicsPwrKey, DefaultAvionicsPwr);
-        set => PlayerPrefs.SetFloat(AvionicsPwrKey, value);
+        set
+        {
+            PlayerPrefs.SetFloat(AvionicsPwrKey, value);
+            PlayerPrefs.Save();
+        }
     }
 }

@@ -73,6 +73,8 @@ public class CamController : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             Vector3 delta = Input.mousePosition - lastMousePosition;
+            Debug.Log(Globals.CamRotateSpeed);
+            Debug.Log(delta);
             transform.Rotate(
                 -delta.y * Globals.CamRotateSpeed,
                 delta.x * Globals.CamRotateSpeed,
