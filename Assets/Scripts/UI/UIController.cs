@@ -58,6 +58,12 @@ public class UIController : MonoBehaviour
     GameObject selectedComponent;
     Simulator.State stateInMemory = Simulator.State.Pause;
 
+    [SerializeField]
+    CanvasGroup settingsCanvasGroup;
+
+    [SerializeField]
+    CanvasGroup mainCanvasGroup;
+
     public GameObject SelectedComponent
     {
         get { return selectedComponent; }
@@ -261,6 +267,11 @@ public class UIController : MonoBehaviour
         popUpText.text = message;
         popUpPanel.SetActive(true);
         gameModeText.text = "System status: Frozen";
+        // Block other UI
+        settingsCanvasGroup.interactable = false;
+        mainCanvasGroup.interactable = false;
+        settingsCanvasGroup.alpha = 0.4f;
+        mainCanvasGroup.alpha = 0.4f;
     }
 
     void HidePopUp()
@@ -281,6 +292,11 @@ public class UIController : MonoBehaviour
                 Simulator.instance.ToFreeze();
                 break;
         }
+        // Reactivate other UI
+        settingsCanvasGroup.interactable = true;
+        mainCanvasGroup.interactable = true;
+        settingsCanvasGroup.alpha = 1f;
+        mainCanvasGroup.alpha = 1f;
     }
 
     void AddNode()
