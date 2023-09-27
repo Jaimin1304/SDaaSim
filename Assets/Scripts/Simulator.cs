@@ -319,6 +319,7 @@ public class Simulator : MonoBehaviour
         lastState = currentState;
         currentState = State.Finished;
         OnFinishEvent.Invoke(); // Invoke the OnEditEvent
+        dataManager.SaveAllDroneDataToCSV(skyway.Drones.Values.ToList());
     }
 
     public void ToLastState()
@@ -425,7 +426,15 @@ public class Simulator : MonoBehaviour
         dataManager.SaveSkywayToJson(skyway);
     }
 
-    void CheckComplete() { }
+    public string GetTimeString()
+    {
+        int hours = Mathf.FloorToInt(elapsedTime / 3600f);
+        int hourInSec = hours * 3600;
+        int minutes = Mathf.FloorToInt((elapsedTime - hourInSec) / 60f);
+        int seconds = Mathf.FloorToInt(elapsedTime - hourInSec - minutes * 60);
+        string timeString = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+        return timeString;
+    }
 
     void QuitGame()
     {

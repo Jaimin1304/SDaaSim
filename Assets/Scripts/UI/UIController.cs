@@ -245,11 +245,7 @@ public class UIController : MonoBehaviour
 
     void UpdateTimer()
     {
-        int hours = Mathf.FloorToInt(Simulator.instance.ElapsedTime / 3600f);
-        int hourInSec = hours * 3600;
-        int minutes = Mathf.FloorToInt((Simulator.instance.ElapsedTime - hourInSec) / 60f);
-        int seconds = Mathf.FloorToInt(Simulator.instance.ElapsedTime - hourInSec - minutes * 60);
-        timerText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+        timerText.text = Simulator.instance.GetTimeString();
     }
 
     void PopUpConfirm()

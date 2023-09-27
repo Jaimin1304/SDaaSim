@@ -58,4 +58,39 @@ public class DataManager : MonoBehaviour
             return false;
         }
     }
+
+    public void SaveAllDroneDataToCSV(List<Drone> allDrones)
+    {
+        Debug.Log("SaveAllDroneDataToCSV");
+        // Define the directory to save all CSV files for this simulation session
+        string directoryName = "simulation_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+        string directoryPath = Path.Combine(
+            Application.streamingAssetsPath,
+            "saved simulations",
+            directoryName
+        );
+        // Check if the directory exists, if not, create it.
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+        // Loop through each drone and save its data to an individual CSV file
+        foreach (Drone drone in allDrones)
+        {
+            // Get the data collection from the drone
+            List<DroneData> dataCollection = drone.DataCollection;
+            // Initialize CSV string with Header row
+            string csvData = "TimeString,X,Y,Z,Speed,BatteryStatus\n";
+            // Append each data row to the CSV string
+            foreach (var data in dataCollection)
+            {
+                csvData += data.ToCSV() + "\n";
+            }
+            // Define the file name and path using the drone's GameObject name
+            string fileName = drone.gameObject.name + ".csv";
+            string filePath = Path.Combine(directoryPath, fileName);
+            // Write the CSV data to the file
+            File.WriteAllText(filePath, csvData);
+        }
+    }
 }

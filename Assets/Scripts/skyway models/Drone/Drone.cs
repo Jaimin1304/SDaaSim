@@ -35,6 +35,16 @@ public class Drone : MonoBehaviour
     [SerializeField]
     float batteryCapacityWh;
 
+    List<DroneData> dataCollection = new List<DroneData>();
+
+    float lastDataCollectionTime = 0f; // To store the time of the last data collection
+    const float dataCollectionInterval = 5f; // The interval in seconds between data collections
+
+    public List<DroneData> DataCollection
+    {
+        get { return dataCollection; }
+    }
+
     public string Id
     {
         get { return id; }
@@ -104,11 +114,20 @@ public class Drone : MonoBehaviour
 
     void Update()
     {
+        if (Simulator.instance.CurrentState != Simulator.State.Play)
+        {
+            return;
+        }
         droneView.UpdateVisual(this);
-        if (
-            Simulator.instance.CurrentState == Simulator.State.Play
-            && subSwarm.CurrentState != SubSwarm.State.Recharging
-        )
+
+        // Check if the time elapsed since the last data collection is greater than the interval
+        if (Simulator.instance.ElapsedTime - lastDataCollectionTime >= dataCollectionInterval)
+        {
+            CollectData();
+            lastDataCollectionTime = Simulator.instance.ElapsedTime; // Update the last collection time
+        }
+
+        if (subSwarm.CurrentState != SubSwarm.State.Recharging)
         {
             batteryStatus -= 0.03f * Time.deltaTime * Globals.PlaySpeed;
             if (batteryStatus < 0)
@@ -128,6 +147,18 @@ public class Drone : MonoBehaviour
         batteryStatus += amount * Time.deltaTime * Globals.PlaySpeed;
     }
 
+    void CollectData()
+    {
+        DroneData data = new DroneData
+        {
+            timestring = Simulator.instance.GetTimeString(),
+            position = transform.position,
+            speed = speed,
+            batteryStatus = batteryStatus
+        };
+        dataCollection.Add(data);
+    }
+
     public SerializableDrone ToSerializableDrone()
     {
         return new SerializableDrone()
@@ -139,5 +170,18 @@ public class Drone : MonoBehaviour
             batteryStatus = batteryStatus,
             payloads = payloads.Select(payload => payload.Id).ToList(),
         };
+    }
+}
+
+public class DroneData
+{
+    public string timestring;
+    public Vector3 position;
+    public float speed;
+    public float batteryStatus;
+
+    public string ToCSV()
+    {
+        return $"{timestring},{position.x},{position.y},{position.z},{speed},{batteryStatus}";
     }
 }
