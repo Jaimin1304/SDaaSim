@@ -21,6 +21,12 @@ public class Drone : MonoBehaviour
     float maxPayloadWeight;
 
     [SerializeField]
+    List<Payload> payloads = new();
+
+    [SerializeField]
+    DroneView droneView;
+
+    [SerializeField]
     float batteryStatus;
 
     [SerializeField]
@@ -28,12 +34,6 @@ public class Drone : MonoBehaviour
 
     [SerializeField]
     float batteryCapacityWh;
-
-    [SerializeField]
-    List<Payload> payloads = new();
-
-    [SerializeField]
-    DroneView droneView;
 
     public string Id
     {
@@ -107,10 +107,10 @@ public class Drone : MonoBehaviour
         droneView.UpdateVisual(this);
         if (
             Simulator.instance.CurrentState == Simulator.State.Play
-            && subSwarm.CurrentState != SubSwarm.State.Landed
+            && subSwarm.CurrentState != SubSwarm.State.Recharging
         )
         {
-            batteryStatus -= 0.01f * Time.deltaTime * Globals.PlaySpeed;
+            batteryStatus -= 0.03f * Time.deltaTime * Globals.PlaySpeed;
             if (batteryStatus < 0)
             {
                 Debug.LogError(string.Format("{0} is out of battery!", this.name));

@@ -26,9 +26,10 @@ public class SubSwarm : MonoBehaviour
 
     public enum State
     {
-        Standby,
-        Operating,
-        Landed
+        Hovering,
+        Flying,
+        Recharging,
+        ArrivedAtTarget
     }
 
     [SerializeField]
@@ -99,7 +100,7 @@ public class SubSwarm : MonoBehaviour
 
     void Start()
     {
-        currentState = State.Operating;
+        currentState = State.Flying;
         transform.position = node.transform.position;
         subSwarmView.InitDronePosition(this);
         subSwarmView.InitVisual(gameObject.name);
@@ -114,23 +115,30 @@ public class SubSwarm : MonoBehaviour
     {
         switch (currentState)
         {
-            case State.Standby:
+            case State.Hovering:
                 // stay still, waiting for command
+                HoverLogic();
                 break;
 
-            case State.Operating:
-                // move along path, once reach node, switch to standby
-                Tick(Node == Edge.LeftNode);
+            case State.Flying:
+                // move along path, once reach node, switch to Hovering
+                FlyLogic(Node == Edge.LeftNode);
                 break;
 
-            case State.Landed:
+            case State.Recharging:
                 // Land at a node and wait for command
+                RechargeLogic();
                 break;
         }
         subSwarmView.Visual(this);
     }
 
-    void Tick(bool leftToRight)
+    void HoverLogic()
+    {
+        return;
+    }
+
+    void FlyLogic(bool leftToRight)
     {
         Node targetNode;
         int indexIncrease;
@@ -157,11 +165,11 @@ public class SubSwarm : MonoBehaviour
             { // reach target
                 if (targetNode == parentSwarm.Request.DestNode)
                 {
-                    ToLanded(targetNode);
+                    ToRecharging(targetNode);
                 }
                 else
                 {
-                    ToStandby(targetNode);
+                    ToHovering(targetNode);
                     AskForCommand();
                 }
                 return;
@@ -172,15 +180,23 @@ public class SubSwarm : MonoBehaviour
         MoveToTarget(Edge.Path[wayPointIndex]);
     }
 
+    void RechargeLogic()
+    {
+        if (drones.All(drone => drone.BatteryStatus == 1f))
+        {
+            AskForCommand();
+        }
+    }
+
     public void MoveToTarget(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
         transform.position += direction * speed * Time.deltaTime * Globals.PlaySpeed;
     }
 
-    public void ToOperating(Edge edge)
+    public void ToFlying(Edge edge)
     {
-        currentState = State.Operating;
+        currentState = State.Flying;
         Edge = edge;
         if (node == edge.LeftNode)
         {
@@ -199,9 +215,9 @@ public class SubSwarm : MonoBehaviour
         epm = KirchsteinECM.instance.CalculateEpm();
     }
 
-    public void ToStandby(Node node)
+    public void ToHovering(Node node)
     {
-        currentState = State.Standby;
+        currentState = State.Hovering;
         Node = node;
         transform.position = node.transform.position;
         Edge = null;
@@ -210,14 +226,14 @@ public class SubSwarm : MonoBehaviour
         subSwarmView.ToggleDroneAnimation(this, 1);
     }
 
-    public bool ToLanded(Node node)
+    public bool ToRecharging(Node node)
     {
         if (node.Capacity < node.LandedDrones.Count + drones.Count)
         {
             Debug.Log(string.Format("Can't land at node {0}, due to low capacity", node.name));
             return false;
         }
-        currentState = State.Landed;
+        currentState = State.Recharging;
         Node = node;
         transform.position = node.transform.position;
         Edge = null;
@@ -226,7 +242,7 @@ public class SubSwarm : MonoBehaviour
         Debug.Log(node.name);
         Debug.Log(node.LandedDrones.Count);
         subSwarmView.LandVisualUpdate(this);
-        Debug.Log("landed!");
+        Debug.Log("Recharging!");
         return true;
     }
 

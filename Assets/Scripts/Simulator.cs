@@ -194,7 +194,7 @@ public class Simulator : MonoBehaviour
                         if (skyway.EdgeDict.ContainsKey(edgeId))
                         {
                             Edge edge = skyway.EdgeDict[edgeId];
-                            subSwarm.ToOperating(edge);
+                            subSwarm.ToFlying(edge);
                         }
                         else
                         {
@@ -220,7 +220,7 @@ public class Simulator : MonoBehaviour
                         if (skyway.NodeDict.ContainsKey(nodeId))
                         {
                             Node node = skyway.NodeDict[nodeId];
-                            subSwarm.ToLanded(node);
+                            subSwarm.ToRecharging(node);
                         }
                         else
                         {

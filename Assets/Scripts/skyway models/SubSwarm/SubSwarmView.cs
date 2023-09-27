@@ -36,7 +36,7 @@ public class SubSwarmView : MonoBehaviour
 
     public void Visual(SubSwarm subSwarm)
     {
-        if (subSwarm.CurrentState == SubSwarm.State.Operating)
+        if (subSwarm.CurrentState == SubSwarm.State.Flying)
         {
             Vector3 targetPostition = new Vector3(
                 subSwarm.Edge.Path[subSwarm.WayPointIndex].x,
