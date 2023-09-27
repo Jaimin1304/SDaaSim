@@ -11,6 +11,18 @@ public class UIController : MonoBehaviour
     TextMeshProUGUI gameModeText;
 
     [SerializeField]
+    TextMeshProUGUI timerText;
+
+    [SerializeField]
+    TextMeshProUGUI playSpeedText;
+
+    [SerializeField]
+    TextMeshProUGUI popUpText;
+
+    [SerializeField]
+    TextMeshProUGUI objectInfo;
+
+    [SerializeField]
     Button settingsButton;
 
     [SerializeField]
@@ -32,42 +44,29 @@ public class UIController : MonoBehaviour
     Button slowDownButton;
 
     [SerializeField]
-    TextMeshProUGUI timerText;
-
-    [SerializeField]
-    TextMeshProUGUI playSpeedText;
-
-    [SerializeField]
     Button popUpConfirmButton;
+
+    [SerializeField]
+    Button nodeBtn;
 
     [SerializeField]
     GameObject popUpPanel;
 
     [SerializeField]
-    TextMeshProUGUI popUpText;
-
-    [SerializeField]
-    private GameObject settingsWindow;
-
-    [SerializeField]
-    TextMeshProUGUI objectInfo;
-    public TextMeshProUGUI ObjectInfo
-    {
-        get { return objectInfo; }
-        set { objectInfo = value; }
-    }
-
-    Simulator.State stateInMemory = Simulator.State.Pause;
-
-    [SerializeField]
-    Button nodeBtn;
+    GameObject settingsWindow;
 
     GameObject selectedComponent;
+    Simulator.State stateInMemory = Simulator.State.Pause;
 
     public GameObject SelectedComponent
     {
         get { return selectedComponent; }
         set { selectedComponent = value; }
+    }
+    public TextMeshProUGUI ObjectInfo
+    {
+        get { return objectInfo; }
+        set { objectInfo = value; }
     }
 
     void OnDestroy()
@@ -77,6 +76,7 @@ public class UIController : MonoBehaviour
         Simulator.instance.OnPauseEvent.RemoveListener(HandlePause);
         Simulator.instance.OnFreezeEvent.RemoveListener(HandleFreeze);
         Simulator.instance.OnEditEvent.RemoveListener(HandleEdit);
+        Simulator.instance.OnFinishEvent.RemoveListener(HandleFinish);
     }
 
     void Start()
@@ -86,6 +86,7 @@ public class UIController : MonoBehaviour
         Simulator.instance.OnPauseEvent.AddListener(HandlePause);
         Simulator.instance.OnFreezeEvent.AddListener(HandleFreeze);
         Simulator.instance.OnEditEvent.AddListener(HandleEdit);
+        Simulator.instance.OnFinishEvent.AddListener(HandleFinish);
         // top bar
         saveSkywayButton.onClick.AddListener(SaveSkyway);
         loadSkywayButton.onClick.AddListener(LoadSkyway);
@@ -135,6 +136,19 @@ public class UIController : MonoBehaviour
         saveSkywayButton.enabled = true;
         nodeBtn.enabled = true;
         settingsButton.enabled = true;
+
+        playPauseButton.enabled = true;
+        speedUpButton.enabled = true;
+        slowDownButton.enabled = true;
+    }
+
+    void HandleFinish()
+    {
+        Debug.Log("Simulation finished");
+        playPauseButton.enabled = false;
+        speedUpButton.enabled = false;
+        slowDownButton.enabled = false;
+        gameModeText.text = "System status: Finished";
     }
 
     void Update()

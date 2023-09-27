@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Events;
 
 public class SubSwarm : MonoBehaviour
 {
@@ -29,7 +29,7 @@ public class SubSwarm : MonoBehaviour
         Hovering,
         Flying,
         Recharging,
-        ArrivedAtTarget
+        Arrived
     }
 
     [SerializeField]
@@ -42,8 +42,6 @@ public class SubSwarm : MonoBehaviour
 
     [SerializeField]
     float epm;
-
-    bool destReached;
 
     public string Id
     {
@@ -129,6 +127,11 @@ public class SubSwarm : MonoBehaviour
                 // Land at a node and wait for command
                 RechargeLogic();
                 break;
+
+            case State.Arrived:
+                // Send arrived event to the simulator for once
+                ArrivedLogic();
+                break;
         }
         subSwarmView.Visual(this);
     }
@@ -165,7 +168,7 @@ public class SubSwarm : MonoBehaviour
             { // reach target
                 if (targetNode == parentSwarm.Request.DestNode)
                 {
-                    ToRecharging(targetNode);
+                    ToArrived(targetNode);
                 }
                 else
                 {
@@ -188,6 +191,11 @@ public class SubSwarm : MonoBehaviour
         }
     }
 
+    void ArrivedLogic()
+    {
+        return;
+    }
+
     public void MoveToTarget(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
@@ -196,6 +204,7 @@ public class SubSwarm : MonoBehaviour
 
     public void ToFlying(Edge edge)
     {
+        Debug.Log("ToFlying");
         currentState = State.Flying;
         Edge = edge;
         if (node == edge.LeftNode)
@@ -217,6 +226,7 @@ public class SubSwarm : MonoBehaviour
 
     public void ToHovering(Node node)
     {
+        Debug.Log("ToHovering");
         currentState = State.Hovering;
         Node = node;
         transform.position = node.transform.position;
@@ -226,8 +236,22 @@ public class SubSwarm : MonoBehaviour
         subSwarmView.ToggleDroneAnimation(this, 1);
     }
 
+    public void ToArrived(Node node)
+    {
+        Debug.Log("ToArrived");
+        currentState = State.Arrived;
+        Node = node;
+        transform.position = node.transform.position;
+        Edge = null;
+        wayPointIndex = 0;
+        Simulator.instance.CheckSimulationComplete();
+        // stop drone animations
+        subSwarmView.ToggleDroneAnimation(this, 0);
+    }
+
     public bool ToRecharging(Node node)
     {
+        Debug.Log("ToRecharging");
         if (node.Capacity < node.LandedDrones.Count + drones.Count)
         {
             Debug.Log(string.Format("Can't land at node {0}, due to low capacity", node.name));

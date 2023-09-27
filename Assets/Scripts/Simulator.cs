@@ -1,12 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.IO;
-using System.Text;
 using Newtonsoft.Json;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine.Events;
 
 public class Simulator : MonoBehaviour
@@ -47,7 +43,8 @@ public class Simulator : MonoBehaviour
         Play,
         Pause,
         Edit,
-        Freeze
+        Freeze,
+        Finished
     }
 
     [SerializeField]
@@ -61,6 +58,7 @@ public class Simulator : MonoBehaviour
     public UnityEvent OnPauseEvent;
     public UnityEvent OnFreezeEvent;
     public UnityEvent OnEditEvent;
+    public UnityEvent OnFinishEvent;
 
     public Skyway Skyway
     {
@@ -102,6 +100,7 @@ public class Simulator : MonoBehaviour
         OnPauseEvent = new UnityEvent();
         OnFreezeEvent = new UnityEvent();
         OnEditEvent = new UnityEvent();
+        OnFinishEvent = new UnityEvent();
     }
 
     void Start()
@@ -315,6 +314,13 @@ public class Simulator : MonoBehaviour
         OnEditEvent.Invoke(); // Invoke the OnEditEvent
     }
 
+    public void ToFinish()
+    {
+        lastState = currentState;
+        currentState = State.Finished;
+        OnFinishEvent.Invoke(); // Invoke the OnEditEvent
+    }
+
     public void ToLastState()
     {
         switch (lastState)
@@ -334,6 +340,25 @@ public class Simulator : MonoBehaviour
             default:
                 Debug.LogError("Invalid simulator state");
                 break;
+        }
+    }
+
+    public void CheckSimulationComplete()
+    {
+        bool complete = true;
+        foreach (Swarm swarm in skyway.Swarms)
+        {
+            foreach (SubSwarm subSwarm in swarm.SubSwarms)
+            {
+                if (subSwarm.CurrentState != SubSwarm.State.Arrived)
+                {
+                    complete = false;
+                }
+            }
+        }
+        if (complete)
+        {
+            ToFinish();
         }
     }
 
