@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 using System.Linq;
 using UnityEngine.Events;
 
+[System.Serializable]
+public class BoolEvent : UnityEvent<bool> { }
+
 public class Simulator : MonoBehaviour
 {
     public static Simulator instance;
@@ -58,7 +61,7 @@ public class Simulator : MonoBehaviour
     public UnityEvent OnPauseEvent;
     public UnityEvent OnFreezeEvent;
     public UnityEvent OnEditEvent;
-    public UnityEvent OnFinishEvent;
+    public BoolEvent OnFinishEvent;
 
     public Skyway Skyway
     {
@@ -100,7 +103,7 @@ public class Simulator : MonoBehaviour
         OnPauseEvent = new UnityEvent();
         OnFreezeEvent = new UnityEvent();
         OnEditEvent = new UnityEvent();
-        OnFinishEvent = new UnityEvent();
+        OnFinishEvent = new BoolEvent();
     }
 
     void Start()
@@ -314,12 +317,15 @@ public class Simulator : MonoBehaviour
         OnEditEvent.Invoke(); // Invoke the OnEditEvent
     }
 
-    public void ToFinish()
+    public void ToFinish(bool saveCSV = true)
     {
         lastState = currentState;
         currentState = State.Finished;
-        OnFinishEvent.Invoke(); // Invoke the OnEditEvent
-        dataManager.SaveAllDroneDataToCSV(skyway.Drones.Values.ToList());
+        OnFinishEvent.Invoke(saveCSV); // Invoke the OnFinishEvent
+        if (saveCSV)
+        {
+            dataManager.SaveAllDroneDataToCSV(skyway.Drones.Values.ToList());
+        }
     }
 
     public void ToLastState()

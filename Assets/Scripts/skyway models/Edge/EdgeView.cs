@@ -92,7 +92,7 @@ public class EdgeView : MonoBehaviour
         {
             CreateLineRenderer();
         }
-        lineRenderer.startWidth = value;
-        lineRenderer.endWidth = value;
+        lineRenderer.startWidth = Globals.EdgeThickness;
+        lineRenderer.endWidth = Globals.EdgeThickness;
     }
 }

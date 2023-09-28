@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 
 public class UIController : MonoBehaviour
 {
@@ -148,13 +149,17 @@ public class UIController : MonoBehaviour
         slowDownButton.enabled = true;
     }
 
-    void HandleFinish()
+    void HandleFinish(bool showPopup)
     {
         Debug.Log("Simulation finished");
         playPauseButton.enabled = false;
         speedUpButton.enabled = false;
         slowDownButton.enabled = false;
         gameModeText.text = "System status: Finished";
+        if (showPopup)
+        {
+            ShowPopUp("Simulation finished. Data is saved to 'StreamingAssets/saved simulations'.");
+        }
     }
 
     void Update()
@@ -277,6 +282,11 @@ public class UIController : MonoBehaviour
     void HidePopUp()
     {
         popUpPanel.SetActive(false);
+        // Reactivate other UI
+        settingsCanvasGroup.interactable = true;
+        mainCanvasGroup.interactable = true;
+        settingsCanvasGroup.alpha = 1f;
+        mainCanvasGroup.alpha = 1f;
         switch (stateInMemory)
         {
             case Simulator.State.Play:
@@ -291,12 +301,10 @@ public class UIController : MonoBehaviour
             case Simulator.State.Freeze:
                 Simulator.instance.ToFreeze();
                 break;
+            case Simulator.State.Finished:
+                Simulator.instance.ToFinish(false);
+                break;
         }
-        // Reactivate other UI
-        settingsCanvasGroup.interactable = true;
-        mainCanvasGroup.interactable = true;
-        settingsCanvasGroup.alpha = 1f;
-        mainCanvasGroup.alpha = 1f;
     }
 
     void AddNode()

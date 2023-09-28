@@ -154,7 +154,9 @@ public class Drone : MonoBehaviour
             timestring = Simulator.instance.GetTimeString(),
             position = transform.position,
             speed = speed,
-            batteryStatus = batteryStatus
+            batteryStatus = batteryStatus,
+            node = (subSwarm.Node != null) ? subSwarm.Node.name : "-",
+            edge = (subSwarm.Edge != null) ? subSwarm.Edge.name : "-"
         };
         dataCollection.Add(data);
     }
@@ -179,9 +181,11 @@ public class DroneData
     public Vector3 position;
     public float speed;
     public float batteryStatus;
+    public string node;
+    public string edge;
 
     public string ToCSV()
     {
-        return $"{timestring},{position.x},{position.y},{position.z},{speed},{batteryStatus}";
+        return $"{timestring},{position.x},{position.y},{position.z},{speed},{batteryStatus},{node},{edge}";
     }
 }

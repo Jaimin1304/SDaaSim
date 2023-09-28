@@ -59,7 +59,7 @@ public class Globals : MonoBehaviour
     const float DefaultCamSprintSpeed = 300;
     const float DefaultCamRotateSpeed = 0.15f;
     const float DefaultCamZoomSpeed = 200;
-    const float DefaultEdgeThickness = 0.7f;
+    const float DefaultEdgeThickness = 0.6f;
     const float DefaultDroneBatCap = 200000;
     const float DefaultWindSpeed = 5;
     const float DefaultBatChargingEffic = 0.85f;
