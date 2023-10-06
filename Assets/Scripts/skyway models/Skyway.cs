@@ -13,12 +13,16 @@ public class Skyway : MonoBehaviour
     List<Edge> edges = new();
 
     [SerializeField]
+    List<Pad> pads = new();
+
+    [SerializeField]
     List<Request> requests = new();
 
     [SerializeField]
     List<Swarm> swarms = new();
 
     Dictionary<string, Edge> edgeDict = new();
+    Dictionary<string, Pad> padDict = new();
     Dictionary<string, Node> nodeDict = new();
     Dictionary<string, SubSwarm> subSwarms = new();
 
@@ -33,6 +37,12 @@ public class Skyway : MonoBehaviour
     }
 
     public List<Edge> Edges
+    {
+        get { return edges; }
+        set { edges = value; }
+    }
+
+    public List<Edge> Pads
     {
         get { return edges; }
         set { edges = value; }
@@ -56,11 +66,11 @@ public class Skyway : MonoBehaviour
         set { subSwarms = value; }
     }
 
-    //public Dictionary<string, Pad> Pads
-    //{
-    //    get { return pads; }
-    //    set { pads = value; }
-    //}
+    public Dictionary<string, Pad> PadDict
+    {
+        get { return padDict; }
+        set { padDict = value; }
+    }
 
     public Dictionary<string, Drone> Drones
     {
@@ -195,8 +205,9 @@ public class Skyway : MonoBehaviour
         return new SerializableSkyway()
         {
             nodes = nodes.Select(node => node.ToSerializableNode()).ToList(),
-            requests = requests.Select(request => request.ToSerializableRequest()).ToList(),
             edges = edges.Select(edge => edge.ToSerializableEdge()).ToList(),
+            pads = pads.Select(pad => pad.ToSerializablePad()).ToList(),
+            requests = requests.Select(request => request.ToSerializableRequest()).ToList(),
             swarms = swarms.Select(swarm => swarm.ToSerializableSwarm()).ToList(),
             subSwarms = subSwarms
                 .Select(subSwarm => subSwarm.Value.ToSerializableSubSwarm())

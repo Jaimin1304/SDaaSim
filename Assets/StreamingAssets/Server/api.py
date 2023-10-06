@@ -8,6 +8,11 @@ def subswarm_land(subswarm_id, node_id, instructions):
         {"subswarm_land": {'subswarm_id': subswarm_id, 'node_id': node_id}})
 
 
+def subswarm_takeoff(subswarm_id, node_id, instructions):
+    instructions.append(
+        {"subswarm_takeoff": {'subswarm_id': subswarm_id, 'node_id': node_id}})
+
+
 def split_subswarm(subswarm_id, drone_lst, instructions):
     instructions.append(
         {"split_subswarm": {'subswarm_id': subswarm_id, 'drone_lst': drone_lst}})

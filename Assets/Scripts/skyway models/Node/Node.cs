@@ -15,13 +15,21 @@ public class Node : MonoBehaviour
     List<Edge> edges;
 
     [SerializeField]
+    List<Pad> pads;
+
+    [SerializeField]
     Utils utils;
 
     [SerializeField]
     NodeView nodeView;
 
     [SerializeField]
-    int capacity;
+    private GameObject padPrefab;
+
+    int totalCapacity;
+    int rechargeableCapacity;
+    List<Pad> rechargeablePads;
+    List<Pad> nonRechargeablePads;
 
     public string Id
     {
@@ -40,10 +48,34 @@ public class Node : MonoBehaviour
         set { edges = value; }
     }
 
-    public int Capacity
+    public List<Pad> Pads
     {
-        get { return capacity; }
-        set { capacity = value; }
+        get { return pads; }
+        set { pads = value; }
+    }
+
+    public List<Pad> RechargeablePads
+    {
+        get { return rechargeablePads; }
+        set { rechargeablePads = value; }
+    }
+
+    public List<Pad> NonRechargeablePads
+    {
+        get { return nonRechargeablePads; }
+        set { nonRechargeablePads = value; }
+    }
+
+    public int TotalCapacity
+    {
+        get { return totalCapacity; }
+        set { totalCapacity = value; }
+    }
+
+    public int RechargeableCapacity
+    {
+        get { return rechargeableCapacity; }
+        set { rechargeableCapacity = value; }
     }
 
     void Awake()
@@ -55,6 +87,9 @@ public class Node : MonoBehaviour
     {
         nodeView.initVisual(this);
         nodeView.UpdateVisual(this);
+        GenerateRandomPads();
+        SyncPadGroups();
+        nodeView.ArrangePads(this);
     }
 
     void Update()
@@ -83,6 +118,38 @@ public class Node : MonoBehaviour
         }
     }
 
+    void SyncCapacities()
+    {
+        totalCapacity = pads.Count;
+        rechargeableCapacity = pads.Count(pad => pad.Rechargeable);
+    }
+
+    void SyncPadGroups()
+    {
+        rechargeablePads = pads.Where(pad => pad.Rechargeable).ToList();
+        nonRechargeablePads = pads.Where(pad => !pad.Rechargeable).ToList();
+    }
+
+    public void GenerateRandomPads()
+    {
+        // Generate a random number for the count of pads.
+        int numberOfPads = UnityEngine.Random.Range(1, 9);
+        for (int i = 0; i < numberOfPads; i++)
+        {
+            // Instantiate a new pad
+            GameObject padGO = Instantiate(padPrefab, transform);
+            // Reset local position to ensure it's placed at the position of the Node
+            padGO.transform.localPosition = Vector3.zero;
+            Pad newPad = padGO.GetComponent<Pad>();
+            bool randomRechargeableState = UnityEngine.Random.value > 0.5f;
+            newPad.ChangeRechargeableState(randomRechargeableState);
+            newPad.Node = this;
+            // Add the new pad to the pads list
+            pads.Add(newPad);
+        }
+        SyncCapacities();
+    }
+
     public SerializableNode ToSerializableNode()
     {
         return new SerializableNode()
@@ -91,7 +158,7 @@ public class Node : MonoBehaviour
             position = transform.position,
             landedDrones = landedDrones.Select(drone => drone.Id).ToList(),
             edges = edges.Select(edge => edge.Id).ToList(),
-            capacity = capacity
+            pads = pads.Select(pad => pad.Id).ToList(),
         };
     }
 }

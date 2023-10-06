@@ -252,7 +252,7 @@ public class SubSwarm : MonoBehaviour
     public bool ToRecharging(Node node)
     {
         Debug.Log("ToRecharging");
-        if (node.Capacity < node.LandedDrones.Count + drones.Count)
+        if (node.TotalCapacity < node.LandedDrones.Count + drones.Count)
         {
             Debug.Log(string.Format("Can't land at node {0}, due to low capacity", node.name));
             return false;

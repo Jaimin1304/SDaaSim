@@ -30,7 +30,8 @@ public class Globals : MonoBehaviour
     public const float objectCreationDistance = 15f;
     public const float editModeDragMultiplier = 0.2f;
     public const int playSpeedLimit = 32;
-    public static Vector3 windDirection = Vector3.left;
+
+    //public static Vector3 windDirection = Vector3.left;
 
     static int playSpeed = 1;
     public static int PlaySpeed
@@ -47,6 +48,12 @@ public class Globals : MonoBehaviour
     const string EdgeThicknessKey = "EdgeThickness";
     const string DroneBatCapKey = "DroneBatCap"; // Drone battery capacity in Wh
     const string WindSpeedKey = "WindSpeed";
+
+    // Wind direction vector3
+    static string WindDirectionXKey = "WindDirectionX";
+    static string WindDirectionYKey = "WindDirectionY";
+    static string WindDirectionZKey = "WindDirectionZ";
+
     const string BatChargingEfficKey = "BatChargingEffic"; // Battery charging efficiency
     const string RotorNumKey = "RotorNum"; // Number of rotors
     const string AirDensityKey = "AirDensity"; // Air density
@@ -62,6 +69,7 @@ public class Globals : MonoBehaviour
     const float DefaultEdgeThickness = 0.6f;
     const float DefaultDroneBatCap = 200000;
     const float DefaultWindSpeed = 5;
+    static Vector3 DefaultWindDirection = Vector3.left;
     const float DefaultBatChargingEffic = 0.85f;
     const float DefaultRotorNum = 4f;
     const float DefaultAirDensity = 1.225f;
@@ -136,6 +144,24 @@ public class Globals : MonoBehaviour
         set
         {
             PlayerPrefs.SetFloat(WindSpeedKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static Vector3 WindDirection
+    {
+        get
+        {
+            float x = PlayerPrefs.GetFloat(WindDirectionXKey, DefaultWindDirection.x);
+            float y = PlayerPrefs.GetFloat(WindDirectionYKey, DefaultWindDirection.y);
+            float z = PlayerPrefs.GetFloat(WindDirectionZKey, DefaultWindDirection.z);
+            return new Vector3(x, y, z);
+        }
+        set
+        {
+            PlayerPrefs.SetFloat(WindDirectionXKey, value.x);
+            PlayerPrefs.SetFloat(WindDirectionYKey, value.y);
+            PlayerPrefs.SetFloat(WindDirectionZKey, value.z);
             PlayerPrefs.Save();
         }
     }

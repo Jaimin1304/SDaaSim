@@ -25,7 +25,7 @@ public class NodeView : MonoBehaviour, IHighlightable
             "{0} [{1}/{2}]",
             node.name,
             node.LandedDrones.Count,
-            node.Capacity
+            node.TotalCapacity
         );
     }
 
@@ -45,8 +45,33 @@ public class NodeView : MonoBehaviour, IHighlightable
             "{0} [{1}/{2}]",
             node.name,
             node.LandedDrones.Count,
-            node.Capacity
+            node.TotalCapacity
         );
+    }
+
+    public void ArrangePads(Node node)
+    {
+        List<Pad> pads = node.Pads;
+        if (pads == null || pads.Count == 0)
+            return;
+        // 1. Determine the values for m and n
+        int n = Mathf.FloorToInt(Mathf.Sqrt(pads.Count));
+        int m = Mathf.CeilToInt((float)pads.Count / n);
+        float padWidth = 4f;
+        float padHeight = 4f;
+        // 2. Calculate the position for each Pad using m and n
+        for (int i = 0; i < pads.Count; i++)
+        {
+            int row = i / n; // Calculate the row
+            int col = i % n; // Calculate the column
+            float xPos = col * padWidth;
+            float zPos = row * padHeight;
+            // Set the Pad's position
+            pads[i].transform.position =
+                new Vector3(xPos, 0, zPos)
+                + node.transform.position
+                + new Vector3(-padWidth * n / 2f, 0, -padHeight * n / 2f);
+        }
     }
 
     public void Highlight()
