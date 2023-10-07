@@ -56,7 +56,7 @@ public class SettingsController : MonoBehaviour
         // update thickness for all edges
         foreach (Edge edge in Simulator.instance.Skyway.Edges)
         {
-            edge.EdgeView.UpdateEdgeThickness(value);
+            edge.EdgeView.UpdateEdgeThickness();
         }
     }
 }

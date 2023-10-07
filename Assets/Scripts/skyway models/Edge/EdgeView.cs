@@ -21,7 +21,6 @@ public class EdgeView : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("Awake called");
         mainCamera = Camera.main;
         if (lineRenderer == null)
         {
@@ -49,7 +48,7 @@ public class EdgeView : MonoBehaviour
         string gameObjectName
     )
     {
-        Vector3 heightOffset = new Vector3(0, 1, 0);
+        Vector3 heightOffset = new Vector3(0, Globals.edgeHeightOffset, 0);
 
         // set waypoints as lineRenderer positions
         lineRenderer.positionCount = wayPoints.Count + 2;
@@ -86,7 +85,7 @@ public class EdgeView : MonoBehaviour
         lengthText.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
     }
 
-    public void UpdateEdgeThickness(float value)
+    public void UpdateEdgeThickness()
     {
         if (lineRenderer == null)
         {

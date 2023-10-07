@@ -184,6 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outline: {fileID: 0}
   nameTag: {fileID: 4569204027396411270}
+  transparentBroder: {fileID: 222323064844931494}
 --- !u!1 &2870111315958720622
 GameObject:
   m_ObjectHideFlags: 0

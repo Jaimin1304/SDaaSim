@@ -78,6 +78,7 @@ public class Edge : MonoBehaviour
         CalLengths();
         CalPath();
         UpdateEdgeVisual();
+        edgeView.UpdateEdgeThickness();
     }
 
     void Update()

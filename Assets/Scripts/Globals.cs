@@ -30,6 +30,9 @@ public class Globals : MonoBehaviour
     public const float objectCreationDistance = 15f;
     public const float editModeDragMultiplier = 0.2f;
     public const int playSpeedLimit = 32;
+    public const float padGap = 4f;
+    public const float edgeHeightOffset = 2f;
+    public const float edgeNodeGap = 5f;
 
     //public static Vector3 windDirection = Vector3.left;
 
