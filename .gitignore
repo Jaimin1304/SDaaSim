@@ -64,6 +64,9 @@ crashlytics-build.properties
 # ignore ImportedAssets
 /Assets/ImportedAssets/
 
-# ignore saved skyways
-/Assets/StreamingAssets/saved skyways
+# Ignore everything in 'saved skyways' folder
+/Assets/StreamingAssets/saved skyways/*
+
+# Ignore everything in 'saved simulations' folder
+/Assets/StreamingAssets/saved simulations/*
 
