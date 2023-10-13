@@ -240,7 +240,7 @@ public class UIController : MonoBehaviour
 
     public void SlowDown()
     {
-        if (Globals.PlaySpeed > 1)
+        if (Globals.PlaySpeed > 0.125)
         {
             Globals.PlaySpeed /= 2;
         }

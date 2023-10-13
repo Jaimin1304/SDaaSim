@@ -23,7 +23,7 @@ public class SerializableNode
 {
     public string id;
     public Vector3 position;
-    public List<string> landedDrones;
+    public List<string> drones;
     public List<string> edges;
     public List<string> pads;
 }

@@ -29,15 +29,16 @@ public class Globals : MonoBehaviour
     public const float doubleClickGap = 0.25f;
     public const float objectCreationDistance = 15f;
     public const float editModeDragMultiplier = 0.2f;
-    public const int playSpeedLimit = 32;
+    public const int playSpeedLimit = 64;
     public const float padGap = 4f;
     public const float edgeHeightOffset = 2f;
     public const float edgeNodeGap = 5f;
+    public const float g = 9.807f; // Gravitational acceleration
 
     //public static Vector3 windDirection = Vector3.left;
 
-    static int playSpeed = 1;
-    public static int PlaySpeed
+    static float playSpeed = 1;
+    public static float PlaySpeed
     {
         get { return playSpeed; }
         set { playSpeed = value; }
@@ -50,12 +51,12 @@ public class Globals : MonoBehaviour
     const string CamZoomSpeedKey = "CamZoomSpeed";
     const string EdgeThicknessKey = "EdgeThickness";
     const string DroneBatCapKey = "DroneBatCap"; // Drone battery capacity in Wh
-    const string WindSpeedKey = "WindSpeed";
+    const string PadRechargeRateKey = "PadRechargeRate"; // Wh per second
 
     // Wind direction vector3
-    static string WindDirectionXKey = "WindDirectionX";
-    static string WindDirectionYKey = "WindDirectionY";
-    static string WindDirectionZKey = "WindDirectionZ";
+    static string WindSpdXKey = "WindSpdX"; // Wind speed x
+    static string WindSpdYKey = "WindSpdY"; // Wind speed y
+    static string WindSpdZKey = "WindSpdZ"; // Wind speed z
 
     const string BatChargingEfficKey = "BatChargingEffic"; // Battery charging efficiency
     const string RotorNumKey = "RotorNum"; // Number of rotors
@@ -64,21 +65,55 @@ public class Globals : MonoBehaviour
     const string PwrXferEfficKey = "PwrXferEffic"; // Power transfer efficiency from battery to propeller
     const string AvionicsPwrKey = "AvionicsPwr"; // Avionics power, power consumption of electronic equipmentF
 
+    // Drone attributes
+    const string MaxLiftSpdKey = "MaxLiftSpd"; // Design maximum lifting speed in m/s
+    const string MaxDescnetSpdKey = "MaxDescnetSpd"; // Design maximum descent speed in m/s
+    const string MaxHorizontalSpdKey = "MaxHorizontalSpd"; // Design maximum horizontal speed in m/s
+    const string BodyMassKey = "BodyMass"; // Drone body mass in kg
+    const string BatMassKey = "BatMass"; // Drone battery mass in kg
+    const string PayloadMassKey = "PayloadMass"; // Drone payload mass in kg
+    const string BodyAreaKey = "BodyArea"; // Drone body projected area in m*m
+    const string BatAreaKey = "BatArea"; // Drone battery projected area in m*m
+    const string PayloadAreaKey = "PayloadArea"; // Drone payload projected area in m*m
+    const string BodyDragCoeffKey = "BodyDragCoeff"; // Drone body projected area in m*m
+    const string BatDragCoeffKey = "BatDragCoeff"; // Drone battery projected area in m*m
+    const string PayloadDragCoeffKey = "PayloadDragCoeff"; // Drone payload projected area in m*m
+    const string InducedPowFactorKey = "InducedPowFactor"; // Drone payload projected area in m*m
+    const string ProfilePowFactorKey = "ProfilePowFactor"; // Drone payload projected area in m*m
+    const string ProfilePowWithSpdFactorKey = "ProfilePowWithSpdFactor"; // Drone payload projected area in m*m
+
     // Define default values
     const float DefaultCamMovSpeed = 80;
     const float DefaultCamSprintSpeed = 300;
     const float DefaultCamRotateSpeed = 0.15f;
     const float DefaultCamZoomSpeed = 200;
     const float DefaultEdgeThickness = 0.6f;
-    const float DefaultDroneBatCap = 200000;
-    const float DefaultWindSpeed = 5;
-    static Vector3 DefaultWindDirection = Vector3.left;
-    const float DefaultBatChargingEffic = 0.85f;
+    const float DefaultPadRechargeRate = 0.05f;
+    const float DefaultDroneBatCap = 500;
+    static Vector3 DefaultWindSpd = Vector3.left;
+    const float DefaultBatChargingEffic = 0.9f;
     const float DefaultRotorNum = 4f;
     const float DefaultAirDensity = 1.225f;
     const float DefaultDownwashCoeff = 1f;
     const float DefaultPwrXferEffic = 0.73f;
     const float DefaultAvionicsPwr = 10f;
+
+    // Default drone attributes
+    const float DefaultMaxLiftSpd = 5f;
+    const float DefaultMaxDescnetSpd = 5f;
+    const float DefaultMaxHorizontalSpd = 20f;
+    const float DefaultBodyMass = 1.07f;
+    const float DefaultBatMass = 1f;
+    const float DefaultPayloadMass = 1.5f;
+    const float DefaultBodyArea = 0.0599f;
+    const float DefaultBatArea = 0.0037f;
+    const float DefaultPayloadArea = 0.0135f;
+    const float DefaultBodyDragCoeff = 1.49f;
+    const float DefaultBatDragCoeff = 1f;
+    const float DefaultPayloadDragCoeff = 2.2f;
+    const float DefaultInducedPowFactor = 1f;
+    const float DefaultProfilePowFactor = 0.790f;
+    const float DefaultProfilePowWithSpdFactor = 0.0042f;
 
     // Properties with PlayerPrefs saving in setters
     public static float CamMovSpeed
@@ -131,6 +166,16 @@ public class Globals : MonoBehaviour
         }
     }
 
+    public static float PadRechargeRate
+    {
+        get => PlayerPrefs.GetFloat(PadRechargeRateKey, DefaultPadRechargeRate);
+        set
+        {
+            PlayerPrefs.SetFloat(PadRechargeRateKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
     public static float DroneBatCap
     {
         get => PlayerPrefs.GetFloat(DroneBatCapKey, DefaultDroneBatCap);
@@ -141,35 +186,25 @@ public class Globals : MonoBehaviour
         }
     }
 
-    public static float WindSpeed
-    {
-        get => PlayerPrefs.GetFloat(WindSpeedKey, DefaultWindSpeed);
-        set
-        {
-            PlayerPrefs.SetFloat(WindSpeedKey, value);
-            PlayerPrefs.Save();
-        }
-    }
-
-    public static Vector3 WindDirection
+    public static Vector3 WindSpd
     {
         get
         {
-            float x = PlayerPrefs.GetFloat(WindDirectionXKey, DefaultWindDirection.x);
-            float y = PlayerPrefs.GetFloat(WindDirectionYKey, DefaultWindDirection.y);
-            float z = PlayerPrefs.GetFloat(WindDirectionZKey, DefaultWindDirection.z);
+            float x = PlayerPrefs.GetFloat(WindSpdXKey, DefaultWindSpd.x);
+            float y = PlayerPrefs.GetFloat(WindSpdYKey, DefaultWindSpd.y);
+            float z = PlayerPrefs.GetFloat(WindSpdZKey, DefaultWindSpd.z);
             return new Vector3(x, y, z);
         }
         set
         {
-            PlayerPrefs.SetFloat(WindDirectionXKey, value.x);
-            PlayerPrefs.SetFloat(WindDirectionYKey, value.y);
-            PlayerPrefs.SetFloat(WindDirectionZKey, value.z);
+            PlayerPrefs.SetFloat(WindSpdXKey, value.x);
+            PlayerPrefs.SetFloat(WindSpdYKey, value.y);
+            PlayerPrefs.SetFloat(WindSpdZKey, value.z);
             PlayerPrefs.Save();
         }
     }
 
-    public static float BatteryChargingEffic
+    public static float BatChargingEffic
     {
         get => PlayerPrefs.GetFloat(BatChargingEfficKey, DefaultBatChargingEffic);
         set
@@ -225,6 +260,156 @@ public class Globals : MonoBehaviour
         set
         {
             PlayerPrefs.SetFloat(AvionicsPwrKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float MaxLiftSpd
+    {
+        get => PlayerPrefs.GetFloat(MaxLiftSpdKey, DefaultMaxLiftSpd);
+        set
+        {
+            PlayerPrefs.SetFloat(MaxLiftSpdKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float MaxDescnetSpd
+    {
+        get => PlayerPrefs.GetFloat(MaxDescnetSpdKey, DefaultMaxDescnetSpd);
+        set
+        {
+            PlayerPrefs.SetFloat(MaxDescnetSpdKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float MaxHorizontalSpd
+    {
+        get => PlayerPrefs.GetFloat(MaxHorizontalSpdKey, DefaultMaxHorizontalSpd);
+        set
+        {
+            PlayerPrefs.SetFloat(MaxHorizontalSpdKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float BodyMass
+    {
+        get => PlayerPrefs.GetFloat(BodyMassKey, DefaultBodyMass);
+        set
+        {
+            PlayerPrefs.SetFloat(BodyMassKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float BatMass
+    {
+        get => PlayerPrefs.GetFloat(BatMassKey, DefaultBatMass);
+        set
+        {
+            PlayerPrefs.SetFloat(BatMassKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float PayloadMass
+    {
+        get => PlayerPrefs.GetFloat(PayloadMassKey, DefaultPayloadMass);
+        set
+        {
+            PlayerPrefs.SetFloat(PayloadMassKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float BodyArea
+    {
+        get => PlayerPrefs.GetFloat(BodyAreaKey, DefaultBodyArea);
+        set
+        {
+            PlayerPrefs.SetFloat(BodyAreaKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float BatArea
+    {
+        get => PlayerPrefs.GetFloat(BatAreaKey, DefaultBatArea);
+        set
+        {
+            PlayerPrefs.SetFloat(BatAreaKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float PayloadArea
+    {
+        get => PlayerPrefs.GetFloat(PayloadAreaKey, DefaultPayloadArea);
+        set
+        {
+            PlayerPrefs.SetFloat(PayloadAreaKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float BodyDragCoeff
+    {
+        get => PlayerPrefs.GetFloat(BodyDragCoeffKey, DefaultBodyDragCoeff);
+        set
+        {
+            PlayerPrefs.SetFloat(BodyDragCoeffKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float BatDragCoeff
+    {
+        get => PlayerPrefs.GetFloat(BatDragCoeffKey, DefaultBatDragCoeff);
+        set
+        {
+            PlayerPrefs.SetFloat(BatDragCoeffKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float PayloadDragCoeff
+    {
+        get => PlayerPrefs.GetFloat(PayloadDragCoeffKey, DefaultPayloadDragCoeff);
+        set
+        {
+            PlayerPrefs.SetFloat(PayloadDragCoeffKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float InducedPowFactor
+    {
+        get => PlayerPrefs.GetFloat(InducedPowFactorKey, DefaultInducedPowFactor);
+        set
+        {
+            PlayerPrefs.SetFloat(InducedPowFactorKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float ProfilePowFactor
+    {
+        get => PlayerPrefs.GetFloat(ProfilePowFactorKey, DefaultProfilePowFactor);
+        set
+        {
+            PlayerPrefs.SetFloat(PayloadDragCoeffKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static float ProfilePowWithSpdFactor
+    {
+        get => PlayerPrefs.GetFloat(ProfilePowWithSpdFactorKey, DefaultProfilePowWithSpdFactor);
+        set
+        {
+            PlayerPrefs.SetFloat(ProfilePowWithSpdFactorKey, value);
             PlayerPrefs.Save();
         }
     }

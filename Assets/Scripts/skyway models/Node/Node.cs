@@ -9,7 +9,7 @@ public class Node : MonoBehaviour
     string id;
 
     [SerializeField]
-    List<Drone> landedDrones;
+    List<Drone> drones;
 
     [SerializeField]
     List<Edge> edges;
@@ -24,22 +24,20 @@ public class Node : MonoBehaviour
     NodeView nodeView;
 
     [SerializeField]
-    private GameObject padPrefab;
+    GameObject padPrefab;
 
-    int totalCapacity;
-    int rechargeableCapacity;
-    List<Pad> rechargeablePads;
-    List<Pad> nonRechargeablePads;
+    List<Pad> rechargePads;
+    List<Pad> nonRechargePads;
 
     public string Id
     {
         get { return id; }
     }
 
-    public List<Drone> LandedDrones
+    public List<Drone> Drones
     {
-        get { return landedDrones; }
-        set { landedDrones = value; }
+        get { return drones; }
+        set { drones = value; }
     }
 
     public List<Edge> Edges
@@ -54,28 +52,16 @@ public class Node : MonoBehaviour
         set { pads = value; }
     }
 
-    public List<Pad> RechargeablePads
+    public List<Pad> RechargePads
     {
-        get { return rechargeablePads; }
-        set { rechargeablePads = value; }
+        get { return rechargePads; }
+        set { rechargePads = value; }
     }
 
-    public List<Pad> NonRechargeablePads
+    public List<Pad> NonRechargePads
     {
-        get { return nonRechargeablePads; }
-        set { nonRechargeablePads = value; }
-    }
-
-    public int TotalCapacity
-    {
-        get { return totalCapacity; }
-        set { totalCapacity = value; }
-    }
-
-    public int RechargeableCapacity
-    {
-        get { return rechargeableCapacity; }
-        set { rechargeableCapacity = value; }
+        get { return nonRechargePads; }
+        set { nonRechargePads = value; }
     }
 
     void Awake()
@@ -108,32 +94,26 @@ public class Node : MonoBehaviour
 
     void RechargeDrones()
     {
-        if (landedDrones.Count <= 0)
+        if (drones.Count <= 0)
         {
             return;
         }
-        foreach (Drone drone in landedDrones)
+        foreach (Drone drone in drones)
         {
             drone.Recharge(0.01f);
         }
     }
 
-    void SyncCapacities()
-    {
-        totalCapacity = pads.Count;
-        rechargeableCapacity = pads.Count(pad => pad.Rechargeable);
-    }
-
     void SyncPadGroups()
     {
-        rechargeablePads = pads.Where(pad => pad.Rechargeable).ToList();
-        nonRechargeablePads = pads.Where(pad => !pad.Rechargeable).ToList();
+        rechargePads = pads.Where(pad => pad.Rechargeable).ToList();
+        nonRechargePads = pads.Where(pad => !pad.Rechargeable).ToList();
     }
 
     public void GenerateRandomPads()
     {
         // Generate a random number for the count of pads.
-        int numberOfPads = UnityEngine.Random.Range(1, 9);
+        int numberOfPads = UnityEngine.Random.Range(15, 20);
         for (int i = 0; i < numberOfPads; i++)
         {
             // Instantiate a new pad
@@ -147,7 +127,16 @@ public class Node : MonoBehaviour
             // Add the new pad to the pads list
             pads.Add(newPad);
         }
-        SyncCapacities();
+    }
+
+    public List<Pad> FreeRechargePads()
+    {
+        return rechargePads.Where(pad => pad.Drone == null).ToList();
+    }
+
+    public List<Pad> FreeNonRechargePads()
+    {
+        return nonRechargePads.Where(pad => pad.Drone == null).ToList();
     }
 
     public SerializableNode ToSerializableNode()
@@ -156,7 +145,7 @@ public class Node : MonoBehaviour
         {
             id = id,
             position = transform.position,
-            landedDrones = landedDrones.Select(drone => drone.Id).ToList(),
+            drones = drones.Select(drone => drone.Id).ToList(),
             edges = edges.Select(edge => edge.Id).ToList(),
             pads = pads.Select(pad => pad.Id).ToList(),
         };

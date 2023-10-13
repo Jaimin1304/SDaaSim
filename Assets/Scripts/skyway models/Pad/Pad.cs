@@ -52,16 +52,6 @@ public class Pad : MonoBehaviour
         padView.SyncPadView(this);
     }
 
-    public void Occupy(Drone drone)
-    {
-        Drone = drone;
-    }
-
-    public void Release()
-    {
-        drone = null;
-    }
-
     public void ChangeRechargeableState(bool newState)
     {
         rechargeable = newState;

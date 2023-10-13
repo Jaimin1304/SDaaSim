@@ -1,50 +1,78 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 /*
 The applied anergy consumption model is derived from kirchstein's approach mentioned in paper:
 Comparison of energy demands of drone-based and ground-based parcel delivery services
 and
 Energy consumption models for delivery drones: A comparison and assessment
+DOI:10.1016/j.trd.2019.102209
 */
 
 public class KirchsteinECM : MonoBehaviour
 {
     public static KirchsteinECM instance;
-    public float eta = 0.73f; // Power transfer efficiency from battery to propeller
-    public float k = 1; // Lifting power markup
+    public float eta; // Power transfer efficiency from battery to propeller
     public float T; // Thrust
-    public float w = 1f; // Downwash coefficient
+    public float w; // Downwash coefficient
     public float va = 1; // Airspeed
-    public float rho = 1.225f; // Air density
-    public float[] mk = { 1.07f, 1f, 1.5f }; // Mass array for drone components
-    public float[] Ak = { 0.0599f, 0.0037f, 0.0135f }; // Area array for drone components
-    public float[] CDk = { 1.49f, 1f, 2.2f }; // Drag coefficient array for drone components
-    public float k2 = 0.790f; // Factor for profile power (m/kg)1/2
-    public float k3 = 0.0042f; // Factor for profile power associated with speed (m/kg)-1/2
-    public float g = 9.807f; // Gravitational acceleration
-    public float Pavio = 10f; // Avionics power, power consumption of electronic equipmentF
-    public float etaC = 0.9f; // Battery charging efficiency
+    public float rho; // Air density
+    public float[] mk = new float[3]; // Mass array for drone components
+    public float[] Ak = new float[3]; // Area array for drone components
+    public float[] CDk = new float[3]; // Drag coefficient array for drone components
+    public float k; // Factor for induced power [unitless]
+    public float k2; // Factor for profile power (m/kg)1/2
+    public float k3; // Factor for profile power associated with speed (m/kg)-1/2
+    public float g; // Gravitational acceleration
+    public float Pavio; // Avionics power, power consumption of electronic equipmentF
+    public float etaC; // Battery charging efficiency
     public float theta = 0f; // Flight angle
-    public float m = 3.57f; // Total mass
-    public float n = 4; // Number of rotors
+    public float m; // Total mass
+    public float n; // Number of rotors
     public float alpha; // Angle of attack in radians
     public float varsigma = 0.0507f; // Spinning area of one rotor [m2]
 
     void Start()
     {
+        eta = Globals.PwrXferEffic;
+        w = Globals.DownwashCoeff;
+        rho = Globals.AirDensity;
+
+        mk[0] = Globals.BodyMass;
+        mk[1] = Globals.BatMass;
+        mk[2] = Globals.PayloadMass;
+
+        Ak[0] = Globals.BodyArea;
+        Ak[1] = Globals.BatArea;
+        Ak[2] = Globals.PayloadArea;
+
+        CDk[0] = Globals.BodyDragCoeff;
+        CDk[1] = Globals.BatDragCoeff;
+        CDk[2] = Globals.PayloadDragCoeff;
+
+        n = Globals.RotorNum;
+        etaC = Globals.BatChargingEffic;
+        m = mk.Sum();
+
+        k = Globals.InducedPowFactor;
+        k2 = Globals.ProfilePowFactor;
+        k3 = Globals.ProfilePowWithSpdFactor;
+        g = Globals.g;
+        Pavio = Globals.AvionicsPwr;
+
         // test different va
         float[] vaValues = { 0.3f, 5, 10, 15, 25 };
         foreach (float vaValue in vaValues)
         {
             va = vaValue; // set va
-            float Epm = CalculateEpm();
+            float Epm = CalculateEpm(1, 0);
             Debug.Log("For va = " + va + ", Energy per meter: " + Epm);
         }
     }
 
-    public float CalculateEpm()
+    public float CalculateEpm(float va, float theta)
     {
         float sumCDkAk = 0;
         float sumMk = 0;
@@ -66,9 +94,6 @@ public class KirchsteinECM : MonoBehaviour
         float denominator = sumMk * g;
         alpha = Mathf.Atan(numerator / denominator);
         Debug.Log(String.Format("Angle of attack Alpha: {0}", alpha));
-        // Calculate downwash coefficient using attack angle
-        // CalculateDownwashCoefficient(out List<float> wSolutions);
-        // Debug.Log("Possible w: " + string.Join(", ", wSolutions));
         // Calculate Epm
         float Epm =
             (1 / eta)

@@ -12,10 +12,22 @@ public class Drone : MonoBehaviour
     SubSwarm subSwarm;
 
     [SerializeField]
+    Pad pad;
+
+    [SerializeField]
     float selfWeight;
 
     [SerializeField]
     float speed;
+
+    [SerializeField]
+    float maxLiftSpd;
+
+    [SerializeField]
+    float maxDescentSpd;
+
+    [SerializeField]
+    float maxHorizontalSpd;
 
     [SerializeField]
     float maxPayloadWeight;
@@ -56,10 +68,34 @@ public class Drone : MonoBehaviour
         set { subSwarm = value; }
     }
 
+    public Pad Pad
+    {
+        get { return pad; }
+        set { pad = value; }
+    }
+
     public float SelfWeight
     {
         get { return selfWeight; }
         set { selfWeight = value; }
+    }
+
+    public float MaxLiftSpd
+    {
+        get { return maxLiftSpd; }
+        set { maxLiftSpd = value; }
+    }
+
+    public float MaxDescentSpd
+    {
+        get { return maxDescentSpd; }
+        set { maxDescentSpd = value; }
+    }
+
+    public float MaxHorizontalSpd
+    {
+        get { return maxHorizontalSpd; }
+        set { maxHorizontalSpd = value; }
     }
 
     public float Speed
@@ -109,42 +145,64 @@ public class Drone : MonoBehaviour
         droneView.UpdateVisual(this);
         batteryStatus = 1;
         batteryCapacityWh = Globals.DroneBatCap;
-        Debug.Log(batteryCapacityWh);
+        currBatteryWh = batteryCapacityWh;
+        maxLiftSpd = Globals.MaxLiftSpd;
+        maxDescentSpd = Globals.MaxDescnetSpd;
+        maxHorizontalSpd = Globals.MaxHorizontalSpd;
     }
 
     void Update()
     {
+        droneView.UpdateVisual(this);
         if (Simulator.instance.CurrentState != Simulator.State.Play)
         {
             return;
         }
-        droneView.UpdateVisual(this);
+        // Update energy status
+        switch (subSwarm.CurrentState)
+        {
+            case SubSwarm.State.Hovering:
+                break;
+            case SubSwarm.State.Flying:
 
+                batteryStatus -= 0.03f * Time.deltaTime * Globals.PlaySpeed;
+                if (batteryStatus < 0)
+                {
+                    Debug.LogError(string.Format("{0} is out of battery!", this.name));
+                }
+                break;
+            case SubSwarm.State.Landed:
+                break;
+            case SubSwarm.State.Recharging:
+                break;
+        }
         // Check if the time elapsed since the last data collection is greater than the interval
         if (Simulator.instance.ElapsedTime - lastDataCollectionTime >= dataCollectionInterval)
         {
             CollectData();
             lastDataCollectionTime = Simulator.instance.ElapsedTime; // Update the last collection time
         }
+        LogState();
+    }
 
-        if (subSwarm.CurrentState != SubSwarm.State.Recharging)
-        {
-            batteryStatus -= 0.03f * Time.deltaTime * Globals.PlaySpeed;
-            if (batteryStatus < 0)
-            {
-                Debug.LogError(string.Format("{0} is out of battery!", this.name));
-            }
-        }
+    void EnergyDrop()
+    {
+        // Use energy comsumption model to calculate energy loss
     }
 
     public void Recharge(float amount)
     {
-        if (batteryStatus >= 1)
+        currBatteryWh += amount * Time.deltaTime * Globals.PlaySpeed;
+        if (currBatteryWh >= batteryCapacityWh)
         {
-            batteryStatus = 1;
-            return;
+            currBatteryWh = batteryCapacityWh;
         }
-        batteryStatus += amount * Time.deltaTime * Globals.PlaySpeed;
+        SyncBatStatus();
+    }
+
+    void SyncBatStatus()
+    {
+        batteryStatus = Mathf.Round(currBatteryWh / batteryCapacityWh * 100f) / 100f;
     }
 
     void CollectData()
@@ -159,6 +217,12 @@ public class Drone : MonoBehaviour
             edge = (subSwarm.Edge != null) ? subSwarm.Edge.name : "-"
         };
         dataCollection.Add(data);
+    }
+
+    void LogState()
+    {
+        Debug.Log("BatteryStatus: " + batteryStatus);
+        Debug.Log("currBatteryWh: " + currBatteryWh);
     }
 
     public SerializableDrone ToSerializableDrone()

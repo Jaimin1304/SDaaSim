@@ -118,11 +118,11 @@ class Swarm:
 
 
 class Node:
-    def __init__(self, id, position, landedDrones: Dict[str, Drone], edges: Dict[str, Edge]):
+    def __init__(self, id, position, drones: Dict[str, Drone], edges: Dict[str, Edge]):
         self.id = id
         self.position = position
         #self.pads = pads
-        self.landedDrones = landedDrones
+        self.drones = drones
         self.edges = edges
 
     def log(self):
@@ -131,7 +131,7 @@ class Node:
         print(self.position)
         # for i in self.pads.values():
         #    i.log()
-        for i in self.landedDrones.values():
+        for i in self.drones.values():
             i.log()
         for i in self.edges.values():
             i.log()

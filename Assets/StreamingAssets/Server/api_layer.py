@@ -83,7 +83,7 @@ def init_skyway(data):
             node["id"],
             node["position"],
             #{id: pads[id] for id in node["pads"]},
-            {id: drones[id] for id in node["landedDrones"]},
+            {id: drones[id] for id in node["drones"]},
             node["edges"]
         )
         for node in data["nodes"]

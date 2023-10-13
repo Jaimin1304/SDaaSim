@@ -120,11 +120,9 @@ def run(skyway: Skyway):
         print(next_edge_id)
         api.set_subswarm_edge(subSwarm.id, next_edge_id, instructions)
 
-    # for subSwarm in skyway.subSwarms.values():
-    #    # find next edge to go
-    #    random_edge_id = random.choice(list(subSwarm.node.edges.keys()))
-    #    set_subswarm_edge(subSwarm.id, random_edge_id, instructions)
+    ###############################
+    # the end of custom algorithm #
+    ###############################
 
-    # the end of custom algorithm
     print('user logic execution complete')
     return instructions

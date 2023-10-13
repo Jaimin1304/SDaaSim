@@ -50,7 +50,13 @@ public class DroneView : MonoBehaviour, IHighlightable
         // Scale text size based on distance
         float scaleValue = distance * Globals.textScaleValue;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
-        nameTag.text = string.Format("{0} {1}%", drone.name, drone.BatteryStatus * 100);
+        nameTag.text = string.Format(
+            "{0} {1}Wh/{2}Wh ({3}%)",
+            drone.name,
+            drone.CurrBatteryWh,
+            drone.BatteryCapacityWh,
+            drone.BatteryStatus * 100
+        );
     }
 
     public void Highlight()

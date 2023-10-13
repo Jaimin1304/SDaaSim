@@ -27,8 +27,8 @@ public class NodeView : MonoBehaviour, IHighlightable
         nameTag.text = string.Format(
             "{0} [{1}/{2}]",
             node.name,
-            node.LandedDrones.Count,
-            node.TotalCapacity
+            node.Drones.Count,
+            node.Pads.Count
         );
     }
 
@@ -47,15 +47,15 @@ public class NodeView : MonoBehaviour, IHighlightable
         nameTag.text = string.Format(
             "{0} [{1}/{2}]",
             node.name,
-            node.LandedDrones.Count,
-            node.TotalCapacity
+            node.Drones.Count,
+            node.Pads.Count
         );
     }
 
     public void ArrangePads(Node node)
     {
-        List<Pad> pads = new List<Pad>(node.RechargeablePads);
-        pads.AddRange(node.NonRechargeablePads);
+        List<Pad> pads = new List<Pad>(node.RechargePads);
+        pads.AddRange(node.NonRechargePads);
         if (pads == null || pads.Count == 0)
             return;
         // 1. Determine the values for m and n
