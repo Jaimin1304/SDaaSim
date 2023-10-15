@@ -66,9 +66,9 @@ public class Globals : MonoBehaviour
     const string AvionicsPwrKey = "AvionicsPwr"; // Avionics power, power consumption of electronic equipmentF
 
     // Drone attributes
-    const string MaxLiftSpdKey = "MaxLiftSpd"; // Design maximum lifting speed in m/s
-    const string MaxDescnetSpdKey = "MaxDescnetSpd"; // Design maximum descent speed in m/s
-    const string MaxHorizontalSpdKey = "MaxHorizontalSpd"; // Design maximum horizontal speed in m/s
+    const string MaxLiftSpdKey = "MaxLiftSpd"; // Design maximum engine lifting speed in m/s
+    const string MaxDescnetSpdKey = "MaxDescnetSpd"; // Design maximum engine descent speed in m/s
+    const string MaxHorizontalSpdKey = "MaxHorizontalSpd"; // Design maximum engine horizontal speed in m/s
     const string BodyMassKey = "BodyMass"; // Drone body mass in kg
     const string BatMassKey = "BatMass"; // Drone battery mass in kg
     const string PayloadMassKey = "PayloadMass"; // Drone payload mass in kg
@@ -90,7 +90,7 @@ public class Globals : MonoBehaviour
     const float DefaultEdgeThickness = 0.6f;
     const float DefaultPadRechargeRate = 0.05f;
     const float DefaultDroneBatCap = 500;
-    static Vector3 DefaultWindSpd = Vector3.left;
+    static Vector3 DefaultWindSpd = new Vector3(-15, 0, 0);
     const float DefaultBatChargingEffic = 0.9f;
     const float DefaultRotorNum = 4f;
     const float DefaultAirDensity = 1.225f;

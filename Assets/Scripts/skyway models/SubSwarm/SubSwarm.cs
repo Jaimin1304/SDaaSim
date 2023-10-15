@@ -222,52 +222,49 @@ public class SubSwarm : MonoBehaviour
     public void MoveToTarget(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        currSpd = CalculateSpeed(direction);
+        currSpd = CalculateEngineSpeedWithWind(direction);
         Debug.Log("target: " + target);
         Debug.Log("direction: " + direction);
         Debug.Log("currSpd: " + currSpd);
-        transform.position += currSpd * Time.deltaTime * Globals.PlaySpeed;
-    }
-
-    Vector3 CalculateSpeed(Vector3 direction)
-    {
-        float maxLiftSpd = Globals.MaxLiftSpd;
-        float maxDescentSpd = Globals.MaxDescnetSpd;
-        float maxHorizontalSpd = Globals.MaxHorizontalSpd;
-        // Determine whether it is lift or descent
-        float maxVerticalSpd = direction.y >= 0 ? maxLiftSpd : maxDescentSpd;
-        Debug.Log("maxVerticalSpd: " + maxVerticalSpd);
-        float horizontalDirectionSpd = Mathf.Sqrt(
-            direction.x * direction.x + direction.z * direction.z
+        Debug.Log("currVerticalSpd: " + currSpd.y);
+        Debug.Log(
+            "currHorizontalSpd: " + MathF.Sqrt(currSpd.x * currSpd.x + currSpd.z * currSpd.z)
         );
-        Vector3 speed = new Vector3();
-        // Check whether the direction speed will hit the vertical or horizontal speed limit
-        float currHorizontalSpd;
-        if (
-            direction.y / horizontalDirectionSpd
-            >= maxVerticalSpd / maxHorizontalSpd
-        )
-        {
-            speed.y = maxVerticalSpd;
-            currHorizontalSpd = speed.y * horizontalDirectionSpd / Mathf.Abs(direction.y);
-        }
-        else
-        {
-            currHorizontalSpd = maxHorizontalSpd;
-            speed.y = currHorizontalSpd * direction.y / horizontalDirectionSpd;
-        }
-        speed.x = currHorizontalSpd * direction.x / horizontalDirectionSpd;
-        speed.z = currHorizontalSpd * direction.z / horizontalDirectionSpd;
-
-        return speed;
+        Debug.Log("windSpd: " + Globals.WindSpd);
+        transform.position += (currSpd + Globals.WindSpd) * Time.deltaTime * Globals.PlaySpeed;
     }
 
-    float CalFlightAngle()
+    Vector3 CalculateEngineSpeedWithWind(Vector3 dir)
     {
-        float horizontalSpeed = Mathf.Sqrt(currSpd.x * currSpd.x + currSpd.z * currSpd.z);
-        float thetaRadians = Mathf.Atan2(currSpd.y, horizontalSpeed);
-        //float thetaDegrees = thetaRadians * Mathf.Rad2Deg;
-        return thetaRadians;
+        Vector3 direction = new Vector3(dir.x, 0, dir.z);
+        Vector3 windSpeed = Globals.WindSpd;
+        float ob = Globals.MaxHorizontalSpd;
+        // Find the anti-wind speed vector
+        Vector3 antiWS = -windSpeed;
+        // Find the length of the vector parallel to the direction
+        float oa = antiWS.magnitude; // length of vector OA
+        float cosTheta = Vector3.Dot(antiWS.normalized, direction);
+        // Solve the quadratic equation with respect to ab
+        // Get ab using cosine theorem
+        float[] roots = Utils.SolveQuadratic(1, 2 * oa * cosTheta, oa * oa - ob * ob);
+        float ab = roots[0] >= 0 ? roots[0] : roots[1];
+        Vector3 abVector = direction.normalized * ab;
+        // Adjust ab if the corresponding vertical vector exceeds the vertical speed limit
+        float currVerticalSpd = abVector.x * dir.y / dir.x;
+        float maxLift = Globals.MaxLiftSpd;
+        float maxDescent = Globals.MaxDescnetSpd;
+        if (currVerticalSpd > maxLift)
+        {
+            abVector *= maxLift / currVerticalSpd;
+            currVerticalSpd = maxLift;
+        }
+        else if (currVerticalSpd < -1 * maxDescent)
+        {
+            abVector *= maxDescent / Mathf.Abs(currVerticalSpd);
+            currVerticalSpd = -1 * maxDescent;
+        }
+        abVector.y = currVerticalSpd;
+        return antiWS + abVector; // The resultant vector OA + AB
     }
 
     public void ToFlying(Edge edge)
