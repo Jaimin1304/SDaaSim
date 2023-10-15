@@ -179,6 +179,13 @@ public class Skyway : MonoBehaviour
         return true;
     }
 
+    public bool RemoveWayPoint(WayPoint wayPoint)
+    {
+        Edge edge = wayPoint.Edge;
+        bool result = edge.RemoveWayPoint(wayPoint);
+        return result;
+    }
+
     public bool RemoveEdge(Edge edge)
     {
         // Remove the edge from the edges list

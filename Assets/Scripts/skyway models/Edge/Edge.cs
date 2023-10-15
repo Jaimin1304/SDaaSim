@@ -137,10 +137,23 @@ public class Edge : MonoBehaviour
         path.Add(rightNode.transform.position);
     }
 
-    public void UpdateEdge()
+    public void SyncEdge()
     {
         CalLengths();
         CalPath();
+        UpdateEdgeVisual();
+    }
+
+    public bool RemoveWayPoint(WayPoint wayPoint)
+    {
+        if (!wayPoints.Contains(wayPoint))
+        {
+            return false;
+        }
+        wayPoints.Remove(wayPoint);
+        Destroy(wayPoint.gameObject);
+        SyncEdge();
+        return true;
     }
 
     void UpdateEdgeVisual()

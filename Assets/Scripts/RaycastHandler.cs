@@ -6,21 +6,21 @@ using UnityEngine;
 public class RaycastHandler : MonoBehaviour
 {
     [SerializeField]
-    GameObject arrow3D;
+    GameObject gizmos3D;
 
     [SerializeField]
-    Material arrowHovered;
+    Material gizmosHovered;
 
     [SerializeField]
-    Material arrowDefault;
+    Material gizmosDefault;
 
     [SerializeField]
-    LayerMask arrow3DLayer;
-    GameObject lastHitArrow;
+    LayerMask gizmos3DLayer;
+    GameObject lastHitGizmos;
     Vector3 initialMousePos;
     Vector3 initialObjectPos;
     string selectedAxis;
-    bool isInteractingWithArrow = false;
+    bool isInteractingWithGizmos = false;
 
     [SerializeField]
     LayerMask skywayObjectLayer;
@@ -39,13 +39,25 @@ public class RaycastHandler : MonoBehaviour
         set { selectedObject = value; }
     }
 
+    void OnDestroy()
+    {
+        // Unsubscribe from UnityEvents
+        uiController.OnDeleteEvent.RemoveListener(Hide3DGizmos);
+    }
+
+    void Start()
+    {
+        // Subscribe to UnityEvents
+        uiController.OnDeleteEvent.AddListener(Hide3DGizmos);
+    }
+
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         HandleSkywayObjectHit(ray);
-        Handle3DArrowHit(ray);
-        if (arrow3D.activeSelf)
-            Adjust3DArrowsScale();
+        Handle3DGizmosHit(ray);
+        if (gizmos3D.activeSelf)
+            Adjust3DGizmossScale();
     }
 
     void HandleSkywayObjectHit(Ray ray)
@@ -93,13 +105,13 @@ public class RaycastHandler : MonoBehaviour
                         Simulator.instance.CreateEdge(selectedNode, hitNode);
                     }
                 }
-                // handle select and 3D arrow action
+                // handle select and 3D gizmos action
                 if (hitObject == draggingObject)
                 {
                     Select(hitObject);
                     if (Simulator.instance.CurrentState == Simulator.State.Edit)
                     {
-                        Show3DArrow(((MonoBehaviour)hitObject).transform.position);
+                        Show3DGizmos(((MonoBehaviour)hitObject).transform.position);
                     }
                 }
                 draggingObject = null;
@@ -114,53 +126,53 @@ public class RaycastHandler : MonoBehaviour
                 lastHitObject = null;
             }
             // handle cancel selection
-            if (Input.GetMouseButtonDown(0) && !isInteractingWithArrow)
+            if (Input.GetMouseButtonDown(0) && !isInteractingWithGizmos)
             {
                 DeSelect();
             }
         }
     }
 
-    void Show3DArrow(Vector3 position)
+    void Show3DGizmos(Vector3 position)
     {
-        arrow3D.transform.position = position;
-        arrow3D.SetActive(true);
+        gizmos3D.transform.position = position;
+        gizmos3D.SetActive(true);
     }
 
-    void Hide3DArrow()
+    void Hide3DGizmos()
     {
-        arrow3D.SetActive(false);
+        gizmos3D.SetActive(false);
     }
 
-    void Handle3DArrowHit(Ray ray)
+    void Handle3DGizmosHit(Ray ray)
     {
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, arrow3DLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, gizmos3DLayer))
         {
-            isInteractingWithArrow = true;
-            GameObject arrow = hit.transform.gameObject;
-            Renderer renderer = arrow.GetComponent<Renderer>();
-            renderer.material = arrowHovered;
-            lastHitArrow = arrow;
+            isInteractingWithGizmos = true;
+            GameObject gizmos = hit.transform.gameObject;
+            Renderer renderer = gizmos.GetComponent<Renderer>();
+            renderer.material = gizmosHovered;
+            lastHitGizmos = gizmos;
 
             if (Input.GetMouseButtonDown(0))
             {
-                selectedAxis = arrow.name; // Assuming arrows are named "X", "Y", "Z"
+                selectedAxis = gizmos.name; // Assuming gizmoss are named "X", "Y", "Z"
                 initialMousePos = Input.mousePosition;
                 initialObjectPos = uiController.SelectedComponent.transform.position;
             }
         }
         else
         {
-            isInteractingWithArrow = false;
+            isInteractingWithGizmos = false;
             if (Input.GetMouseButtonDown(0))
             {
-                Hide3DArrow();
+                Hide3DGizmos();
             }
-            if (lastHitArrow != null)
+            if (lastHitGizmos != null)
             {
-                Renderer renderer = lastHitArrow.GetComponent<Renderer>();
-                renderer.material = arrowDefault;
-                lastHitArrow = null;
+                Renderer renderer = lastHitGizmos.GetComponent<Renderer>();
+                renderer.material = gizmosDefault;
+                lastHitGizmos = null;
             }
         }
         if (Input.GetMouseButton(0) && selectedAxis != null)
@@ -188,19 +200,19 @@ public class RaycastHandler : MonoBehaviour
             }
             uiController.SelectedComponent.transform.position =
                 initialObjectPos + axis * dragDistance;
-            arrow3D.transform.position = uiController.SelectedComponent.transform.position;
+            gizmos3D.transform.position = uiController.SelectedComponent.transform.position;
             // update affected edge lengths
             WayPoint wayPoint = uiController.SelectedComponent.GetComponent<WayPoint>();
             Node node = uiController.SelectedComponent.GetComponent<Node>();
             if (wayPoint != null)
             {
-                wayPoint.Edge.UpdateEdge();
+                wayPoint.Edge.SyncEdge();
             }
             else if (node != null)
             {
                 foreach (Edge edge in node.Edges)
                 {
-                    edge.UpdateEdge();
+                    edge.SyncEdge();
                 }
             }
         }
@@ -233,13 +245,13 @@ public class RaycastHandler : MonoBehaviour
         camController?.ToFocusMode(centerObject);
     }
 
-    void Adjust3DArrowsScale()
+    void Adjust3DGizmossScale()
     {
         float distanceFromCamera = Vector3.Distance(
             Camera.main.transform.position,
-            arrow3D.transform.position
+            gizmos3D.transform.position
         );
-        float scaleFactor = distanceFromCamera * Globals.arrow3DScaleValue;
-        arrow3D.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        float scaleFactor = distanceFromCamera * Globals.gizmos3DScaleValue;
+        gizmos3D.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
     }
 }

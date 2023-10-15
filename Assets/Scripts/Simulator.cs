@@ -410,6 +410,13 @@ public class Simulator : MonoBehaviour
         skyway.RemoveNode(node);
     }
 
+    public void DeleteWayPoint(WayPoint wayPoint)
+    {
+        Debug.Log("DeleteWayPoint");
+        raycastHandler.SelectedObject = null;
+        skyway.RemoveWayPoint(wayPoint);
+    }
+
     public void DeleteEdge(Edge edge)
     {
         Debug.Log("DeleteEdge");

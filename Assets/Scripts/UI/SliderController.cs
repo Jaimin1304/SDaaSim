@@ -23,14 +23,13 @@ public class SliderController : MonoBehaviour
         UpdateValueText(slider.value);
     }
 
-public void OnSliderValueChanged(float value)
-{
-    // Save the new slider value to PlayerPrefs when it changes
-    PlayerPrefs.SetFloat(SliderValueKey, value);
-    PlayerPrefs.Save();
-    UpdateValueText(value);
-}
-
+    public void OnSliderValueChanged(float value)
+    {
+        // Save the new slider value to PlayerPrefs when it changes
+        PlayerPrefs.SetFloat(SliderValueKey, value);
+        PlayerPrefs.Save();
+        UpdateValueText(value);
+    }
 
     void UpdateValueText(float value)
     {

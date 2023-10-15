@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 
 public class UIController : MonoBehaviour
 {
@@ -65,6 +66,9 @@ public class UIController : MonoBehaviour
     [SerializeField]
     CanvasGroup mainCanvasGroup;
 
+    // Define UnityEvents for delete
+    public UnityEvent OnDeleteEvent;
+
     public GameObject SelectedComponent
     {
         get { return selectedComponent; }
@@ -84,6 +88,12 @@ public class UIController : MonoBehaviour
         Simulator.instance.OnFreezeEvent.RemoveListener(HandleFreeze);
         Simulator.instance.OnEditEvent.RemoveListener(HandleEdit);
         Simulator.instance.OnFinishEvent.RemoveListener(HandleFinish);
+    }
+
+    void Awake()
+    {
+        // Initialize the UnityEvents
+        OnDeleteEvent = new UnityEvent();
     }
 
     void Start()
@@ -183,6 +193,7 @@ public class UIController : MonoBehaviour
         }
         Node nodeComponent = selectedComponent.GetComponent<Node>();
         Edge edgeComponent = selectedComponent.GetComponent<Edge>();
+        WayPoint wayPointComponent = selectedComponent.GetComponent<WayPoint>();
         selectedComponent = null;
         if (nodeComponent != null)
         {
@@ -192,10 +203,15 @@ public class UIController : MonoBehaviour
         {
             Simulator.instance.DeleteEdge(edgeComponent);
         }
+        else if (wayPointComponent != null)
+        {
+            Simulator.instance.DeleteWayPoint(wayPointComponent);
+        }
         else
         {
             Debug.Log("Selected object is neither a Node nor an Edge");
         }
+        OnDeleteEvent.Invoke();
     }
 
     public void SaveSkyway()

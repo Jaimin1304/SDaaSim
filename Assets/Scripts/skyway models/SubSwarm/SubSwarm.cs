@@ -39,7 +39,7 @@ public class SubSwarm : MonoBehaviour
     int wayPointIndex;
 
     [SerializeField]
-    Vector3 currSpd = new Vector3(0, 0, 0);
+    Vector3 currEngineSpd = new Vector3(0, 0, 0);
 
     [SerializeField]
     float speed;
@@ -222,16 +222,18 @@ public class SubSwarm : MonoBehaviour
     public void MoveToTarget(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        currSpd = CalculateEngineSpeedWithWind(direction);
+        currEngineSpd = CalculateEngineSpeedWithWind(direction);
         Debug.Log("target: " + target);
         Debug.Log("direction: " + direction);
-        Debug.Log("currSpd: " + currSpd);
-        Debug.Log("currVerticalSpd: " + currSpd.y);
+        Debug.Log("currEngineSpd: " + currEngineSpd);
+        Debug.Log("currVerticalSpd: " + currEngineSpd.y);
         Debug.Log(
-            "currHorizontalSpd: " + MathF.Sqrt(currSpd.x * currSpd.x + currSpd.z * currSpd.z)
+            "currHorizontalSpd: "
+                + MathF.Sqrt(currEngineSpd.x * currEngineSpd.x + currEngineSpd.z * currEngineSpd.z)
         );
         Debug.Log("windSpd: " + Globals.WindSpd);
-        transform.position += (currSpd + Globals.WindSpd) * Time.deltaTime * Globals.PlaySpeed;
+        transform.position +=
+            (currEngineSpd + Globals.WindSpd) * Time.deltaTime * Globals.PlaySpeed;
     }
 
     Vector3 CalculateEngineSpeedWithWind(Vector3 dir)
