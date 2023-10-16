@@ -387,6 +387,13 @@ public class Simulator : MonoBehaviour
         skyway.AddNode(newNode);
     }
 
+    public void DeleteNode(Node node)
+    {
+        Debug.Log("DeleteNode");
+        raycastHandler.SelectedObject = null;
+        skyway.RemoveNode(node);
+    }
+
     public void CreateEdge(Node a, Node b)
     {
         if (Utils.HasEdgeBetween(a, b))
@@ -403,11 +410,11 @@ public class Simulator : MonoBehaviour
         skyway.AddEdge(newEdge);
     }
 
-    public void DeleteNode(Node node)
+    public void DeleteEdge(Edge edge)
     {
-        Debug.Log("DeleteNode");
+        Debug.Log("DeleteEdge");
         raycastHandler.SelectedObject = null;
-        skyway.RemoveNode(node);
+        skyway.RemoveEdge(edge);
     }
 
     public void DeleteWayPoint(WayPoint wayPoint)
@@ -417,11 +424,18 @@ public class Simulator : MonoBehaviour
         skyway.RemoveWayPoint(wayPoint);
     }
 
-    public void DeleteEdge(Edge edge)
+    public void EditPad(Node node, bool add, bool rechargeable)
     {
-        Debug.Log("DeleteEdge");
-        raycastHandler.SelectedObject = null;
-        skyway.RemoveEdge(edge);
+        if (add)
+        {
+            Debug.Log("AddPad");
+            node.AddPad(rechargeable);
+        }
+        else
+        {
+            Debug.Log("RemovePad");
+            node.RemovePad(rechargeable);
+        }
     }
 
     //public void CreateWayPoint()
@@ -433,6 +447,7 @@ public class Simulator : MonoBehaviour
     //    newWayPoint.gameObject.name = String.Format("Node ({0})", skyway.Nodes.Count.ToString());
     //    //skyway.Nodes.Add(newWayPoint);
     //}
+
 
     public void SaveSkyway()
     {

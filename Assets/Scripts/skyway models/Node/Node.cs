@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor.XR;
 
 public class Node : MonoBehaviour
 {
@@ -127,6 +128,45 @@ public class Node : MonoBehaviour
             // Add the new pad to the pads list
             pads.Add(newPad);
         }
+        SyncPadGroups();
+    }
+
+    public bool AddPad(bool rechargeable)
+    {
+        // Add a new pad
+        GameObject padGO = Instantiate(padPrefab, transform);
+        padGO.transform.localPosition = Vector3.zero;
+        Pad newPad = padGO.GetComponent<Pad>();
+        // Set rechargeable
+        newPad.ChangeRechargeableState(rechargeable);
+        newPad.Node = this;
+        // Add it to pad list according to rechargeable or not
+        pads.Add(newPad);
+        if (rechargeable)
+        {
+            rechargePads.Add(newPad);
+        }
+        else
+        {
+            nonRechargePads.Add(newPad);
+        }
+        SyncPadGroups();
+        nodeView.ArrangePads(this);
+        return true;
+    }
+
+    public bool RemovePad(bool rechargeable)
+    {
+        List<Pad> targetList = rechargeable ? rechargePads : nonRechargePads;
+        if (targetList.Count <= 0)
+            return false;
+        // Remove pad from scene and list
+        Destroy(targetList[0].gameObject);
+        pads.Remove(targetList[0]);
+        targetList.RemoveAt(0);
+        SyncPadGroups();
+        nodeView.ArrangePads(this);
+        return true;
     }
 
     public List<Pad> FreeRechargePads()

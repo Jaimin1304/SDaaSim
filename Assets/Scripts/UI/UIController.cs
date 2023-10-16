@@ -74,6 +74,7 @@ public class UIController : MonoBehaviour
         get { return selectedComponent; }
         set { selectedComponent = value; }
     }
+
     public TextMeshProUGUI ObjectInfo
     {
         get { return objectInfo; }
@@ -182,7 +183,32 @@ public class UIController : MonoBehaviour
         {
             DeleteSelectedComponent();
         }
+
+        // Handle pad edition
+        bool addPad = Input.GetKeyDown(KeyCode.Equals);
+        bool removePad = Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus);
+        if (addPad || removePad)
+        {
+            bool rechargeable = Input.GetKey(KeyCode.R);
+            EditPads(addPad, rechargeable);
+        }
+
         UpdateObjectInfo(selectedComponent);
+    }
+
+    void EditPads(bool add, bool rechargeable)
+    {
+        // Check whether a node is selected
+        if (selectedComponent == null)
+        {
+            return;
+        }
+        Node nodeComponent = selectedComponent.GetComponent<Node>();
+        if (nodeComponent == null)
+        {
+            return;
+        }
+        Simulator.instance.EditPad(nodeComponent, add, rechargeable);
     }
 
     public void DeleteSelectedComponent()
