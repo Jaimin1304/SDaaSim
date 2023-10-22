@@ -59,4 +59,14 @@ public class SettingsController : MonoBehaviour
             edge.EdgeView.UpdateEdgeThickness();
         }
     }
+
+    public void SetRechargePadNum(float value)
+    {
+        Globals.RechargePadNum = (int) value;
+    }
+
+    public void SetNonRechargePadNum(float value)
+    {
+        Globals.NonRechargePadNum = (int) value;
+    }
 }

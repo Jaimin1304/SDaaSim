@@ -44,28 +44,31 @@ public class Globals : MonoBehaviour
         set { playSpeed = value; }
     }
 
-    // Define keys for PlayerPrefs
+    // PlayerPrefs attributes
     const string CamMovSpeedKey = "CamMovSpeed";
     const string CamSprintSpeedKey = "CamSprintSpeed";
     const string CamRotateSpeedKey = "CamRotateSpeed";
     const string CamZoomSpeedKey = "CamZoomSpeed";
     const string EdgeThicknessKey = "EdgeThickness";
-    const string DroneBatCapKey = "DroneBatCap"; // Drone battery capacity in Wh
-    const string PadRechargeRateKey = "PadRechargeRate"; // Wh per second
 
-    // Wind direction vector3
+    // Skyway attributes
+    const string PadRechargeRateKey = "PadRechargeRate"; // Pad recharge rate in Wh per second
+    const string RechargePadNumKey = "RechargePadNum"; // Default number of recharge pad for node creation
+    const string NonRechargePadNumKey = "NonRechargePadNum"; // Default number of non recharge pad for node creation
+
+    // Environment attributes
     static string WindSpdXKey = "WindSpdX"; // Wind speed x
     static string WindSpdYKey = "WindSpdY"; // Wind speed y
     static string WindSpdZKey = "WindSpdZ"; // Wind speed z
+    const string AirDensityKey = "AirDensity"; // Air density
 
+    // Drone attributes
+    const string DroneBatCapKey = "DroneBatCap"; // Drone battery capacity in Wh
     const string BatChargingEfficKey = "BatChargingEffic"; // Battery charging efficiency
     const string RotorNumKey = "RotorNum"; // Number of rotors
-    const string AirDensityKey = "AirDensity"; // Air density
     const string DownwashCoeffKey = "DownwashCoeff"; // Downwash coefficient
     const string PwrXferEfficKey = "PwrXferEffic"; // Power transfer efficiency from battery to propeller
     const string AvionicsPwrKey = "AvionicsPwr"; // Avionics power, power consumption of electronic equipmentF
-
-    // Drone attributes
     const string MaxLiftSpdKey = "MaxLiftSpd"; // Design maximum engine lifting speed in m/s
     const string MaxDescnetSpdKey = "MaxDescnetSpd"; // Design maximum engine descent speed in m/s
     const string MaxHorizontalSpdKey = "MaxHorizontalSpd"; // Design maximum engine horizontal speed in m/s
@@ -89,6 +92,8 @@ public class Globals : MonoBehaviour
     const float DefaultCamZoomSpeed = 200;
     const float DefaultEdgeThickness = 0.6f;
     const float DefaultPadRechargeRate = 0.05f;
+    const int DefaultRechargePadNum = 4;
+    const int DefaultNonRechargePadNum = 4;
     const float DefaultDroneBatCap = 500;
     static Vector3 DefaultWindSpd = new Vector3(-15, 0, 0);
     const float DefaultBatChargingEffic = 0.9f;
@@ -172,6 +177,26 @@ public class Globals : MonoBehaviour
         set
         {
             PlayerPrefs.SetFloat(PadRechargeRateKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static int RechargePadNum
+    {
+        get => PlayerPrefs.GetInt(RechargePadNumKey, DefaultRechargePadNum);
+        set
+        {
+            PlayerPrefs.SetInt(RechargePadNumKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static int NonRechargePadNum
+    {
+        get => PlayerPrefs.GetInt(NonRechargePadNumKey, DefaultNonRechargePadNum);
+        set
+        {
+            PlayerPrefs.SetInt(NonRechargePadNumKey, value);
             PlayerPrefs.Save();
         }
     }

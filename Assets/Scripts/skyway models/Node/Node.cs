@@ -74,7 +74,7 @@ public class Node : MonoBehaviour
     {
         nodeView.initVisual(this);
         nodeView.UpdateVisual(this);
-        GenerateRandomPads();
+        GenerateDefaultPads();
         SyncPadGroups();
         nodeView.ArrangePads(this);
     }
@@ -111,24 +111,24 @@ public class Node : MonoBehaviour
         nonRechargePads = pads.Where(pad => !pad.Rechargeable).ToList();
     }
 
-    public void GenerateRandomPads()
+    public void GenerateDefaultPads()
     {
-        // Generate a random number for the count of pads.
-        int numberOfPads = UnityEngine.Random.Range(15, 20);
-        for (int i = 0; i < numberOfPads; i++)
+        CreatePads(Globals.RechargePadNum, true);
+        CreatePads(Globals.NonRechargePadNum, false);
+        SyncPadGroups();
+    }
+
+    private void CreatePads(int padCount, bool isRechargeable)
+    {
+        for (int i = 0; i < padCount; i++)
         {
-            // Instantiate a new pad
             GameObject padGO = Instantiate(padPrefab, transform);
-            // Reset local position to ensure it's placed at the position of the Node
             padGO.transform.localPosition = Vector3.zero;
             Pad newPad = padGO.GetComponent<Pad>();
-            bool randomRechargeableState = UnityEngine.Random.value > 0.5f;
-            newPad.ChangeRechargeableState(randomRechargeableState);
+            newPad.ChangeRechargeableState(isRechargeable);
             newPad.Node = this;
-            // Add the new pad to the pads list
             pads.Add(newPad);
         }
-        SyncPadGroups();
     }
 
     public bool AddPad(bool rechargeable)
