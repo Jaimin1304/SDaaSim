@@ -22,7 +22,6 @@ public class NodeView : MonoBehaviour, IHighlightable
     void Awake()
     {
         mainCamera = Camera.main;
-        outline = GetComponentInChildren<Outline>();
     }
 
     public void initVisual(Node node)

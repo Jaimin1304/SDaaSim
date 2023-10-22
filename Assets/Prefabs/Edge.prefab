@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 996df0801fac4da4f8fb76992412bf7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 0}
+  outline: {fileID: 6051369537044868236}
   lineRenderer: {fileID: 1371608337604213274}
   lengthText: {fileID: 4127955355439910064}
   material: {fileID: 2100000, guid: df3ebf63a6178474d932e7cc5fcfd9e5, type: 2}

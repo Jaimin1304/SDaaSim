@@ -20,7 +20,6 @@ public class DroneView : MonoBehaviour, IHighlightable
     void Awake()
     {
         mainCamera = Camera.main;
-        outline = GetComponentInChildren<Outline>();
     }
 
     public void initVisual(Drone drone)

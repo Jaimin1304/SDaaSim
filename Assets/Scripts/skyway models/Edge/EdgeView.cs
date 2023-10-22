@@ -95,9 +95,16 @@ public class EdgeView : MonoBehaviour, IHighlightable
             lengthText.transform.position,
             mainCamera.transform.position
         );
-        // Scale text size based on distance
+        // Scale text, border and collider based on distance
         float scaleValue = distance * Globals.textScaleValue;
         lengthText.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        int scaleConst = 5;
+        transparentBroder.transform.localScale = new Vector3(
+            scaleValue * scaleConst,
+            scaleValue * scaleConst,
+            scaleValue * scaleConst
+        );
+        edge.BorderCollider.radius = scaleValue * scaleConst;
     }
 
     public void UpdateEdgeThickness()
