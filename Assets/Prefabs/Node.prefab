@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d632402de1eed40b3b933a567577c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 0}
+  outline: {fileID: 4448009656544748531}
   nameTag: {fileID: 4569204027396411270}
   transparentBroder: {fileID: 8323191364600283425}
   borderCollider: {fileID: 40989279504155355}

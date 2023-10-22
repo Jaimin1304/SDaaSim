@@ -42,9 +42,6 @@ public class SubSwarm : MonoBehaviour
     Vector3 currEngineSpd = new Vector3(0, 0, 0);
 
     [SerializeField]
-    float speed;
-
-    [SerializeField]
     float epm;
 
     public string Id
@@ -96,7 +93,6 @@ public class SubSwarm : MonoBehaviour
 
     void Awake()
     {
-        speed = 15;
         id = Guid.NewGuid().ToString();
     }
 

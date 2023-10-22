@@ -6,8 +6,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class EdgeView : MonoBehaviour
+public class EdgeView : MonoBehaviour, IHighlightable
 {
+    [SerializeField]
+    Outline outline;
+
     [SerializeField]
     LineRenderer lineRenderer;
 
@@ -16,6 +19,9 @@ public class EdgeView : MonoBehaviour
 
     [SerializeField]
     Material material;
+
+    [SerializeField]
+    GameObject transparentBroder;
 
     Camera mainCamera;
 
@@ -40,6 +46,7 @@ public class EdgeView : MonoBehaviour
     }
 
     public void UpdateVisual(
+        Edge edge,
         Vector3 leftNodePos,
         Vector3 rightNodePos,
         List<WayPoint> wayPoints,
@@ -65,11 +72,19 @@ public class EdgeView : MonoBehaviour
             Vector3 middlePosition =
                 wayPoints[wayPoints.Count / 2].transform.position + heightOffset * 4;
             lengthText.transform.position = middlePosition;
+            // update broder & collider position
+            transparentBroder.transform.position = middlePosition;
+            edge.BorderCollider.center = middlePosition - edge.transform.position;
+            edge.MoveEdgeToPosition(middlePosition);
         }
         else
         {
             Vector3 middlePosition = (leftNodePos + rightNodePos) / 2 + heightOffset * 4;
             lengthText.transform.position = middlePosition;
+            // update broder & collider position
+            transparentBroder.transform.position = middlePosition;
+            edge.BorderCollider.center = middlePosition - edge.transform.position;
+            edge.MoveEdgeToPosition(middlePosition);
         }
 
         lengthText.text = gameObjectName + "\n" + totalLength.ToString("F2") + "m";
@@ -93,5 +108,17 @@ public class EdgeView : MonoBehaviour
         }
         lineRenderer.startWidth = Globals.EdgeThickness;
         lineRenderer.endWidth = Globals.EdgeThickness;
+    }
+
+    public void Highlight()
+    {
+        if (outline != null)
+            outline.enabled = true;
+    }
+
+    public void Unhighlight()
+    {
+        if (outline != null)
+            outline.enabled = false;
     }
 }

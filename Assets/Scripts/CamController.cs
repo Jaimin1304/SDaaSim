@@ -87,6 +87,12 @@ public class CamController : MonoBehaviour
 
     void FocusModeLogic()
     {
+        // Check if centerObject still exists
+        if (centerObject == null)
+        {
+            ToFreeMode();
+            return;
+        }
         transform.position = centerObject.transform.position + focusModeOffset;
         // Check for key presses to switch back to free mode
         if (

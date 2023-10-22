@@ -27,6 +27,9 @@ public class Edge : MonoBehaviour
     [SerializeField]
     EdgeView edgeView;
 
+    [SerializeField]
+    SphereCollider borderCollider;
+
     List<Vector3> path = new();
 
     public string Id
@@ -66,6 +69,12 @@ public class Edge : MonoBehaviour
     public List<Vector3> Path
     {
         get { return path; }
+    }
+
+    public SphereCollider BorderCollider
+    {
+        get { return borderCollider; }
+        set { borderCollider = value; }
     }
 
     void Awake()
@@ -159,6 +168,7 @@ public class Edge : MonoBehaviour
     void UpdateEdgeVisual()
     {
         edgeView.UpdateVisual(
+            this,
             leftNode.transform.position,
             rightNode.transform.position,
             WayPoints,
@@ -166,6 +176,19 @@ public class Edge : MonoBehaviour
             totalLength,
             gameObject.name
         );
+    }
+
+    public void MoveEdgeToPosition(Vector3 newPosition)
+    {
+        // Step 1: Calculate the difference in position
+        Vector3 positionDifference = newPosition - transform.position;
+        // Step 2: Move the edge object to the new position
+        transform.position = newPosition;
+        // Step 3: Move all child objects in the opposite direction to keep their world space position
+        foreach (Transform child in transform)
+        {
+            child.position -= positionDifference;
+        }
     }
 
     public SerializableEdge ToSerializableEdge()
