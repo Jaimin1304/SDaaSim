@@ -223,15 +223,6 @@ public class SubSwarm : MonoBehaviour
     {
         Vector3 direction = (target - transform.position).normalized;
         currEngineSpd = CalculateEngineSpeedWithWind(direction);
-        Debug.Log("target: " + target);
-        Debug.Log("direction: " + direction);
-        Debug.Log("currEngineSpd: " + currEngineSpd);
-        Debug.Log("currVerticalSpd: " + currEngineSpd.y);
-        Debug.Log(
-            "currHorizontalSpd: "
-                + MathF.Sqrt(currEngineSpd.x * currEngineSpd.x + currEngineSpd.z * currEngineSpd.z)
-        );
-        Debug.Log("windSpd: " + Globals.WindSpd);
         transform.position +=
             (currEngineSpd + Globals.WindSpd) * Time.deltaTime * Globals.PlaySpeed;
     }
@@ -362,6 +353,17 @@ public class SubSwarm : MonoBehaviour
     {
         Simulator.instance.UpdateDrones(this);
         Simulator.instance.UpdateSubSwarm(this);
+    }
+
+    void LogState()
+    {
+        Debug.Log("currEngineSpd: " + currEngineSpd);
+        Debug.Log("currVerticalSpd: " + currEngineSpd.y);
+        Debug.Log(
+            "currHorizontalSpd: "
+                + MathF.Sqrt(currEngineSpd.x * currEngineSpd.x + currEngineSpd.z * currEngineSpd.z)
+        );
+        Debug.Log("windSpd: " + Globals.WindSpd);
     }
 
     public SerializableSubSwarm ToSerializableSubSwarm()

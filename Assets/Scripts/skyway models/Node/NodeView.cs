@@ -14,6 +14,9 @@ public class NodeView : MonoBehaviour, IHighlightable
     [SerializeField]
     GameObject transparentBroder;
 
+    [SerializeField]
+    BoxCollider borderCollider;
+
     Camera mainCamera;
 
     void Awake()
@@ -75,11 +78,14 @@ public class NodeView : MonoBehaviour, IHighlightable
                 + node.transform.position
                 + new Vector3(-padGap * (m - 1) / 2f, 0, -padGap * (n - 1) / 2f);
         }
+        // set broder scale
         transparentBroder.transform.localScale = new Vector3(
-            m * n * 2 + 4,
-            m * n + 2,
-            m * n * 2 + 4
+            m * padGap,
+            transparentBroder.transform.localScale.y,
+            n * padGap
         );
+        // set box collider
+        borderCollider.size = new Vector3(m * padGap, borderCollider.size.y, n * padGap);
     }
 
     public void Highlight()

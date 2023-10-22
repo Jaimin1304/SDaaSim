@@ -5,6 +5,7 @@ from typing import Dict
 import globals
 
 
+# init empty skyway object
 skyway = Skyway(None, None, None, None, None, None, None)
 
 

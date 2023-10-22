@@ -182,7 +182,7 @@ public class Drone : MonoBehaviour
             CollectData();
             lastDataCollectionTime = Simulator.instance.ElapsedTime; // Update the last collection time
         }
-        LogState();
+        //LogState();
     }
 
     void EnergyDrop()
