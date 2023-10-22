@@ -64,72 +64,103 @@ public class RaycastHandler : MonoBehaviour
     {
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, skywayObjectLayer))
         {
-            IHighlightable hitObject = hit.transform.GetComponent<IHighlightable>();
-            if (hitObject != null)
-            {
-                hitObject.Highlight();
-                if (
-                    lastHitObject != null
-                    && lastHitObject != hitObject
-                    && lastHitObject != selectedObject
-                )
-                {
-                    lastHitObject.Unhighlight();
-                }
-                lastHitObject = hitObject;
-            }
+            HandleHitObject(hit);
+            // Check for mouse button events
             if (Input.GetMouseButtonDown(0))
             {
-                // Check for single click
-                if (hit.transform != null)
-                {
-                    // Set the selected object and highlight it
-                    draggingObject = hitObject;
-                }
-                // Check for double click
-                if (Time.time - lastClickTime < Globals.doubleClickGap)
-                {
-                    EnterFocusMode(hit.transform.gameObject);
-                }
-                lastClickTime = Time.time;
+                HandleMouseButtonDown(hit);
             }
             if (Input.GetMouseButtonUp(0))
             {
-                // Handle the drop action
-                if (draggingObject != null && hitObject != null && hitObject != draggingObject)
-                {
-                    Node selectedNode = ((MonoBehaviour)draggingObject).GetComponent<Node>();
-                    Node hitNode = ((MonoBehaviour)hitObject).GetComponent<Node>();
-                    if (selectedNode != null && hitNode != null)
-                    {
-                        Simulator.instance.CreateEdge(selectedNode, hitNode);
-                    }
-                }
-                // handle select and 3D gizmos action
-                if (hitObject == draggingObject)
-                {
-                    Select(hitObject);
-                    if (Simulator.instance.CurrentState == Simulator.State.Edit)
-                    {
-                        Show3DGizmos(((MonoBehaviour)hitObject).transform.position);
-                    }
-                }
-                draggingObject = null;
+                HandleMouseButtonUp(hit);
             }
         }
         else
         {
-            if (lastHitObject != null)
+            HandleNoHit();
+        }
+    }
+
+    void HandleHitObject(RaycastHit hit)
+    {
+        // Highlight the hit object if it implements IHighlightable
+        IHighlightable hitObject = hit.transform.GetComponent<IHighlightable>();
+        if (hitObject != null)
+        {
+            hitObject.Highlight();
+            // Unhighlight the previous hit object if different from current and selected
+            if (
+                lastHitObject != null
+                && lastHitObject != hitObject
+                && lastHitObject != selectedObject
+            )
             {
-                if (lastHitObject != selectedObject)
-                    lastHitObject.Unhighlight();
-                lastHitObject = null;
+                lastHitObject.Unhighlight();
             }
-            // handle cancel selection
-            if (Input.GetMouseButtonDown(0) && !isInteractingWithGizmos)
-            {
-                DeSelect();
-            }
+            lastHitObject = hitObject;
+        }
+    }
+
+    void HandleMouseButtonDown(RaycastHit hit)
+    {
+        IHighlightable hitObject = hit.transform.GetComponent<IHighlightable>();
+        // Assign hitObject to draggingObject on single click
+        draggingObject = hitObject;
+        // Enter focus mode on double click
+        if (Time.time - lastClickTime < Globals.doubleClickGap)
+        {
+            EnterFocusMode(hit.transform.gameObject);
+        }
+        lastClickTime = Time.time;
+    }
+
+    void HandleMouseButtonUp(RaycastHit hit)
+    {
+        IHighlightable hitObject = hit.transform.GetComponent<IHighlightable>();
+        // Connect nodes on drop
+        if (draggingObject != null && hitObject != null && hitObject != draggingObject)
+        {
+            CreateEdgeBetweenNodes(draggingObject, hitObject);
+        }
+        // Handle node selection
+        if (hitObject == draggingObject)
+        {
+            SelectNode(hitObject);
+        }
+        draggingObject = null;
+    }
+
+    void CreateEdgeBetweenNodes(IHighlightable from, IHighlightable to)
+    {
+        Node fromNode = ((MonoBehaviour)from).GetComponent<Node>();
+        Node toNode = ((MonoBehaviour)to).GetComponent<Node>();
+        if (fromNode != null && toNode != null)
+        {
+            Simulator.instance.CreateEdge(fromNode, toNode);
+        }
+    }
+
+    void SelectNode(IHighlightable node)
+    {
+        Select(node);
+        if (Simulator.instance.CurrentState == Simulator.State.Edit)
+        {
+            Show3DGizmos(((MonoBehaviour)node).transform.position);
+        }
+    }
+
+    void HandleNoHit()
+    {
+        // Unhighlight previous hit object
+        if (lastHitObject != null && lastHitObject != selectedObject)
+        {
+            lastHitObject.Unhighlight();
+            lastHitObject = null;
+        }
+        // Deselect on click outside objects
+        if (Input.GetMouseButtonDown(0) && !isInteractingWithGizmos)
+        {
+            DeSelect();
         }
     }
 
@@ -153,7 +184,6 @@ public class RaycastHandler : MonoBehaviour
             Renderer renderer = gizmos.GetComponent<Renderer>();
             renderer.material = gizmosHovered;
             lastHitGizmos = gizmos;
-
             if (Input.GetMouseButtonDown(0))
             {
                 selectedAxis = gizmos.name; // Assuming gizmoss are named "X", "Y", "Z"

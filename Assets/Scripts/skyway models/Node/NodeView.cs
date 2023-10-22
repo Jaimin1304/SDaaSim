@@ -95,6 +95,7 @@ public class NodeView : MonoBehaviour, IHighlightable
 
     public void Unhighlight()
     {
-        outline.enabled = false;
+        if (outline != null)
+            outline.enabled = false;
     }
 }
