@@ -56,8 +56,26 @@ public class EdgeView : MonoBehaviour, IHighlightable
     )
     {
         Vector3 heightOffset = new Vector3(0, Globals.edgeHeightOffset, 0);
+        // Set up line renderer with waypoints.
+        SetLineRendererPositions(leftNodePos, rightNodePos, wayPoints, heightOffset);
+        // Calculate the middle position.
+        Vector3 middlePosition = CalculateMiddlePosition(
+            leftNodePos,
+            rightNodePos,
+            wayPoints,
+            heightOffset
+        );
+        // Update text, border, and collider positions.
+        UpdatePositionsAndText(edge, middlePosition, gameObjectName, totalLength);
+    }
 
-        // set waypoints as lineRenderer positions
+    void SetLineRendererPositions(
+        Vector3 leftNodePos,
+        Vector3 rightNodePos,
+        List<WayPoint> wayPoints,
+        Vector3 heightOffset
+    )
+    {
         lineRenderer.positionCount = wayPoints.Count + 2;
         lineRenderer.SetPosition(0, leftNodePos + heightOffset);
         for (int i = 0; i < wayPoints.Count; i++)
@@ -65,40 +83,52 @@ public class EdgeView : MonoBehaviour, IHighlightable
             lineRenderer.SetPosition(i + 1, wayPoints[i].transform.position);
         }
         lineRenderer.SetPosition(wayPoints.Count + 1, rightNodePos + heightOffset);
+    }
 
-        // Position the text in the middle of the edge and slightly above it
+    Vector3 CalculateMiddlePosition(
+        Vector3 leftNodePos,
+        Vector3 rightNodePos,
+        List<WayPoint> wayPoints,
+        Vector3 heightOffset
+    )
+    {
         if (wayPoints.Count > 0)
         {
-            Vector3 middlePosition =
-                wayPoints[wayPoints.Count / 2].transform.position + heightOffset * 4;
-            lengthText.transform.position = middlePosition;
-            // update broder & collider position
-            transparentBroder.transform.position = middlePosition;
-            edge.BorderCollider.center = middlePosition - edge.transform.position;
-            edge.MoveEdgeToPosition(middlePosition);
+            return wayPoints[wayPoints.Count / 2].transform.position + heightOffset * 4;
         }
         else
         {
-            Vector3 middlePosition = (leftNodePos + rightNodePos) / 2 + heightOffset * 4;
-            lengthText.transform.position = middlePosition;
-            // update broder & collider position
-            transparentBroder.transform.position = middlePosition;
-            edge.BorderCollider.center = middlePosition - edge.transform.position;
-            edge.MoveEdgeToPosition(middlePosition);
+            return (leftNodePos + rightNodePos) / 2 + heightOffset * 4;
         }
+    }
 
+    void UpdatePositionsAndText(
+        Edge edge,
+        Vector3 middlePosition,
+        string gameObjectName,
+        float totalLength
+    )
+    {
+        // Position the length text and set its content.
+        lengthText.transform.position = middlePosition;
         lengthText.text = gameObjectName + "\n" + totalLength.ToString("F2") + "m";
-        // Let the length text face the camera
+        // Position the transparent border.
+        transparentBroder.transform.position = middlePosition;
+        // Adjust edge collider and move edge.
+        edge.BorderCollider.center = middlePosition - edge.transform.position;
+        edge.MoveEdgeToPosition(middlePosition);
+        // Let the length text face the camera.
         lengthText.transform.rotation = mainCamera.transform.rotation;
-        // Calculate distance from the camera
-        float distance = Vector3.Distance(
-            lengthText.transform.position,
-            mainCamera.transform.position
-        );
-        // Scale text, border and collider based on distance
+        // Scale UI elements based on distance to camera.
+        AdjustScaleBasedOnDistance(middlePosition, edge);
+    }
+
+    void AdjustScaleBasedOnDistance(Vector3 position, Edge edge)
+    {
+        float distance = Vector3.Distance(position, mainCamera.transform.position);
         float scaleValue = distance * Globals.textScaleValue;
+        const int scaleConst = 5;
         lengthText.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
-        int scaleConst = 5;
         transparentBroder.transform.localScale = new Vector3(
             scaleValue * scaleConst,
             scaleValue * scaleConst,
