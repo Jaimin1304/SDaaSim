@@ -14,11 +14,13 @@ public class WayPointView : MonoBehaviour, IHighlightable
 
     public void Highlight()
     {
-        outline.enabled = true;
+        if (outline != null)
+            outline.enabled = true;
     }
 
     public void Unhighlight()
     {
-        outline.enabled = false;
+        if (outline != null)
+            outline.enabled = false;
     }
 }
