@@ -8,11 +8,38 @@ public class SubSwarmView : MonoBehaviour
     [SerializeField]
     TextMeshPro nameTag;
 
+    [SerializeField]
+    TextMeshPro engineSpdTag;
+
+    [SerializeField]
+    TextMeshPro windSpdTag;
+
+    [SerializeField]
+    Material engineSpdMaterial;
+
+    [SerializeField]
+    Material windSpdMaterial;
+
     Camera mainCamera;
+
+    [SerializeField]
+    LineRenderer engineSpdLineRenderer;
+
+    [SerializeField]
+    LineRenderer windSpdLineRenderer;
 
     void Awake()
     {
         mainCamera = Camera.main;
+        InitLineRenderer(engineSpdLineRenderer);
+        InitLineRenderer(windSpdLineRenderer);
+    }
+
+    void InitLineRenderer(LineRenderer lineRenderer)
+    {
+        lineRenderer.startWidth = 0.1f;
+        lineRenderer.endWidth = 0.1f;
+        lineRenderer.positionCount = 2;
     }
 
     public void InitVisual(string tagName)
@@ -29,9 +56,13 @@ public class SubSwarmView : MonoBehaviour
         );
         // Let the name tag face the camera
         nameTag.transform.rotation = mainCamera.transform.rotation;
+        engineSpdTag.transform.rotation = mainCamera.transform.rotation;
+        windSpdTag.transform.rotation = mainCamera.transform.rotation;
         // Scale text size based on distance
         float scaleValue = distance * Globals.textScaleValue;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        engineSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        windSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
     }
 
     public void Visual(SubSwarm subSwarm)
@@ -91,7 +122,26 @@ public class SubSwarmView : MonoBehaviour
         }
     }
 
-    public void SetLandPosition(SubSwarm subSwarm, List<Pad> pads) {
+    public void DrawEngineSpeed(SubSwarm subSwarm)
+    {
+        Vector3 startPosition = subSwarm.transform.position;
+        Vector3 endPosition = startPosition + subSwarm.CurrEngineSpd;
+        engineSpdLineRenderer.SetPosition(0, startPosition);
+        engineSpdLineRenderer.SetPosition(1, endPosition);
+        engineSpdTag.transform.position = endPosition;
+    }
+
+    public void DrawWindSpeed(SubSwarm subSwarm)
+    {
+        Vector3 startPosition = subSwarm.transform.position;
+        Vector3 endPosition = startPosition + Globals.WindSpd;
+        windSpdLineRenderer.SetPosition(0, startPosition);
+        windSpdLineRenderer.SetPosition(1, endPosition);
+        windSpdTag.transform.position = endPosition;
+    }
+
+    public void SetLandPosition(SubSwarm subSwarm, List<Pad> pads)
+    {
         for (int i = 0; i < subSwarm.Drones.Count; i++)
         {
             subSwarm.Drones[i].transform.position = pads[i].transform.position;

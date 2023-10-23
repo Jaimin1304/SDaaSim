@@ -91,6 +91,12 @@ public class SubSwarm : MonoBehaviour
         set { Epm = value; }
     }
 
+    public Vector3 CurrEngineSpd
+    {
+        get { return currEngineSpd; }
+        set { currEngineSpd = value; }
+    }
+
     void Awake()
     {
         id = Guid.NewGuid().ToString();
@@ -107,6 +113,9 @@ public class SubSwarm : MonoBehaviour
     void Update()
     {
         subSwarmView.UpdateVisual(); // update nametag
+        subSwarmView.DrawEngineSpeed(this); // draw engine speed
+        subSwarmView.DrawWindSpeed(this); // draw wind speed
+        LogState();
     }
 
     public void UpdateLogic()
