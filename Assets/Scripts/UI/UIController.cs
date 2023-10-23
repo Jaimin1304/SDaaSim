@@ -179,6 +179,7 @@ public class UIController : MonoBehaviour
         {
             UpdateTimer();
         }
+        // Handle deletion
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             DeleteSelectedComponent();
@@ -191,6 +192,19 @@ public class UIController : MonoBehaviour
         {
             bool rechargeable = Input.GetKey(KeyCode.R);
             EditPads(addPad, rechargeable);
+        }
+
+        // Handle waypoint edition
+        if (Input.GetKeyDown(KeyCode.P)) {
+            Edge edgeComponent = selectedComponent.GetComponent<Edge>();
+            WayPoint wayPointComponent = selectedComponent.GetComponent<WayPoint>();
+            if (edgeComponent != null) {
+                // add waypoint to an edge with no waypoint, insert at middle
+                Simulator.instance.CreateWayPoint(edgeComponent, null);
+            } else if (wayPointComponent != null) {
+                // add a new waypoint beside the existing waypoint
+                Simulator.instance.CreateWayPoint(wayPointComponent.Edge, wayPointComponent);
+            }
         }
 
         UpdateObjectInfo(selectedComponent);

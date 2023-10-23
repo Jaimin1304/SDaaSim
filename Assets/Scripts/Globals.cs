@@ -27,7 +27,7 @@ public class Globals : MonoBehaviour
     public const float textScaleValue = 0.013f;
     public const float gizmos3DScaleValue = 0.02f;
     public const float doubleClickGap = 0.25f;
-    public const float objectCreationDistance = 15f;
+    public const float objectCreationDistance = 40f;
     public const float editModeDragMultiplier = 0.2f;
     public const int playSpeedLimit = 64;
     public const float padGap = 4f;

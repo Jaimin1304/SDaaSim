@@ -383,7 +383,6 @@ public class Simulator : MonoBehaviour
         Vector3 creationPosition = CamFrontPosition();
         // Instantiate the node at the calculated position
         Node newNode = Instantiate(nodePrefab, creationPosition, Quaternion.identity);
-        newNode.gameObject.name = String.Format("Node ({0})", skyway.Nodes.Count.ToString());
         skyway.AddNode(newNode);
     }
 
@@ -402,7 +401,6 @@ public class Simulator : MonoBehaviour
         }
         Debug.Log("CreateEdge");
         Edge newEdge = Instantiate(edgePrefab, Vector3.zero, Quaternion.identity);
-        newEdge.gameObject.name = String.Format("Edge ({0})", skyway.Edges.Count.ToString());
         newEdge.LeftNode = a;
         newEdge.RightNode = b;
         a.Edges.Add(newEdge);
@@ -415,6 +413,20 @@ public class Simulator : MonoBehaviour
         Debug.Log("DeleteEdge");
         raycastHandler.SelectedObject = null;
         skyway.RemoveEdge(edge);
+    }
+
+    public void CreateWayPoint(Edge edge, WayPoint baseWayPoint)
+    {
+        Debug.Log("CreateWayPoint");
+        // If baseWayPoint is null and edge already has waypoints, then return early
+        if (!baseWayPoint && edge.WayPoints.Any())
+        {
+            Debug.Log("Edge already has waypoints");
+            return;
+        }
+        // Instantiate waypoint object
+        WayPoint newWayPoint = Instantiate(wayPointPrefab, Vector3.zero, Quaternion.identity);
+        skyway.AddWayPoint(edge, newWayPoint, baseWayPoint);
     }
 
     public void DeleteWayPoint(WayPoint wayPoint)

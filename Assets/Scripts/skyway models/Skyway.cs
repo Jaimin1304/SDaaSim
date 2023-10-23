@@ -144,6 +144,7 @@ public class Skyway : MonoBehaviour
 
     public bool AddNode(Node node)
     {
+        node.gameObject.name = String.Format("Node ({0})", nodes.Count.ToString());
         nodes.Add(node);
         nodeDict.Add(node.Id, node);
         return true;
@@ -151,6 +152,7 @@ public class Skyway : MonoBehaviour
 
     public bool AddEdge(Edge edge)
     {
+        edge.gameObject.name = String.Format("Edge ({0})", edges.Count.ToString());
         edges.Add(edge);
         edgeDict.Add(edge.Id, edge);
         return true;
@@ -179,6 +181,29 @@ public class Skyway : MonoBehaviour
         return true;
     }
 
+    public bool AddWayPoint(Edge edge, WayPoint newWayPoint, WayPoint baseWayPoint)
+    {
+        // Determine position for the new waypoint
+        if (baseWayPoint)
+        {
+            newWayPoint.transform.position = baseWayPoint.transform.position + new Vector3(5, 0, 5);
+            int index = edge.WayPoints.IndexOf(baseWayPoint);
+            if (index != -1)
+                edge.WayPoints.Insert(index + 1, newWayPoint);
+        }
+        else
+        {
+            newWayPoint.transform.position =
+                (edge.LeftNode.transform.position + edge.RightNode.transform.position) / 2;
+            edge.WayPoints.Add(newWayPoint);
+        }
+        // Set newWayPoint as a child of edge
+        newWayPoint.transform.SetParent(edge.transform);
+        // Synchronize the edge with the new waypoint
+        edge.SyncEdge();
+        return true;
+    }
+
     public bool RemoveWayPoint(WayPoint wayPoint)
     {
         Edge edge = wayPoint.Edge;
@@ -203,6 +228,11 @@ public class Skyway : MonoBehaviour
         // Remove this edge from the nodes it is connected to
         edge.LeftNode.Edges.Remove(edge);
         edge.RightNode.Edges.Remove(edge);
+        // Remove waypoints in edge
+        for (int i = edge.WayPoints.Count - 1; i >= 0; i--)
+        {
+            edge.RemoveWayPoint(edge.WayPoints[i]);
+        }
         Destroy(edge.gameObject);
         return true;
     }
