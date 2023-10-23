@@ -126,8 +126,9 @@ public class SubSwarmView : MonoBehaviour
     {
         Vector3 startPosition = subSwarm.transform.position;
         Vector3 endPosition = startPosition + subSwarm.CurrEngineSpd;
-        engineSpdLineRenderer.SetPosition(0, startPosition);
-        engineSpdLineRenderer.SetPosition(1, endPosition);
+        Vector3 hightOffset = new Vector3(0, 1, 0);
+        engineSpdLineRenderer.SetPosition(0, startPosition + hightOffset);
+        engineSpdLineRenderer.SetPosition(1, endPosition + hightOffset);
         engineSpdTag.transform.position = endPosition;
     }
 
@@ -135,8 +136,9 @@ public class SubSwarmView : MonoBehaviour
     {
         Vector3 startPosition = subSwarm.transform.position;
         Vector3 endPosition = startPosition + Globals.WindSpd;
-        windSpdLineRenderer.SetPosition(0, startPosition);
-        windSpdLineRenderer.SetPosition(1, endPosition);
+        Vector3 hightOffset = new Vector3(0, 1, 0);
+        windSpdLineRenderer.SetPosition(0, startPosition + hightOffset);
+        windSpdLineRenderer.SetPosition(1, endPosition + hightOffset);
         windSpdTag.transform.position = endPosition;
     }
 
