@@ -24,8 +24,8 @@ public class Node : MonoBehaviour
     [SerializeField]
     GameObject padPrefab;
 
-    List<Pad> rechargePads;
-    List<Pad> nonRechargePads;
+    List<Pad> rechargePads = new();
+    List<Pad> nonRechargePads = new();
 
     public string Id
     {

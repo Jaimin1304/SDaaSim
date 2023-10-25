@@ -92,8 +92,8 @@ public class Globals : MonoBehaviour
     const float DefaultCamZoomSpeed = 200;
     const float DefaultEdgeThickness = 0.6f;
     const float DefaultPadRechargeRate = 0.05f;
-    const int DefaultRechargePadNum = 4;
-    const int DefaultNonRechargePadNum = 4;
+    const int DefaultRechargePadNum = 3;
+    const int DefaultNonRechargePadNum = 3;
     const float DefaultDroneBatCap = 500;
     static Vector3 DefaultWindSpd = new Vector3(-15, 0, 0);
     const float DefaultBatChargingEffic = 0.9f;

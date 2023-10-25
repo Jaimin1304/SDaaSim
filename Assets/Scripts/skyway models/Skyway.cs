@@ -195,6 +195,14 @@ public class Skyway : MonoBehaviour
         node.gameObject.name = String.Format("Node ({0})", nodes.Count.ToString());
         nodes.Add(node);
         nodeDict.Add(node.Id, node);
+        for (int i = 0; i < Globals.RechargePadNum; i++)
+        {
+            node.AddPad(true);
+        }
+        for (int i = 0; i < Globals.NonRechargePadNum; i++)
+        {
+            node.AddPad(false);
+        }
         return true;
     }
 
