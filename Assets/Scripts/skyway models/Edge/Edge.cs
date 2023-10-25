@@ -211,6 +211,7 @@ public class Edge : MonoBehaviour
         return new SerializableEdge()
         {
             id = id,
+            name = gameObject.name,
             position = transform.position,
             leftNode = leftNode.Id,
             rightNode = rightNode.Id,

@@ -15,6 +15,9 @@ public class Request : MonoBehaviour
     Node destNode;
 
     [SerializeField]
+    Swarm swarm;
+
+    [SerializeField]
     List<Payload> payloads = new();
 
     public string Id
@@ -35,6 +38,12 @@ public class Request : MonoBehaviour
         set { destNode = value; }
     }
 
+    public Swarm Swarm
+    {
+        get { return swarm; }
+        set { swarm = value; }
+    }
+
     public List<Payload> Payloads
     {
         get { return payloads; }
@@ -51,8 +60,10 @@ public class Request : MonoBehaviour
         return new SerializableRequest()
         {
             id = id,
+            name = gameObject.name,
             startNode = startNode.Id,
             destNode = destNode.Id,
+            swarm = swarm.Id,
             payloads = payloads.Select(payload => payload.Id).ToList(),
         };
     }

@@ -209,6 +209,7 @@ public class Node : MonoBehaviour
         return new SerializableNode()
         {
             id = id,
+            name = gameObject.name,
             position = transform.position,
             drones = drones.Select(drone => drone.Id).ToList(),
             edges = edges.Select(edge => edge.Id).ToList(),

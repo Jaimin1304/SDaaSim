@@ -50,6 +50,7 @@ public class Payload : MonoBehaviour
         return new SerializablePayload()
         {
             id = id,
+            name = gameObject.name,
             weight = weight,
             request = request.Id,
             drone = drone.Id

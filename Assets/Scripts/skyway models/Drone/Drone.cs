@@ -237,6 +237,7 @@ public class Drone : MonoBehaviour
         return new SerializableDrone()
         {
             id = id,
+            name = gameObject.name,
             subswarm = subSwarm.Id,
             selfWeight = selfWeight,
             speed = speed,

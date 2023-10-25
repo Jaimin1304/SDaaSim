@@ -31,6 +31,7 @@ public class WayPoint : MonoBehaviour
         return new SerializableWayPoint()
         {
             id = id,
+            name = gameObject.name,
             position = transform.position,
             edge = edge.Id
         };

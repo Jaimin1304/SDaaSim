@@ -387,6 +387,7 @@ public class SubSwarm : MonoBehaviour
         return new SerializableSubSwarm()
         {
             id = id,
+            name = gameObject.name,
             parentSwarm = parentSwarm.Id,
             position = transform.position,
             drones = drones.Select(drone => drone.Id).ToList(),

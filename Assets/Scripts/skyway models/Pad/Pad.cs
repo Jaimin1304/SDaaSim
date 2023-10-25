@@ -63,9 +63,10 @@ public class Pad : MonoBehaviour
     {
         return new SerializablePad()
         {
-            id = this.id,
-            node = this.node.Id,
-            rechargeable = this.rechargeable,
+            id = id,
+            name = gameObject.name,
+            node = node.Id,
+            rechargeable = rechargeable,
         };
     }
 }

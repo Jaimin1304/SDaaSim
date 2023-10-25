@@ -42,6 +42,7 @@ public class Swarm : MonoBehaviour
         return new SerializableSwarm()
         {
             id = id,
+            name = gameObject.name,
             request = request.Id,
             subSwarms = subSwarms.Select(subSwarm => subSwarm.Id).ToList(),
         };

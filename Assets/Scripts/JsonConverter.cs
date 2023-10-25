@@ -7,6 +7,8 @@ using Unity.VisualScripting;
 [Serializable]
 public class SerializableSkyway
 {
+    public string id;
+    public string name;
     public List<SerializableNode> nodes;
     public List<SerializableEdge> edges;
     public List<SerializableWayPoint> wayPoints;
@@ -22,6 +24,7 @@ public class SerializableSkyway
 public class SerializableNode
 {
     public string id;
+    public string name;
     public Vector3 position;
     public List<string> drones;
     public List<string> edges;
@@ -32,6 +35,7 @@ public class SerializableNode
 public class SerializableEdge
 {
     public string id;
+    public string name;
     public Vector3 position;
     public string leftNode;
     public string rightNode;
@@ -43,6 +47,7 @@ public class SerializableEdge
 public class SerializableWayPoint
 {
     public string id;
+    public string name;
     public Vector3 position;
     public string edge;
 }
@@ -51,6 +56,7 @@ public class SerializableWayPoint
 public class SerializablePad
 {
     public string id;
+    public string name;
     public string node;
     public bool rechargeable;
 }
@@ -59,8 +65,10 @@ public class SerializablePad
 public class SerializableRequest
 {
     public string id;
+    public string name;
     public string startNode;
     public string destNode;
+    public string swarm;
     public List<String> payloads;
 }
 
@@ -68,6 +76,7 @@ public class SerializableRequest
 public class SerializablePayload
 {
     public string id;
+    public string name;
     public float weight;
     public string request;
     public string drone;
@@ -77,6 +86,7 @@ public class SerializablePayload
 public class SerializableSwarm
 {
     public string id;
+    public string name;
     public string request;
     public List<String> subSwarms;
 }
@@ -85,6 +95,7 @@ public class SerializableSwarm
 public class SerializableSubSwarm
 {
     public string id;
+    public string name;
     public string parentSwarm;
     public Vector3 position;
     public List<String> drones;
@@ -98,6 +109,7 @@ public class SerializableSubSwarm
 public class SerializableDrone
 {
     public string id;
+    public string name;
     public string subswarm;
     public float selfWeight;
     public float speed;
@@ -187,6 +199,8 @@ public class JsonConverter : MonoBehaviour
             skywayJson
         );
         Skyway skyway = Instantiate(skywayPrefab, Vector3.zero, Quaternion.identity);
+        skyway.Id = serializableSkyway.id;
+        skyway.name = serializableSkyway.name;
         InitSkywayObjects(skyway, serializableSkyway);
         EstablishReferences(skyway, serializableSkyway);
         return skyway;
@@ -198,6 +212,7 @@ public class JsonConverter : MonoBehaviour
         {
             Node node = Instantiate(nodePrefab, i.position, Quaternion.identity);
             node.Id = i.id;
+            node.name = i.name;
             skyway.Nodes.Add(node);
             node.transform.SetParent(skyway.transform);
         }
@@ -206,6 +221,7 @@ public class JsonConverter : MonoBehaviour
         {
             Edge edge = Instantiate(edgePrefab, i.position, Quaternion.identity);
             edge.Id = i.id;
+            edge.name = i.name;
             skyway.Edges.Add(edge);
             edge.transform.SetParent(skyway.transform);
         }
@@ -214,6 +230,7 @@ public class JsonConverter : MonoBehaviour
         {
             WayPoint wayPoint = Instantiate(wayPointPrefab, i.position, Quaternion.identity);
             wayPoint.Id = i.id;
+            wayPoint.name = i.name;
             skyway.WayPoints.Add(wayPoint);
             wayPoint.transform.SetParent(skyway.transform);
         }
@@ -222,6 +239,7 @@ public class JsonConverter : MonoBehaviour
         {
             Pad pad = Instantiate(padPrefab, Vector3.zero, Quaternion.identity);
             pad.Id = i.id;
+            pad.name = i.name;
             pad.Rechargeable = i.rechargeable;
             skyway.Pads.Add(pad);
             pad.transform.SetParent(skyway.transform);
@@ -231,6 +249,7 @@ public class JsonConverter : MonoBehaviour
         {
             Request request = Instantiate(requestPrefab, Vector3.zero, Quaternion.identity);
             request.Id = i.id;
+            request.name = i.name;
             skyway.Requests.Add(request);
             request.transform.SetParent(skyway.transform);
         }
@@ -239,6 +258,7 @@ public class JsonConverter : MonoBehaviour
         {
             Payload payload = Instantiate(payloadPrefab, Vector3.zero, Quaternion.identity);
             payload.Id = i.id;
+            payload.name = i.name;
             payload.Weight = i.weight;
             skyway.Payloads.Add(payload);
             payload.transform.SetParent(skyway.transform);
@@ -248,6 +268,7 @@ public class JsonConverter : MonoBehaviour
         {
             Swarm swarm = Instantiate(swarmPrefab, Vector3.zero, Quaternion.identity);
             swarm.Id = i.id;
+            swarm.name = i.name;
             skyway.Swarms.Add(swarm);
             swarm.transform.SetParent(skyway.transform);
         }
@@ -256,6 +277,7 @@ public class JsonConverter : MonoBehaviour
         {
             SubSwarm subSwarm = Instantiate(subSwarmPrefab, Vector3.zero, Quaternion.identity);
             subSwarm.Id = i.id;
+            subSwarm.name = i.name;
             skyway.SubSwarms.Add(subSwarm);
             subSwarm.transform.SetParent(skyway.transform);
         }
@@ -264,6 +286,7 @@ public class JsonConverter : MonoBehaviour
         {
             Drone drone = Instantiate(dronePrefab, Vector3.zero, Quaternion.identity);
             drone.Id = i.id;
+            drone.name = i.name;
             skyway.Drones.Add(drone);
             drone.transform.SetParent(skyway.transform);
         }
@@ -366,6 +389,7 @@ public class JsonConverter : MonoBehaviour
             SerializableSwarm s = serializableSkyway.swarms.Find(i => i.id == swarm.Id);
             // request
             swarm.Request = skyway.Requests.Find(request => request.Id == s.request);
+            swarm.Request.Swarm = swarm;
         }
 
         // Establish references for subSwarms

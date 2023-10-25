@@ -7,6 +7,9 @@ using System.Linq;
 public class Skyway : MonoBehaviour
 {
     [SerializeField]
+    string id;
+
+    [SerializeField]
     List<Node> nodes = new();
 
     [SerializeField]
@@ -39,6 +42,12 @@ public class Skyway : MonoBehaviour
     Dictionary<string, SubSwarm> subSwarmDict = new();
     Dictionary<string, Drone> droneDict = new();
     Dictionary<string, Payload> payloadDict = new();
+
+    public string Id
+    {
+        get { return id; }
+        set { id = value; }
+    }
 
     public List<Node> Nodes
     {
@@ -128,6 +137,11 @@ public class Skyway : MonoBehaviour
     {
         get { return nodeDict; }
         set { nodeDict = value; }
+    }
+
+    void Awake()
+    {
+        id = Guid.NewGuid().ToString();
     }
 
     public void InitSkyway()
@@ -279,6 +293,8 @@ public class Skyway : MonoBehaviour
     {
         return new SerializableSkyway()
         {
+            id = id,
+            name = gameObject.name,
             nodes = nodes.Select(node => node.ToSerializableNode()).ToList(),
             edges = edges.Select(edge => edge.ToSerializableEdge()).ToList(),
             wayPoints = wayPoints.Select(wayPoint => wayPoint.ToSerializableWayPoint()).ToList(),
@@ -289,7 +305,9 @@ public class Skyway : MonoBehaviour
                 .Select(subSwarm => subSwarm.Value.ToSerializableSubSwarm())
                 .ToList(),
             drones = droneDict.Select(drone => drone.Value.ToSerializableDrone()).ToList(),
-            payloads = payloadDict.Select(payload => payload.Value.ToSerializablePayload()).ToList(),
+            payloads = payloadDict
+                .Select(payload => payload.Value.ToSerializablePayload())
+                .ToList(),
         };
     }
 }
