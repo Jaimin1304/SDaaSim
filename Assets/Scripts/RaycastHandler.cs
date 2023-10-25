@@ -254,6 +254,10 @@ public class RaycastHandler : MonoBehaviour
 
     void Select(IHighlightable obj)
     {
+        if (obj == null)
+        {
+            return;
+        }
         Debug.Log(String.Format("select {0}", obj));
         selectedObject?.Unhighlight();
         selectedObject = obj;

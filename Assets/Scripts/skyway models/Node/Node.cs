@@ -19,9 +19,6 @@ public class Node : MonoBehaviour
     List<Pad> pads;
 
     [SerializeField]
-    Utils utils;
-
-    [SerializeField]
     NodeView nodeView;
 
     [SerializeField]
@@ -33,6 +30,7 @@ public class Node : MonoBehaviour
     public string Id
     {
         get { return id; }
+        set { id = value; }
     }
 
     public List<Drone> Drones
@@ -72,11 +70,7 @@ public class Node : MonoBehaviour
 
     void Start()
     {
-        nodeView.initVisual(this);
-        nodeView.UpdateVisual(this);
-        GenerateDefaultPads();
-        SyncPadGroups();
-        nodeView.ArrangePads(this);
+        Init();
     }
 
     void Update()
@@ -86,6 +80,15 @@ public class Node : MonoBehaviour
         {
             RechargeDrones();
         }
+    }
+
+    public void Init()
+    {
+        nodeView.initVisual(this);
+        nodeView.UpdateVisual(this);
+        //GenerateDefaultPads();
+        SyncPadGroups();
+        nodeView.ArrangePads(this);
     }
 
     public bool HasEdgeTo(Node otherNode)
@@ -128,6 +131,9 @@ public class Node : MonoBehaviour
             newPad.ChangeRechargeableState(isRechargeable);
             newPad.Node = this;
             pads.Add(newPad);
+            // add pad to skyway
+            Simulator.instance.Skyway.Pads.Add(newPad);
+            Simulator.instance.Skyway.PadDict.Add(newPad.Id, newPad);
         }
     }
 
@@ -152,6 +158,9 @@ public class Node : MonoBehaviour
         }
         SyncPadGroups();
         nodeView.ArrangePads(this);
+        // add pad to skyway
+        Simulator.instance.Skyway.Pads.Add(newPad);
+        Simulator.instance.Skyway.PadDict.Add(newPad.Id, newPad);
         return true;
     }
 
@@ -160,13 +169,29 @@ public class Node : MonoBehaviour
         List<Pad> targetList = rechargeable ? rechargePads : nonRechargePads;
         if (targetList.Count <= 0)
             return false;
+        Pad padToRemove = targetList[0];
+        // remove pad from skyway
+        Simulator.instance.Skyway.Pads.Remove(padToRemove);
+        Simulator.instance.Skyway.PadDict.Remove(padToRemove.Id);
         // Remove pad from scene and list
-        Destroy(targetList[0].gameObject);
-        pads.Remove(targetList[0]);
-        targetList.RemoveAt(0);
+        pads.Remove(padToRemove);
+        targetList.Remove(padToRemove);
         SyncPadGroups();
         nodeView.ArrangePads(this);
+        Destroy(padToRemove.gameObject);
         return true;
+    }
+
+    public void ClearPads()
+    {
+        for (int i = rechargePads.Count - 1; i >= 0; i--)
+        {
+            RemovePad(true);
+        }
+        for (int i = nonRechargePads.Count - 1; i >= 0; i--)
+        {
+            RemovePad(false);
+        }
     }
 
     public List<Pad> FreeRechargePads()

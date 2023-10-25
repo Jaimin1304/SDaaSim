@@ -117,9 +117,9 @@ public class Simulator : MonoBehaviour
 
     void Update()
     {
-        if (currentState == State.Play)
-        { // simulation logic
-            foreach (SubSwarm subSwarm in skyway.SubSwarms.Values)
+        if (currentState == State.Play) // simulation logic
+        {
+            foreach (SubSwarm subSwarm in skyway.SubSwarmDict.Values)
             {
                 subSwarm.UpdateLogic();
             }
@@ -189,9 +189,9 @@ public class Simulator : MonoBehaviour
                     Debug.Log("SubSwarm ID: " + subSwarmId);
                     Debug.Log("Edge ID: " + edgeId);
                     // Check if the key exists in the SubSwarms dictionary
-                    if (skyway.SubSwarms.ContainsKey(subSwarmId))
+                    if (skyway.SubSwarmDict.ContainsKey(subSwarmId))
                     {
-                        SubSwarm subSwarm = skyway.SubSwarms[subSwarmId];
+                        SubSwarm subSwarm = skyway.SubSwarmDict[subSwarmId];
                         // Check if the key exists in the EdgeDict dictionary
                         if (skyway.EdgeDict.ContainsKey(edgeId))
                         {
@@ -205,7 +205,9 @@ public class Simulator : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogError("SubSwarm ID not found in skyway.SubSwarms: " + subSwarmId);
+                        Debug.LogError(
+                            "SubSwarm ID not found in skyway.SubSwarmDict: " + subSwarmId
+                        );
                     }
                     break;
 
@@ -215,9 +217,9 @@ public class Simulator : MonoBehaviour
                     Debug.Log("SubSwarm ID: " + subSwarmId);
                     Debug.Log("Edge ID: " + nodeId);
                     // Check if the key exists in the SubSwarms dictionary
-                    if (skyway.SubSwarms.ContainsKey(subSwarmId))
+                    if (skyway.SubSwarmDict.ContainsKey(subSwarmId))
                     {
-                        SubSwarm subSwarm = skyway.SubSwarms[subSwarmId];
+                        SubSwarm subSwarm = skyway.SubSwarmDict[subSwarmId];
                         // Check if the key exists in the NodeDict dictionary
                         if (skyway.NodeDict.ContainsKey(nodeId))
                         {
@@ -231,7 +233,9 @@ public class Simulator : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogError("SubSwarm ID not found in skyway.SubSwarms: " + subSwarmId);
+                        Debug.LogError(
+                            "SubSwarm ID not found in skyway.SubSwarmDict: " + subSwarmId
+                        );
                     }
                     break;
 
@@ -241,14 +245,16 @@ public class Simulator : MonoBehaviour
                     Debug.Log("SubSwarm ID: " + subSwarmId);
                     Debug.Log("Drone list: " + droneLst);
                     // Check if the key exists in the SubSwarms dictionary
-                    if (skyway.SubSwarms.ContainsKey(subSwarmId))
+                    if (skyway.SubSwarmDict.ContainsKey(subSwarmId))
                     {
-                        SubSwarm subSwarm = skyway.SubSwarms[subSwarmId];
+                        SubSwarm subSwarm = skyway.SubSwarmDict[subSwarmId];
                         Debug.Log("split according to drone list");
                     }
                     else
                     {
-                        Debug.LogError("SubSwarm ID not found in skyway.SubSwarms: " + subSwarmId);
+                        Debug.LogError(
+                            "SubSwarm ID not found in skyway.SubSwarmDict: " + subSwarmId
+                        );
                     }
                     break;
 
@@ -259,8 +265,8 @@ public class Simulator : MonoBehaviour
                     Debug.Log("SubSwarmB ID: " + subSwarmBId);
                     // Check if the key exists in the SubSwarms dictionary
                     if (
-                        skyway.SubSwarms.ContainsKey(subSwarmAId)
-                        && skyway.SubSwarms.ContainsKey(subSwarmBId)
+                        skyway.SubSwarmDict.ContainsKey(subSwarmAId)
+                        && skyway.SubSwarmDict.ContainsKey(subSwarmBId)
                     )
                     {
                         Debug.Log("merge");
@@ -269,7 +275,7 @@ public class Simulator : MonoBehaviour
                     {
                         Debug.LogError(
                             string.Format(
-                                "SubSwarm ID not found in skyway.SubSwarms, could be {0} or {1}",
+                                "SubSwarm ID not found in skyway.SubSwarmDict, could be {0} or {1}",
                                 subSwarmAId,
                                 subSwarmBId
                             )
@@ -324,7 +330,7 @@ public class Simulator : MonoBehaviour
         OnFinishEvent.Invoke(saveCSV); // Invoke the OnFinishEvent
         if (saveCSV)
         {
-            dataManager.SaveAllDroneDataToCSV(skyway.Drones.Values.ToList());
+            dataManager.SaveAllDroneDataToCSV(skyway.DroneDict.Values.ToList());
         }
     }
 
@@ -450,20 +456,21 @@ public class Simulator : MonoBehaviour
         }
     }
 
-    //public void CreateWayPoint()
-    //{
-    //    Debug.Log("CreateWayPoint");
-    //    Vector3 creationPosition = CamFrontPosition();
-    //    // Instantiate the wayPoint at the calculated position
-    //    WayPoint newWayPoint = Instantiate(wayPointPrefab, creationPosition, Quaternion.identity);
-    //    newWayPoint.gameObject.name = String.Format("Node ({0})", skyway.Nodes.Count.ToString());
-    //    //skyway.Nodes.Add(newWayPoint);
-    //}
-
-
     public void SaveSkyway()
     {
         dataManager.SaveSkywayToJson(skyway);
+    }
+
+    public void LoadSkyway()
+    {
+        String skywayJson = dataManager.FetchSkywayJsonFromFile();
+        Debug.Log("skyway json get successful: " + skywayJson);
+        if (skywayJson == "")
+        {
+            return;
+        }
+        skyway = dataManager.LoadSkywayFromJson(skywayJson);
+        skyway.InitSkyway();
     }
 
     public string GetTimeString()

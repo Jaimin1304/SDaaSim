@@ -22,6 +22,7 @@ public class Pad : MonoBehaviour
     public string Id
     {
         get { return id; }
+        set { id = value; }
     }
 
     public Node Node

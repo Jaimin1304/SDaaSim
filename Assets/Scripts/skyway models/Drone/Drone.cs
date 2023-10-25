@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.PlayerLoop;
 
 public class Drone : MonoBehaviour
 {
@@ -60,6 +61,7 @@ public class Drone : MonoBehaviour
     public string Id
     {
         get { return id; }
+        set { id = value; }
     }
 
     public SubSwarm SubSwarm
@@ -141,14 +143,7 @@ public class Drone : MonoBehaviour
 
     void Start()
     {
-        droneView.initVisual(this);
-        droneView.UpdateVisual(this);
-        batteryStatus = 1;
-        batteryCapacityWh = Globals.DroneBatCap;
-        currBatteryWh = batteryCapacityWh;
-        maxLiftSpd = Globals.MaxLiftSpd;
-        maxDescentSpd = Globals.MaxDescnetSpd;
-        maxHorizontalSpd = Globals.MaxHorizontalSpd;
+        Init();
     }
 
     void Update()
@@ -183,6 +178,18 @@ public class Drone : MonoBehaviour
             lastDataCollectionTime = Simulator.instance.ElapsedTime; // Update the last collection time
         }
         //LogState();
+    }
+
+    public void Init()
+    {
+        droneView.initVisual(this);
+        droneView.UpdateVisual(this);
+        batteryStatus = 1;
+        batteryCapacityWh = Globals.DroneBatCap;
+        currBatteryWh = batteryCapacityWh;
+        maxLiftSpd = Globals.MaxLiftSpd;
+        maxDescentSpd = Globals.MaxDescnetSpd;
+        maxHorizontalSpd = Globals.MaxHorizontalSpd;
     }
 
     void EnergyDrop()
@@ -230,6 +237,7 @@ public class Drone : MonoBehaviour
         return new SerializableDrone()
         {
             id = id,
+            subswarm = subSwarm.Id,
             selfWeight = selfWeight,
             speed = speed,
             maxPayloadWeight = maxPayloadWeight,

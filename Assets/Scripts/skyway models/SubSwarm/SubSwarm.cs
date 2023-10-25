@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Events;
+using UnityEditor.Search;
 
 public class SubSwarm : MonoBehaviour
 {
@@ -47,6 +48,7 @@ public class SubSwarm : MonoBehaviour
     public string Id
     {
         get { return id; }
+        set { id = value; }
     }
 
     public State CurrentState
@@ -104,10 +106,7 @@ public class SubSwarm : MonoBehaviour
 
     void Start()
     {
-        currentState = State.Flying;
-        transform.position = node.transform.position;
-        subSwarmView.SetFlyPosition(this);
-        subSwarmView.InitVisual(gameObject.name);
+        Init();
     }
 
     void Update()
@@ -115,7 +114,19 @@ public class SubSwarm : MonoBehaviour
         subSwarmView.UpdateVisual(); // update nametag
         subSwarmView.DrawEngineSpeed(this); // draw engine speed
         subSwarmView.DrawWindSpeed(this); // draw wind speed
-        LogState();
+        //LogState();
+    }
+
+    public void Init()
+    {
+        if (node == null)
+        {
+            return;
+        }
+        currentState = State.Flying;
+        transform.position = node.transform.position;
+        subSwarmView.SetFlyPosition(this);
+        subSwarmView.InitVisual(gameObject.name);
     }
 
     public void UpdateLogic()
@@ -376,6 +387,7 @@ public class SubSwarm : MonoBehaviour
         return new SerializableSubSwarm()
         {
             id = id,
+            parentSwarm = parentSwarm.Id,
             position = transform.position,
             drones = drones.Select(drone => drone.Id).ToList(),
             node = node.Id,

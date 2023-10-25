@@ -52,7 +52,6 @@ MonoBehaviour:
   drones: []
   edges: []
   pads: []
-  utils: {fileID: 8006760440081949815, guid: b3a41e0fb5837924080f57f86b3c20c1, type: 3}
   nodeView: {fileID: 3922244908923170588}
   padPrefab: {fileID: 1719151548926632809, guid: 9547f69057cb57540b72c97092e84732, type: 3}
 --- !u!65 &40989279504155355

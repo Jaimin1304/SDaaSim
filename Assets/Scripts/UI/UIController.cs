@@ -264,6 +264,7 @@ public class UIController : MonoBehaviour
     public void LoadSkyway()
     {
         Debug.Log("LoadSkyway");
+        Simulator.instance.LoadSkyway();
     }
 
     public void Reset()

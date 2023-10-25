@@ -5,17 +5,21 @@ using UnityEngine;
 public class Payload : MonoBehaviour
 {
     [SerializeField]
-    private string id;
+    string id;
 
     [SerializeField]
-    private float weight;
+    float weight;
 
     [SerializeField]
-    private Request request;
+    Request request;
+
+    [SerializeField]
+    Drone drone;
 
     public string Id
     {
         get { return id; }
+        set { id = value; }
     }
 
     public float Weight
@@ -30,6 +34,12 @@ public class Payload : MonoBehaviour
         set { request = value; }
     }
 
+    public Drone Drone
+    {
+        get { return drone; }
+        set { drone = value; }
+    }
+
     void Awake()
     {
         id = Guid.NewGuid().ToString();
@@ -37,6 +47,12 @@ public class Payload : MonoBehaviour
 
     public SerializablePayload ToSerializablePayload()
     {
-        return new SerializablePayload() { id = this.id, weight = this.weight, };
+        return new SerializablePayload()
+        {
+            id = id,
+            weight = weight,
+            request = request.Id,
+            drone = drone.Id
+        };
     }
 }

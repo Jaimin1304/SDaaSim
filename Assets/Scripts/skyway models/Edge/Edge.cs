@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Diagnostics;
 
 public class Edge : MonoBehaviour
 {
@@ -35,6 +36,7 @@ public class Edge : MonoBehaviour
     public string Id
     {
         get { return id; }
+        set { id = value; }
     }
 
     public EdgeView EdgeView
@@ -84,15 +86,28 @@ public class Edge : MonoBehaviour
 
     void Start()
     {
-        CalLengths();
-        CalPath();
-        UpdateEdgeVisual();
-        edgeView.UpdateEdgeThickness();
+        Init();
     }
 
     void Update()
     {
+        if (leftNode == null || rightNode == null)
+        {
+            return;
+        }
         UpdateEdgeVisual();
+    }
+
+    public void Init()
+    {
+        if (leftNode == null || rightNode == null)
+        {
+            return;
+        }
+        CalLengths();
+        CalPath();
+        UpdateEdgeVisual();
+        edgeView.UpdateEdgeThickness();
     }
 
     public void CalLengths()
@@ -196,9 +211,11 @@ public class Edge : MonoBehaviour
         return new SerializableEdge()
         {
             id = id,
+            position = transform.position,
             leftNode = leftNode.Id,
             rightNode = rightNode.Id,
             totalLength = totalLength,
+            wayPoints = wayPoints.Select(wayPoint => wayPoint.Id).ToList(),
         };
     }
 }

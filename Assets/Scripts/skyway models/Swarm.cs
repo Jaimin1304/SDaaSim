@@ -17,6 +17,7 @@ public class Swarm : MonoBehaviour
     public string Id
     {
         get { return id; }
+        set { id = value; }
     }
 
     public Request Request

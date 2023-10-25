@@ -6,13 +6,13 @@ using System.Linq;
 public class Request : MonoBehaviour
 {
     [SerializeField]
-    private string id;
+    string id;
 
     [SerializeField]
-    private Node startNode;
+    Node startNode;
 
     [SerializeField]
-    private Node destNode;
+    Node destNode;
 
     [SerializeField]
     List<Payload> payloads = new();
@@ -20,6 +20,7 @@ public class Request : MonoBehaviour
     public string Id
     {
         get { return id; }
+        set { id = value; }
     }
 
     public Node StartNode

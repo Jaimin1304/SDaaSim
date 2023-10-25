@@ -13,22 +13,32 @@ public class Skyway : MonoBehaviour
     List<Edge> edges = new();
 
     [SerializeField]
+    List<WayPoint> wayPoints = new();
+
+    [SerializeField]
     List<Pad> pads = new();
 
     [SerializeField]
     List<Request> requests = new();
 
     [SerializeField]
+    List<Payload> payloads = new();
+
+    [SerializeField]
     List<Swarm> swarms = new();
+
+    [SerializeField]
+    List<SubSwarm> subSwarms = new();
+
+    [SerializeField]
+    List<Drone> drones = new();
 
     Dictionary<string, Edge> edgeDict = new();
     Dictionary<string, Pad> padDict = new();
     Dictionary<string, Node> nodeDict = new();
-    Dictionary<string, SubSwarm> subSwarms = new();
-
-    //Dictionary<string, Pad> pads = new();
-    Dictionary<string, Drone> drones = new();
-    Dictionary<string, Payload> payloads = new();
+    Dictionary<string, SubSwarm> subSwarmDict = new();
+    Dictionary<string, Drone> droneDict = new();
+    Dictionary<string, Payload> payloadDict = new();
 
     public List<Node> Nodes
     {
@@ -42,10 +52,16 @@ public class Skyway : MonoBehaviour
         set { edges = value; }
     }
 
-    public List<Edge> Pads
+    public List<WayPoint> WayPoints
     {
-        get { return edges; }
-        set { edges = value; }
+        get { return wayPoints; }
+        set { wayPoints = value; }
+    }
+
+    public List<Pad> Pads
+    {
+        get { return pads; }
+        set { pads = value; }
     }
 
     public List<Request> Requests
@@ -54,16 +70,34 @@ public class Skyway : MonoBehaviour
         set { requests = value; }
     }
 
+    public List<Payload> Payloads
+    {
+        get { return payloads; }
+        set { payloads = value; }
+    }
+
     public List<Swarm> Swarms
     {
         get { return swarms; }
         set { swarms = value; }
     }
 
-    public Dictionary<string, SubSwarm> SubSwarms
+    public List<SubSwarm> SubSwarms
     {
         get { return subSwarms; }
         set { subSwarms = value; }
+    }
+
+    public List<Drone> Drones
+    {
+        get { return drones; }
+        set { drones = value; }
+    }
+
+    public Dictionary<string, SubSwarm> SubSwarmDict
+    {
+        get { return subSwarmDict; }
+        set { subSwarmDict = value; }
     }
 
     public Dictionary<string, Pad> PadDict
@@ -72,16 +106,16 @@ public class Skyway : MonoBehaviour
         set { padDict = value; }
     }
 
-    public Dictionary<string, Drone> Drones
+    public Dictionary<string, Drone> DroneDict
     {
-        get { return drones; }
-        set { drones = value; }
+        get { return droneDict; }
+        set { droneDict = value; }
     }
 
-    public Dictionary<string, Payload> Payloads
+    public Dictionary<string, Payload> PayloadDict
     {
-        get { return payloads; }
-        set { payloads = value; }
+        get { return payloadDict; }
+        set { payloadDict = value; }
     }
 
     public Dictionary<string, Edge> EdgeDict
@@ -108,12 +142,12 @@ public class Skyway : MonoBehaviour
         {
             nodeDict.Add(node.Id, node);
         }
-        // init subswarms
+        // init subSwarmDict
         foreach (Swarm swarm in swarms)
         {
             foreach (SubSwarm subSwarm in swarm.SubSwarms)
             {
-                subSwarms.Add(subSwarm.Id, subSwarm);
+                subSwarmDict.Add(subSwarm.Id, subSwarm);
             }
         }
         //// init pads
@@ -124,20 +158,20 @@ public class Skyway : MonoBehaviour
         //        pads.Add(pad.Id, pad);
         //    }
         //}
-        // init drones
-        foreach (SubSwarm subSwarm in subSwarms.Values)
+        // init droneDict
+        foreach (SubSwarm subSwarm in subSwarmDict.Values)
         {
             foreach (Drone drone in subSwarm.Drones)
             {
-                drones.Add(drone.Id, drone);
+                droneDict.Add(drone.Id, drone);
             }
         }
-        // init payloads
+        // init payloadDict
         foreach (Request request in Requests)
         {
             foreach (Payload payload in request.Payloads)
             {
-                payloads.Add(payload.Id, payload);
+                payloadDict.Add(payload.Id, payload);
             }
         }
     }
@@ -177,6 +211,8 @@ public class Skyway : MonoBehaviour
         {
             RemoveEdge(node.Edges[i]);
         }
+        // Remove all pads in the node
+        node.ClearPads();
         Destroy(node.gameObject);
         return true;
     }
@@ -201,11 +237,13 @@ public class Skyway : MonoBehaviour
         newWayPoint.transform.SetParent(edge.transform);
         // Synchronize the edge with the new waypoint
         edge.SyncEdge();
+        wayPoints.Add(newWayPoint);
         return true;
     }
 
     public bool RemoveWayPoint(WayPoint wayPoint)
     {
+        wayPoints.Remove(wayPoint);
         Edge edge = wayPoint.Edge;
         bool result = edge.RemoveWayPoint(wayPoint);
         return result;
@@ -231,7 +269,7 @@ public class Skyway : MonoBehaviour
         // Remove waypoints in edge
         for (int i = edge.WayPoints.Count - 1; i >= 0; i--)
         {
-            edge.RemoveWayPoint(edge.WayPoints[i]);
+            RemoveWayPoint(edge.WayPoints[i]);
         }
         Destroy(edge.gameObject);
         return true;
@@ -243,15 +281,15 @@ public class Skyway : MonoBehaviour
         {
             nodes = nodes.Select(node => node.ToSerializableNode()).ToList(),
             edges = edges.Select(edge => edge.ToSerializableEdge()).ToList(),
+            wayPoints = wayPoints.Select(wayPoint => wayPoint.ToSerializableWayPoint()).ToList(),
             pads = pads.Select(pad => pad.ToSerializablePad()).ToList(),
             requests = requests.Select(request => request.ToSerializableRequest()).ToList(),
             swarms = swarms.Select(swarm => swarm.ToSerializableSwarm()).ToList(),
-            subSwarms = subSwarms
+            subSwarms = subSwarmDict
                 .Select(subSwarm => subSwarm.Value.ToSerializableSubSwarm())
                 .ToList(),
-            //pads = pads.Select(pad => pad.Value.ToSerializablePad()).ToList(),
-            drones = drones.Select(drone => drone.Value.ToSerializableDrone()).ToList(),
-            payloads = payloads.Select(payload => payload.Value.ToSerializablePayload()).ToList(),
+            drones = droneDict.Select(drone => drone.Value.ToSerializableDrone()).ToList(),
+            payloads = payloadDict.Select(payload => payload.Value.ToSerializablePayload()).ToList(),
         };
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using SFB;
 
 public class DataManager : MonoBehaviour
 {
@@ -26,12 +27,6 @@ public class DataManager : MonoBehaviour
     public string DronesToJson(SubSwarm subSwarm)
     {
         return jsonConverter.DronesToJson(subSwarm);
-    }
-
-    public Skyway LoadSkywayFromJson(string skywayJson)
-    {
-        Skyway skyway = null;
-        return skyway;
     }
 
     public bool SaveSkywayToJson(Skyway skyway)
@@ -92,5 +87,35 @@ public class DataManager : MonoBehaviour
             // Write the CSV data to the file
             File.WriteAllText(filePath, csvData);
         }
+    }
+
+    public String FetchSkywayJsonFromFile()
+    {
+        string[] paths = StandaloneFileBrowser.OpenFilePanel(
+            "Select a skyway JSON",
+            Application.streamingAssetsPath + "/saved skyways",
+            "json",
+            false
+        );
+        if (paths.Length == 0)
+        { // User delete file selection
+            return "";
+        }
+        string path = paths[0];
+        try
+        {
+            string skywayJson = File.ReadAllText(path);
+            return skywayJson;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error loading skyway from JSON: " + ex.Message);
+        }
+        return "";
+    }
+
+    public Skyway LoadSkywayFromJson(String skywayJson)
+    {
+        return jsonConverter.JsonToSkyway(skywayJson);
     }
 }
