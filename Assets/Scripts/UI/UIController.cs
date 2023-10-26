@@ -292,6 +292,12 @@ public class UIController : MonoBehaviour
             // Round to one decimal place
             droneComponent.Payloads[0].Weight =
                 Mathf.Round(droneComponent.Payloads[0].Weight * 10f) / 10f;
+            // Check for simultaneous pressing of LeftShift and Equals(+) key
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                Request request = droneComponent.SubSwarm.ParentSwarm.Request;
+                Simulator.instance.CreatePayload(request);
+            }
         }
         UpdateObjectInfo(selectedComponent);
     }

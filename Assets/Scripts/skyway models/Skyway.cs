@@ -330,7 +330,11 @@ public class Skyway : MonoBehaviour
 
     public bool AddPayload(Payload payload, Request request)
     {
+        // skyway references
+        payloads.Add(payload);
+        payloadDict.Add(payload.Id, payload);
         request.Payloads.Add(payload);
+        payload.Request = request;
         AddDroneForPayload(payload, request);
         return true;
     }
@@ -361,8 +365,11 @@ public class Skyway : MonoBehaviour
         newDrone.Payloads.Add(payload);
         payload.Drone = newDrone;
         // request references
-        request.Swarm.SubSwarms[0].Drones.Add(newDrone);
-        newDrone.transform.SetParent(request.Swarm.SubSwarms[0].transform);
+        SubSwarm subSwarm = request.Swarm.SubSwarms[0];
+        newDrone.SubSwarm = subSwarm;
+        subSwarm.Drones.Add(newDrone);
+        subSwarm.Init();
+        newDrone.transform.SetParent(subSwarm.transform);
         payload.transform.SetParent(newDrone.transform);
     }
 

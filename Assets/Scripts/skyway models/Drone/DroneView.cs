@@ -15,7 +15,7 @@ public class DroneView : MonoBehaviour, IHighlightable
 
     // Define a maximum distance for visibility
     [SerializeField]
-    private float maxVisibleDistance = 20f; // Set this value based on your needs
+    float maxVisibleDistance = 20f; // Set this value based on your needs
 
     void Awake()
     {
@@ -24,18 +24,7 @@ public class DroneView : MonoBehaviour, IHighlightable
 
     public void initVisual(Drone drone)
     {
-        // set name tag
-        nameTag.text = string.Format(
-            "{0} {1}Wh/{2}Wh ({3}%)",
-            drone.name,
-            drone.CurrBatteryWh,
-            drone.BatteryCapacityWh,
-            drone.BatteryStatus * 100
-        );
-        foreach (Payload payload in drone.Payloads)
-        {
-            nameTag.text += string.Format(" - {0}({1}kg)", payload.name, payload.Weight.ToString());
-        }
+        setNameTagStr(drone);
     }
 
     public void UpdateVisual(Drone drone)
@@ -60,8 +49,13 @@ public class DroneView : MonoBehaviour, IHighlightable
         // Scale text size based on distance
         float scaleValue = distance * Globals.textScaleValue;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        setNameTagStr(drone);
+    }
+
+    void setNameTagStr(Drone drone)
+    {
         // set name tag
-        nameTag.text = string.Format(
+        string tag = string.Format(
             "{0} {1}Wh/{2}Wh ({3}%)",
             drone.name,
             drone.CurrBatteryWh,
@@ -70,8 +64,9 @@ public class DroneView : MonoBehaviour, IHighlightable
         );
         foreach (Payload payload in drone.Payloads)
         {
-            nameTag.text += string.Format(" - {0}({1}kg)", payload.name, payload.Weight.ToString());
+            tag += string.Format(" - {0}({1}kg)", payload.name, payload.Weight.ToString());
         }
+        nameTag.text = tag;
     }
 
     public void Highlight()
