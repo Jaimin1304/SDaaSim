@@ -26,12 +26,23 @@ public class NodeView : MonoBehaviour, IHighlightable
 
     public void initVisual(Node node)
     {
+        // set name tag
         nameTag.text = string.Format(
             "{0} [{1}/{2}]",
             node.name,
             node.Drones.Count,
             node.Pads.Count
         );
+        // add start/end node tag
+        Request request = Simulator.instance.Skyway.Requests[0];
+        if (request.StartNode == node)
+        {
+            nameTag.text += " - Start Node";
+        }
+        else if (request.DestNode == node)
+        {
+            nameTag.text += " - Dest Node";
+        }
     }
 
     public void UpdateVisual(Node node)
@@ -46,12 +57,23 @@ public class NodeView : MonoBehaviour, IHighlightable
         // Scale text size based on distance
         float scaleValue = distance * Globals.textScaleValue;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        // set name tag
         nameTag.text = string.Format(
             "{0} [{1}/{2}]",
             node.name,
             node.Drones.Count,
             node.Pads.Count
         );
+        // add start/end node tag
+        Request request = Simulator.instance.Skyway.Requests[0];
+        if (request.StartNode == node)
+        {
+            nameTag.text += " - Start Node";
+        }
+        else if (request.DestNode == node)
+        {
+            nameTag.text += " - Dest Node";
+        }
     }
 
     public void ArrangePads(Node node)

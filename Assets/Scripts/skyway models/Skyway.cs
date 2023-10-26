@@ -338,6 +338,9 @@ public class Skyway : MonoBehaviour
     public bool RemovePayload(Payload payload, Request request)
     {
         request.Payloads.Remove(payload);
+        // remove payload from skyway
+        payloads.Remove(payload);
+        payloadDict.Remove(payload.Id);
         RemoveDroneWithPayload(payload, request);
         payload.Request = null;
         Destroy(payload.gameObject);

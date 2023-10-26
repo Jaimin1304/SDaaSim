@@ -24,7 +24,18 @@ public class DroneView : MonoBehaviour, IHighlightable
 
     public void initVisual(Drone drone)
     {
-        nameTag.text = drone.name;
+        // set name tag
+        nameTag.text = string.Format(
+            "{0} {1}Wh/{2}Wh ({3}%)",
+            drone.name,
+            drone.CurrBatteryWh,
+            drone.BatteryCapacityWh,
+            drone.BatteryStatus * 100
+        );
+        foreach (Payload payload in drone.Payloads)
+        {
+            nameTag.text += string.Format(" - {0}({1}kg)", payload.name, payload.Weight.ToString());
+        }
     }
 
     public void UpdateVisual(Drone drone)
@@ -49,6 +60,7 @@ public class DroneView : MonoBehaviour, IHighlightable
         // Scale text size based on distance
         float scaleValue = distance * Globals.textScaleValue;
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        // set name tag
         nameTag.text = string.Format(
             "{0} {1}Wh/{2}Wh ({3}%)",
             drone.name,
@@ -56,15 +68,21 @@ public class DroneView : MonoBehaviour, IHighlightable
             drone.BatteryCapacityWh,
             drone.BatteryStatus * 100
         );
+        foreach (Payload payload in drone.Payloads)
+        {
+            nameTag.text += string.Format(" - {0}({1}kg)", payload.name, payload.Weight.ToString());
+        }
     }
 
     public void Highlight()
     {
-        outline.enabled = true;
+        if (outline != null)
+            outline.enabled = true;
     }
 
     public void Unhighlight()
     {
-        outline.enabled = false;
+        if (outline != null)
+            outline.enabled = false;
     }
 }

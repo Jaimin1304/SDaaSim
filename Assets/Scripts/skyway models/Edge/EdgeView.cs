@@ -134,7 +134,7 @@ public class EdgeView : MonoBehaviour, IHighlightable
             scaleValue * scaleConst,
             scaleValue * scaleConst
         );
-        edge.BorderCollider.radius = scaleValue * scaleConst;
+        edge.BorderCollider.radius = scaleValue * scaleConst / 2;
     }
 
     public void UpdateEdgeThickness()

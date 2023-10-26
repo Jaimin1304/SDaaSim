@@ -124,7 +124,7 @@ public class Simulator : MonoBehaviour
     public SubSwarm SubSwarmPrefab
     {
         get { return subSwarmPrefab; }
-        set { subSwarmPrefab= value; }
+        set { subSwarmPrefab = value; }
     }
 
     void Awake()
@@ -539,6 +539,11 @@ public class Simulator : MonoBehaviour
         skyway.ClearSkyway();
         skyway = dataManager.LoadSkywayFromJson(skywayJson);
         skyway.InitSkyway();
+    }
+
+    public void ResetSkyway()
+    {
+        return;
     }
 
     public string GetTimeString()

@@ -175,39 +175,21 @@ public class UIController : MonoBehaviour
 
     void Update()
     {
-        if (Simulator.instance.CurrentState == Simulator.State.Play)
+        switch (Simulator.instance.CurrentState)
         {
-            UpdateTimer();
+            case Simulator.State.Play:
+                UpdateTimer();
+                break;
+            case Simulator.State.Pause:
+                break;
+            case Simulator.State.Edit:
+                EditLogic();
+                break;
+            case Simulator.State.Freeze:
+                break;
+            case Simulator.State.Finished:
+                break;
         }
-        // Handle deletion
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            DeleteSelectedComponent();
-        }
-
-        // Handle pad edition
-        bool addPad = Input.GetKeyDown(KeyCode.Equals);
-        bool removePad = Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus);
-        if (addPad || removePad)
-        {
-            bool rechargeable = Input.GetKey(KeyCode.R);
-            EditPads(addPad, rechargeable);
-        }
-
-        // Handle waypoint edition
-        if (Input.GetKeyDown(KeyCode.P)) {
-            Edge edgeComponent = selectedComponent.GetComponent<Edge>();
-            WayPoint wayPointComponent = selectedComponent.GetComponent<WayPoint>();
-            if (edgeComponent != null) {
-                // add waypoint to an edge with no waypoint, insert at middle
-                Simulator.instance.CreateWayPoint(edgeComponent, null);
-            } else if (wayPointComponent != null) {
-                // add a new waypoint beside the existing waypoint
-                Simulator.instance.CreateWayPoint(wayPointComponent.Edge, wayPointComponent);
-            }
-        }
-
-        UpdateObjectInfo(selectedComponent);
     }
 
     void EditPads(bool add, bool rechargeable)
@@ -225,6 +207,75 @@ public class UIController : MonoBehaviour
         Simulator.instance.EditPad(nodeComponent, add, rechargeable);
     }
 
+    void EditLogic()
+    {
+        // Handle deletion
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            DeleteSelectedComponent();
+        }
+        // Handle pad edition
+        bool addPad = Input.GetKeyDown(KeyCode.Equals);
+        bool removePad = Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus);
+        if (addPad || removePad)
+        {
+            bool rechargeable = Input.GetKey(KeyCode.R);
+            EditPads(addPad, rechargeable);
+        }
+        // Handle waypoint edition
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Edge edgeComponent = selectedComponent.GetComponent<Edge>();
+            WayPoint wayPointComponent = selectedComponent.GetComponent<WayPoint>();
+            if (edgeComponent != null)
+            {
+                // add waypoint to an edge with no waypoint, insert at middle
+                Simulator.instance.CreateWayPoint(edgeComponent, null);
+            }
+            else if (wayPointComponent != null)
+            {
+                // add a new waypoint beside the existing waypoint
+                Simulator.instance.CreateWayPoint(wayPointComponent.Edge, wayPointComponent);
+            }
+        }
+        // Handle request startNode/destNode edition
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Node nodeComponent = selectedComponent.GetComponent<Node>();
+            if (nodeComponent != null)
+            {
+                // set the selected node to the start node of the request
+                Request request = Simulator.instance.Skyway.Requests[0];
+                request.StartNode = nodeComponent;
+                foreach (SubSwarm subSwarm in request.Swarm.SubSwarms)
+                {
+                    subSwarm.Node = nodeComponent;
+                    subSwarm.Init();
+                }
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Node nodeComponent = selectedComponent.GetComponent<Node>();
+            if (nodeComponent != null)
+            {
+                // set the selected node to the start node of the request
+                Request request = Simulator.instance.Skyway.Requests[0];
+                request.DestNode = nodeComponent;
+            }
+        }
+        // Handle payload/drone edition
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            Drone drone = selectedComponent.GetComponent<Drone>();
+        }
+        if (Input.GetKeyDown(KeyCode.Minus))
+        {
+            Drone drone = selectedComponent.GetComponent<Drone>();
+        }
+        UpdateObjectInfo(selectedComponent);
+    }
+
     public void DeleteSelectedComponent()
     {
         if (selectedComponent == null)
@@ -233,6 +284,7 @@ public class UIController : MonoBehaviour
         }
         Node nodeComponent = selectedComponent.GetComponent<Node>();
         Edge edgeComponent = selectedComponent.GetComponent<Edge>();
+        Drone droneComponent = selectedComponent.GetComponent<Drone>();
         WayPoint wayPointComponent = selectedComponent.GetComponent<WayPoint>();
         selectedComponent = null;
         if (nodeComponent != null)
@@ -246,6 +298,12 @@ public class UIController : MonoBehaviour
         else if (wayPointComponent != null)
         {
             Simulator.instance.DeleteWayPoint(wayPointComponent);
+        }
+        else if (droneComponent != null)
+        {
+            Payload payload = droneComponent.Payloads[0];
+            Request request = droneComponent.SubSwarm.ParentSwarm.Request;
+            Simulator.instance.DeletePayload(payload, request);
         }
         else
         {
@@ -270,6 +328,7 @@ public class UIController : MonoBehaviour
     public void Reset()
     {
         Debug.Log("reset");
+        Simulator.instance.ResetSkyway();
     }
 
     public void TogglePlayPause()
