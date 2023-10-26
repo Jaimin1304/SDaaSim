@@ -209,10 +209,18 @@ public class UIController : MonoBehaviour
 
     void EditLogic()
     {
+        if (selectedComponent == null)
+        {
+            return;
+        }
         // Handle deletion
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             DeleteSelectedComponent();
+            if (selectedComponent == null)
+            {
+                return;
+            }
         }
         // Handle pad edition
         bool addPad = Input.GetKeyDown(KeyCode.Equals);
@@ -265,13 +273,25 @@ public class UIController : MonoBehaviour
             }
         }
         // Handle payload/drone edition
-        if (Input.GetKeyDown(KeyCode.Equals))
+        Drone droneComponent = selectedComponent.GetComponent<Drone>();
+        if (droneComponent != null)
         {
-            Drone drone = selectedComponent.GetComponent<Drone>();
-        }
-        if (Input.GetKeyDown(KeyCode.Minus))
-        {
-            Drone drone = selectedComponent.GetComponent<Drone>();
+            float weightChange = 0.1f;
+            if (Input.GetKeyDown(KeyCode.Equals))
+            {
+                droneComponent.Payloads[0].Weight += weightChange;
+            }
+            if (Input.GetKeyDown(KeyCode.Minus))
+            {
+                droneComponent.Payloads[0].Weight -= weightChange;
+            }
+            // Ensure weight is not below 0
+            droneComponent.Payloads[0].Weight = Mathf.Max(0.1f, droneComponent.Payloads[0].Weight);
+            // Ensure weight is not above 3
+            droneComponent.Payloads[0].Weight = Mathf.Min(3f, droneComponent.Payloads[0].Weight);
+            // Round to one decimal place
+            droneComponent.Payloads[0].Weight =
+                Mathf.Round(droneComponent.Payloads[0].Weight * 10f) / 10f;
         }
         UpdateObjectInfo(selectedComponent);
     }
