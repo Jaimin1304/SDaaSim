@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Xml.Serialization;
 
 [Serializable]
 public class Skyway : MonoBehaviour
@@ -295,6 +296,103 @@ public class Skyway : MonoBehaviour
         }
         Destroy(edge.gameObject);
         return true;
+    }
+
+    public bool AddRequest(Request request)
+    {
+        request.transform.SetParent(transform);
+        requests.Add(request);
+        // init request and swarm
+        Swarm newSwarm = Instantiate(Simulator.instance.SwarmPrefab);
+        SubSwarm subSwarm = Instantiate(Simulator.instance.SubSwarmPrefab);
+        request.Swarm = newSwarm;
+        newSwarm.SubSwarms.Add(subSwarm);
+        newSwarm.Request = request;
+        return true;
+    }
+
+    public bool RemoveRequest(Request request)
+    {
+        // remove drones and payloads
+        for (int i = request.Payloads.Count - 1; i >= 0; i--)
+        {
+            RemovePayload(request.Payloads[i], request);
+        }
+        // remove subswarms and swarms
+        for (int i = request.Swarm.SubSwarms.Count - 1; i >= 0; i--)
+        {
+            Destroy(request.Swarm.SubSwarms[i].gameObject);
+        }
+        Destroy(request.Swarm.gameObject);
+        Destroy(request.gameObject);
+        return true;
+    }
+
+    public bool AddPayload(Payload payload, Request request)
+    {
+        request.Payloads.Add(payload);
+        AddDroneForPayload(payload, request);
+        return true;
+    }
+
+    public bool RemovePayload(Payload payload, Request request)
+    {
+        request.Payloads.Remove(payload);
+        RemoveDroneWithPayload(payload, request);
+        payload.Request = null;
+        Destroy(payload.gameObject);
+        return true;
+    }
+
+    void AddDroneForPayload(Payload payload, Request request)
+    {
+        Drone newDrone = Instantiate(
+            Simulator.instance.DronePrefab,
+            Vector3.zero,
+            Quaternion.identity
+        );
+        // skyway references
+        drones.Add(newDrone);
+        droneDict.Add(newDrone.Id, newDrone);
+        // payload references
+        newDrone.Payloads.Add(payload);
+        payload.Drone = newDrone;
+        // request references
+        request.Swarm.SubSwarms[0].Drones.Add(newDrone);
+        newDrone.transform.SetParent(request.Swarm.SubSwarms[0].transform);
+        payload.transform.SetParent(newDrone.transform);
+    }
+
+    void RemoveDroneWithPayload(Payload payload, Request request)
+    {
+        Drone drone = payload.Drone;
+        payload.Drone = null;
+        drone.Payloads.Remove(payload);
+        // remove skyway references
+        drones.Remove(drone);
+        droneDict.Remove(drone.Id);
+        // remove drone from subswarm
+        request.Swarm.SubSwarms[0].Drones.Remove(drone);
+        // destroy drone
+        drone.SubSwarm = null;
+        drone.Payloads = null;
+        Destroy(drone.gameObject);
+    }
+
+    public void ClearSkyway()
+    {
+        // destroy all skyway components
+        for (int i = nodes.Count - 1; i >= 0; i--)
+        {
+            RemoveNode(nodes[i]);
+        }
+        // destroy all requests and corresponding swarms, subswarms and drones
+        for (int i = requests.Count - 1; i >= 0; i--)
+        {
+            RemoveRequest(requests[i]);
+        }
+        // destroy self
+        Destroy(gameObject);
     }
 
     public SerializableSkyway ToSerializableSkyway()

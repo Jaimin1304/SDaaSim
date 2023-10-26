@@ -4,6 +4,7 @@ using System;
 using Newtonsoft.Json;
 using System.Linq;
 using UnityEngine.Events;
+using System.Xml.Serialization;
 
 [System.Serializable]
 public class BoolEvent : UnityEvent<bool> { }
@@ -11,6 +12,36 @@ public class BoolEvent : UnityEvent<bool> { }
 public class Simulator : MonoBehaviour
 {
     public static Simulator instance;
+
+    [SerializeField]
+    Skyway skywayPrefab;
+
+    [SerializeField]
+    Node nodePrefab;
+
+    [SerializeField]
+    Pad padPrefab;
+
+    [SerializeField]
+    Edge edgePrefab;
+
+    [SerializeField]
+    WayPoint wayPointPrefab;
+
+    [SerializeField]
+    Request requestPrefab;
+
+    [SerializeField]
+    Swarm swarmPrefab;
+
+    [SerializeField]
+    SubSwarm subSwarmPrefab;
+
+    [SerializeField]
+    Drone dronePrefab;
+
+    [SerializeField]
+    Payload payloadPrefab;
 
     [SerializeField]
     Skyway skyway;
@@ -26,15 +57,6 @@ public class Simulator : MonoBehaviour
 
     [SerializeField]
     ClientSocket cs;
-
-    [SerializeField]
-    Node nodePrefab;
-
-    [SerializeField]
-    Edge edgePrefab;
-
-    [SerializeField]
-    WayPoint wayPointPrefab;
 
     [SerializeField]
     RaycastHandler raycastHandler;
@@ -85,6 +107,24 @@ public class Simulator : MonoBehaviour
     {
         get { return lastState; }
         set { lastState = value; }
+    }
+
+    public Drone DronePrefab
+    {
+        get { return dronePrefab; }
+        set { dronePrefab = value; }
+    }
+
+    public Swarm SwarmPrefab
+    {
+        get { return swarmPrefab; }
+        set { swarmPrefab = value; }
+    }
+
+    public SubSwarm SubSwarmPrefab
+    {
+        get { return subSwarmPrefab; }
+        set { subSwarmPrefab= value; }
     }
 
     void Awake()
@@ -456,6 +496,32 @@ public class Simulator : MonoBehaviour
         }
     }
 
+    public void CreateRequest()
+    {
+        Debug.Log("AddRequest");
+        Request newRequest = Instantiate(requestPrefab, Vector3.zero, Quaternion.identity);
+        skyway.AddRequest(newRequest);
+    }
+
+    public void DeleteRequest(Request request)
+    {
+        Debug.Log("DeleteRequest");
+        skyway.RemoveRequest(request);
+    }
+
+    public void CreatePayload(Request request)
+    {
+        Debug.Log("CreatePayload");
+        Payload newPayload = Instantiate(payloadPrefab, Vector3.zero, Quaternion.identity);
+        skyway.AddPayload(newPayload, request);
+    }
+
+    public void DeletePayload(Payload payload, Request request)
+    {
+        Debug.Log("DeletePayload");
+        skyway.RemovePayload(payload, request);
+    }
+
     public void SaveSkyway()
     {
         dataManager.SaveSkywayToJson(skyway);
@@ -469,6 +535,8 @@ public class Simulator : MonoBehaviour
         {
             return;
         }
+        // clear original skyway
+        skyway.ClearSkyway();
         skyway = dataManager.LoadSkywayFromJson(skywayJson);
         skyway.InitSkyway();
     }
