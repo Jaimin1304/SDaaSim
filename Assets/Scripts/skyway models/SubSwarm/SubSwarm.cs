@@ -89,8 +89,8 @@ public class SubSwarm : MonoBehaviour
 
     public float Epm
     {
-        get { return Epm; }
-        set { Epm = value; }
+        get { return epm; }
+        set { epm = value; }
     }
 
     public Vector3 CurrEngineSpd
@@ -102,6 +102,7 @@ public class SubSwarm : MonoBehaviour
     void Awake()
     {
         id = Guid.NewGuid().ToString();
+        epm = 0;
     }
 
     void Start()
@@ -111,7 +112,7 @@ public class SubSwarm : MonoBehaviour
 
     void Update()
     {
-        subSwarmView.UpdateVisual(); // update nametag
+        subSwarmView.UpdateVisual(this); // update nametag
         subSwarmView.DrawEngineSpeed(this); // draw engine speed
         subSwarmView.DrawWindSpeed(this); // draw wind speed
         //LogState();
@@ -206,6 +207,17 @@ public class SubSwarm : MonoBehaviour
             wayPointIndex += indexIncrease;
         }
         MoveToTarget(Edge.Path[wayPointIndex]);
+        // calculate flight angle
+        Vector3 direction = (Edge.Path[wayPointIndex] - transform.position).normalized;
+        Vector3 horizontalProjection = new Vector3(direction.x, 0, direction.z);
+        float theta = Vector3.Angle(horizontalProjection, direction);
+        if (direction.y < 0)
+        {
+            theta = -theta;
+        }
+        // update epm
+        epm = KirchsteinECM.instance.CalculateEpm(CurrEngineSpd.magnitude, theta);
+        // apply energy loss for each drone
     }
 
     void LandLogic()

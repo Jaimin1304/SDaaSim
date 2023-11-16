@@ -56,10 +56,10 @@ public class DroneView : MonoBehaviour, IHighlightable
     {
         // set name tag
         string tag = string.Format(
-            "{0} {1}Wh/{2}Wh ({3}%)",
+            "{0} {1}J/{2}J ({3}%)",
             drone.name,
-            drone.CurrBatteryWh,
-            drone.BatteryCapacityWh,
+            drone.CurrBatteryJ,
+            drone.BatteryCapacityJ,
             drone.BatteryStatus * 100
         );
         foreach (Payload payload in drone.Payloads)

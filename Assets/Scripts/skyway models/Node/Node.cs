@@ -86,7 +86,7 @@ public class Node : MonoBehaviour
     {
         nodeView.initVisual(this);
         nodeView.UpdateVisual(this);
-        //GenerateDefaultPads();
+        GenerateDefaultPads();
         SyncPadGroups();
         nodeView.ArrangePads(this);
     }

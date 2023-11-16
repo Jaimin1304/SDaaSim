@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class SubSwarmView : MonoBehaviour
 {
@@ -47,7 +48,7 @@ public class SubSwarmView : MonoBehaviour
         nameTag.text = tagName;
     }
 
-    public void UpdateVisual()
+    public void UpdateVisual(SubSwarm subSwarm)
     {
         // Calculate distance from the camera
         float distance = Vector3.Distance(
@@ -63,6 +64,8 @@ public class SubSwarmView : MonoBehaviour
         nameTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
         engineSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
         windSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
+        // add epm to name
+        nameTag.text = String.Format("{0} - {1}J/m", subSwarm.name, subSwarm.Epm);
     }
 
     public void Visual(SubSwarm subSwarm)

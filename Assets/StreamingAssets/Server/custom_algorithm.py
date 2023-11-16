@@ -100,6 +100,7 @@ def run(skyway: Skyway):
         # land and recharge if low power
         for drone in subSwarm.drones.values():
             print(drone.batteryStatus)
+            print(drone.id)
             if drone.batteryStatus < 0.4:
                 api.subswarm_land(subSwarm.id, subSwarm.node.id, instructions)
                 print("subswarm landed")

@@ -177,79 +177,150 @@ public class RaycastHandler : MonoBehaviour
 
     void Handle3DGizmosHit(Ray ray)
     {
+        // Raycast to check for gizmo interaction
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f, gizmos3DLayer))
         {
-            isInteractingWithGizmos = true;
-            GameObject gizmos = hit.transform.gameObject;
-            Renderer renderer = gizmos.GetComponent<Renderer>();
-            renderer.material = gizmosHovered;
-            lastHitGizmos = gizmos;
-            if (Input.GetMouseButtonDown(0))
-            {
-                selectedAxis = gizmos.name; // Assuming gizmoss are named "X", "Y", "Z"
-                initialMousePos = Input.mousePosition;
-                initialObjectPos = uiController.SelectedComponent.transform.position;
-            }
+            HandleGizmoSelection(hit);
         }
         else
         {
-            isInteractingWithGizmos = false;
-            if (Input.GetMouseButtonDown(0))
-            {
-                Hide3DGizmos();
-            }
-            if (lastHitGizmos != null)
-            {
-                Renderer renderer = lastHitGizmos.GetComponent<Renderer>();
-                renderer.material = gizmosDefault;
-                lastHitGizmos = null;
-            }
+            HandleDeselection();
         }
+        // Handle drag if the mouse button is held down
         if (Input.GetMouseButton(0) && selectedAxis != null)
         {
-            Vector3 deltaMousePos = Input.mousePosition - initialMousePos;
-            Vector3 axis = Vector3.zero;
-            Vector3 camPosition = Camera.main.transform.position;
-            Vector3 objPosition = ((MonoBehaviour)selectedObject).transform.position;
-            float dragDistance = 0f;
-
-            switch (selectedAxis)
-            {
-                case "X":
-                    axis = (objPosition.z - camPosition.z > 0) ? Vector3.right : Vector3.left;
-                    dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
-                    break;
-                case "Y":
-                    axis = Vector3.up;
-                    dragDistance = deltaMousePos.y * Globals.editModeDragMultiplier;
-                    break;
-                case "Z":
-                    axis = (objPosition.x - camPosition.x > 0) ? Vector3.back : Vector3.forward;
-                    dragDistance = deltaMousePos.x * Globals.editModeDragMultiplier;
-                    break;
-            }
-            uiController.SelectedComponent.transform.position =
-                initialObjectPos + axis * dragDistance;
-            gizmos3D.transform.position = uiController.SelectedComponent.transform.position;
-            // update affected edge lengths
-            WayPoint wayPoint = uiController.SelectedComponent.GetComponent<WayPoint>();
-            Node node = uiController.SelectedComponent.GetComponent<Node>();
-            if (wayPoint != null)
-            {
-                wayPoint.Edge.SyncEdge();
-            }
-            else if (node != null)
-            {
-                foreach (Edge edge in node.Edges)
-                {
-                    edge.SyncEdge();
-                }
-            }
+            HandleDragging();
         }
+        // Reset the selected axis when the mouse button is released
         if (Input.GetMouseButtonUp(0))
         {
             selectedAxis = null;
         }
+    }
+
+    private void HandleGizmoSelection(RaycastHit hit)
+    {
+        // Handle gizmo selection logic
+        isInteractingWithGizmos = true;
+        GameObject gizmos = hit.transform.gameObject;
+        HighlightGizmo(gizmos, gizmosHovered);
+        lastHitGizmos = gizmos;
+        if (Input.GetMouseButtonDown(0))
+        {
+            StartDragging(gizmos);
+        }
+    }
+
+    private void HandleDeselection()
+    {
+        // Handle gizmo deselection logic
+        isInteractingWithGizmos = false;
+        if (Input.GetMouseButtonDown(0))
+        {
+            Hide3DGizmos();
+        }
+
+        if (lastHitGizmos != null)
+        {
+            HighlightGizmo(lastHitGizmos, gizmosDefault);
+            lastHitGizmos = null;
+        }
+    }
+
+    private void StartDragging(GameObject gizmos)
+    {
+        // Initialize dragging variables
+        selectedAxis = gizmos.name; // Gizmos named "X", "Y", "Z"
+        initialMousePos = Input.mousePosition;
+        initialObjectPos = uiController.SelectedComponent.transform.position;
+    }
+
+    private void HandleDragging()
+    {
+        // Calculate delta and update positions
+        Vector3 deltaMousePos = Input.mousePosition - initialMousePos;
+        Vector3 axis = DetermineDragAxis();
+        float dragDistance = CalculateDragDistance(deltaMousePos, axis);
+        // Update position based on dragging
+        UpdatePositions(axis, dragDistance);
+        UpdateAffectedComponents();
+    }
+
+    private Vector3 DetermineDragAxis()
+    {
+        // Logic to determine which axis is being dragged
+        Vector3 camPosition = Camera.main.transform.position;
+        Vector3 objPosition = ((MonoBehaviour)selectedObject).transform.position;
+        switch (selectedAxis)
+        {
+            case "X":
+                return (objPosition.z - camPosition.z > 0) ? Vector3.right : Vector3.left;
+            case "Y":
+                return Vector3.up;
+            case "Z":
+                return (objPosition.x - camPosition.x > 0) ? Vector3.back : Vector3.forward;
+            default:
+                return Vector3.zero;
+        }
+    }
+
+    private float CalculateDragDistance(Vector3 deltaMousePos, Vector3 axis)
+    {
+        // Calculate drag distance based on mouse movement
+        return axis == Vector3.up
+            ? deltaMousePos.y * Globals.editModeDragMultiplier
+            : deltaMousePos.x * Globals.editModeDragMultiplier;
+    }
+
+    private void UpdatePositions(Vector3 axis, float dragDistance)
+    {
+        // Update positions of UI components and 3D gizmos
+        Vector3 newPosition = initialObjectPos + axis * dragDistance;
+        uiController.SelectedComponent.transform.position = newPosition;
+        gizmos3D.transform.position = newPosition;
+    }
+
+    private void UpdateAffectedComponents()
+    {
+        // Update waypoints, nodes, or other components affected by the drag
+        Component component = uiController.SelectedComponent.GetComponent<Component>();
+        WayPoint wayPoint = uiController.SelectedComponent.GetComponent<WayPoint>();
+        Node node = uiController.SelectedComponent.GetComponent<Node>();
+        if (wayPoint != null)
+        {
+            wayPoint.Edge.SyncEdge();
+        }
+        else if (node != null)
+        {
+            foreach (Edge edge in node.Edges)
+            {
+                edge.SyncEdge();
+            }
+            // if node is startnode for swarm, update swarm position as well
+            UpdateSwarmPosition(node);
+        }
+    }
+
+    private void UpdateSwarmPosition(Node node)
+    {
+        foreach (Request request in Simulator.instance.Skyway.Requests)
+        {
+            if (request.StartNode != node)
+            {
+                break;
+            }
+            foreach (SubSwarm subSwarm in request.Swarm.SubSwarms)
+            {
+                subSwarm.transform.position = uiController.SelectedComponent.transform.position;
+            }
+        }
+    }
+
+    private void HighlightGizmo(GameObject gizmo, Material material)
+    {
+        // Change the material of the gizmo to indicate selection or deselection
+        Renderer renderer = gizmo.GetComponent<Renderer>();
+        renderer.material = material;
     }
 
     void Select(IHighlightable obj)

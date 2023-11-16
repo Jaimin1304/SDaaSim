@@ -43,10 +43,13 @@ public class Drone : MonoBehaviour
     float batteryStatus;
 
     [SerializeField]
-    float currBatteryWh;
+    float physicalBatteryStatus;
 
     [SerializeField]
-    float batteryCapacityWh;
+    float currBatteryJ;
+
+    [SerializeField]
+    float batteryCapacityJ;
 
     List<DroneData> dataCollection = new List<DroneData>();
 
@@ -118,22 +121,28 @@ public class Drone : MonoBehaviour
         set { batteryStatus = value; }
     }
 
+    public float PhysicalBatteryStatus
+    {
+        get { return physicalBatteryStatus; }
+        set { physicalBatteryStatus = value; }
+    }
+
     public List<Payload> Payloads
     {
         get { return payloads; }
         set { payloads = value; }
     }
 
-    public float CurrBatteryWh
+    public float CurrBatteryJ
     {
-        get { return currBatteryWh; }
-        set { currBatteryWh = value; }
+        get { return currBatteryJ; }
+        set { currBatteryJ = value; }
     }
 
-    public float BatteryCapacityWh
+    public float BatteryCapacityJ
     {
-        get { return batteryCapacityWh; }
-        set { batteryCapacityWh = value; }
+        get { return batteryCapacityJ; }
+        set { batteryCapacityJ = value; }
     }
 
     void Awake()
@@ -160,11 +169,18 @@ public class Drone : MonoBehaviour
                 break;
             case SubSwarm.State.Flying:
 
-                batteryStatus -= 0.03f * Time.deltaTime * Globals.PlaySpeed;
+                // traditional
+                batteryStatus -= 0.0018f * Time.deltaTime * Globals.PlaySpeed;
                 if (batteryStatus < 0)
                 {
                     Debug.LogError(string.Format("{0} is out of battery!", this.name));
                 }
+                // physical
+                float energyUsedPerSecond = subSwarm.CurrEngineSpd.magnitude * subSwarm.Epm; // 根据速度和epm计算每秒的能量消耗
+                CurrBatteryJ -= energyUsedPerSecond * Time.deltaTime; // 更新电池电量
+                if (CurrBatteryJ < 0)
+                    CurrBatteryJ = 0;
+                SyncBatStatus(); // 同步电池状态
                 break;
             case SubSwarm.State.Landed:
                 break;
@@ -185,8 +201,9 @@ public class Drone : MonoBehaviour
         droneView.initVisual(this);
         droneView.UpdateVisual(this);
         batteryStatus = 1;
-        batteryCapacityWh = Globals.DroneBatCap;
-        currBatteryWh = batteryCapacityWh;
+        physicalBatteryStatus = 1;
+        batteryCapacityJ = Globals.DroneBatCap;
+        currBatteryJ = batteryCapacityJ;
         maxLiftSpd = Globals.MaxLiftSpd;
         maxDescentSpd = Globals.MaxDescnetSpd;
         maxHorizontalSpd = Globals.MaxHorizontalSpd;
@@ -199,17 +216,17 @@ public class Drone : MonoBehaviour
 
     public void Recharge(float amount)
     {
-        currBatteryWh += amount * Time.deltaTime * Globals.PlaySpeed;
-        if (currBatteryWh >= batteryCapacityWh)
+        currBatteryJ += amount * Time.deltaTime * Globals.PlaySpeed;
+        if (currBatteryJ >= batteryCapacityJ)
         {
-            currBatteryWh = batteryCapacityWh;
+            currBatteryJ = batteryCapacityJ;
         }
         SyncBatStatus();
     }
 
     void SyncBatStatus()
     {
-        batteryStatus = Mathf.Round(currBatteryWh / batteryCapacityWh * 100f) / 100f;
+        physicalBatteryStatus = Mathf.Round(currBatteryJ / batteryCapacityJ * 100f) / 100f;
     }
 
     void CollectData()
@@ -220,6 +237,7 @@ public class Drone : MonoBehaviour
             position = transform.position,
             speed = speed,
             batteryStatus = batteryStatus,
+            physicalBatteryStatus = physicalBatteryStatus,
             node = (subSwarm.Node != null) ? subSwarm.Node.name : "-",
             edge = (subSwarm.Edge != null) ? subSwarm.Edge.name : "-"
         };
@@ -229,7 +247,7 @@ public class Drone : MonoBehaviour
     void LogState()
     {
         Debug.Log("BatteryStatus: " + batteryStatus);
-        Debug.Log("currBatteryWh: " + currBatteryWh);
+        Debug.Log("currBatteryJ: " + currBatteryJ);
     }
 
     public SerializableDrone ToSerializableDrone()
@@ -254,11 +272,12 @@ public class DroneData
     public Vector3 position;
     public float speed;
     public float batteryStatus;
+    public float physicalBatteryStatus;
     public string node;
     public string edge;
 
     public string ToCSV()
     {
-        return $"{timestring},{position.x},{position.y},{position.z},{speed},{batteryStatus},{node},{edge}";
+        return $"{timestring},{position.x},{position.y},{position.z},{speed},{batteryStatus},{physicalBatteryStatus},{node},{edge}";
     }
 }

@@ -34,6 +34,16 @@ public class KirchsteinECM : MonoBehaviour
     public float alpha; // Angle of attack in radians
     public float varsigma = 0.0507f; // Spinning area of one rotor [m2]
 
+    void Awake()
+    {
+        if (instance != null) // Singleton
+        {
+            Debug.LogError("More than one GameManager in scene!");
+            return;
+        }
+        instance = this;
+    }
+
     void Start()
     {
         eta = Globals.PwrXferEffic;
@@ -88,7 +98,6 @@ public class KirchsteinECM : MonoBehaviour
                 + rho * sumCDkAk * Mathf.Pow(va, 2) * m * g * (float)Math.Sin((float)theta)
         );
         Debug.Log(String.Format("Thrust T: {0}", T));
-        // Calculate downwash coefficient
         // Calculate the angle of attack alpha in radians
         float numerator = 0.5f * rho * sumCDkAk * Mathf.Pow(va, 2);
         float denominator = sumMk * g;
