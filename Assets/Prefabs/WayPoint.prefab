@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 6547689482047196147}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.6, y: 1.6, z: 1.6}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1470704209888209579}
@@ -148,7 +148,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &460858313497153811
 MonoBehaviour:
@@ -162,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f4d56d4a56ba84479de36db8399987a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
   edge: {fileID: 0}
 --- !u!114 &9131785002773228412
 MonoBehaviour:

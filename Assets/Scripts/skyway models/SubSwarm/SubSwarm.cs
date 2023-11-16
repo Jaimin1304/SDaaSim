@@ -181,17 +181,19 @@ public class SubSwarm : MonoBehaviour
             targetNode = Edge.LeftNode;
             indexIncrease = -1;
         }
-
+        // check if reach milestone
         if (
             Vector3.Distance(transform.position, Edge.Path[wayPointIndex])
             <= Globals.nodeTouchDistance
         )
-        { // reach milestone
+        {
+            // check if reach target node
             if (
                 Vector3.Distance(transform.position, targetNode.transform.position)
                 <= Globals.nodeTouchDistance
             )
-            { // reach target
+            {
+                // check if target node is destination
                 if (targetNode == parentSwarm.Request.DestNode)
                 {
                     ToArrived(targetNode);
@@ -203,10 +205,14 @@ public class SubSwarm : MonoBehaviour
                 }
                 return;
             }
+            // milestone is a waypoint, keep going
             transform.position = Edge.Path[wayPointIndex];
             wayPointIndex += indexIncrease;
         }
         MoveToTarget(Edge.Path[wayPointIndex]);
+
+        // calculate drone energy consumption
+        
         // calculate flight angle
         Vector3 direction = (Edge.Path[wayPointIndex] - transform.position).normalized;
         Vector3 horizontalProjection = new Vector3(direction.x, 0, direction.z);
@@ -216,7 +222,7 @@ public class SubSwarm : MonoBehaviour
             theta = -theta;
         }
         // update epm
-        epm = KirchsteinECM.instance.CalculateEpm(CurrEngineSpd.magnitude, theta);
+        epm = KirchsteinECM.instance.CalEpm(CurrEngineSpd.magnitude, theta, 9.807f, 1.225f);
         // apply energy loss for each drone
     }
 

@@ -69,7 +69,7 @@ public class KirchsteinECM : MonoBehaviour
         k = Globals.InducedPowFactor;
         k2 = Globals.ProfilePowFactor;
         k3 = Globals.ProfilePowWithSpdFactor;
-        g = Globals.g;
+        g = Globals.g0;
         Pavio = Globals.AvionicsPwr;
 
         // test different va
@@ -77,12 +77,12 @@ public class KirchsteinECM : MonoBehaviour
         foreach (float vaValue in vaValues)
         {
             va = vaValue; // set va
-            float Epm = CalculateEpm(1, 0);
+            float Epm = CalEpm(1, 0, 9.807f, 1.225f);
             Debug.Log("For va = " + va + ", Energy per meter: " + Epm);
         }
     }
 
-    public float CalculateEpm(float va, float theta)
+    public float CalEpm(float va, float theta, float g, float rho)
     {
         float sumCDkAk = 0;
         float sumMk = 0;

@@ -33,7 +33,14 @@ public class Globals : MonoBehaviour
     public const float padGap = 4f;
     public const float edgeHeightOffset = 2f;
     public const float edgeNodeGap = 5f;
-    public const float g = 9.807f; // Gravitational acceleration
+
+    // physics const
+    public const float g0 = 9.807f; // Gravitational acceleration at the Earth's surface, in m/s²
+    public const float earthRadius = 6371000f; // Radius of the Earth, in meters
+    public const float T0 = 288.15f; // Standard temperature at sea level in Kelvin
+    public const float P0 = 101325f; // Standard atmospheric pressure at sea level in Pascals
+    public const float L = 0.0065f; // Temperature lapse rate in Kelvin per meter
+    public const float R = 287.05f; // Specific gas constant for air in Joules/(kg·Kelvin)
 
     //public static Vector3 windDirection = Vector3.left;
 
