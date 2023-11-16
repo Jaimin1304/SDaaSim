@@ -283,8 +283,8 @@ public class RaycastHandler : MonoBehaviour
     private void UpdateAffectedComponents()
     {
         // Update waypoints, nodes, or other components affected by the drag
-        Component component = uiController.SelectedComponent.GetComponent<Component>();
         WayPoint wayPoint = uiController.SelectedComponent.GetComponent<WayPoint>();
+        Edge edge = uiController.SelectedComponent.GetComponent<Edge>();
         Node node = uiController.SelectedComponent.GetComponent<Node>();
         if (wayPoint != null)
         {
@@ -292,12 +292,16 @@ public class RaycastHandler : MonoBehaviour
         }
         else if (node != null)
         {
-            foreach (Edge edge in node.Edges)
+            foreach (Edge e in node.Edges)
             {
-                edge.SyncEdge();
+                e.SyncEdge();
             }
             // if node is startnode for swarm, update swarm position as well
             UpdateSwarmPosition(node);
+        }
+        else if (edge != null)
+        {
+            edge.SyncEdge();
         }
     }
 
