@@ -57,18 +57,20 @@ class Edge:
 
 
 class Drone:
-    def __init__(self, id, selfWeight, speed, maxPayloadWeight, batteryStatus, payloads: Dict[str, Payload]):
+    def __init__(self, id, bodyWeight, payloadWeight, speed, maxPayloadWeight, batteryStatus, epm, payloads: Dict[str, Payload]):
         self.id = id
-        self.selfWeight = selfWeight
+        self.bodyWeight = bodyWeight
+        self.payloadWeight = payloadWeight
         self.speed = speed
         self.maxPayloadWeight = maxPayloadWeight
         self.batteryStatus = batteryStatus
+        self.epm = epm
         self.payloads = payloads
 
     def log(self):
         print('--drone--')
         print(self.id)
-        print('selfWeight: ' + str(self.selfWeight))
+        print('bodyWeight: ' + str(self.bodyWeight))
         print('speed: ' + str(self.speed))
         print('maxPayloadWeight' + str(self.maxPayloadWeight))
         print('batteryStatus: ' + str(self.batteryStatus))

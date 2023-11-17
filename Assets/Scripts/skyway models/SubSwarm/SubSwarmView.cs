@@ -65,7 +65,7 @@ public class SubSwarmView : MonoBehaviour
         engineSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
         windSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
         // add epm to name
-        nameTag.text = String.Format("{0} - {1}J/m", subSwarm.name, subSwarm.Epm);
+        nameTag.text = String.Format("{0} - g:{1}m/s^2 - rho:{2}kg/m^3", subSwarm.name, subSwarm.G, subSwarm.AirDensity);
     }
 
     public void Visual(SubSwarm subSwarm)

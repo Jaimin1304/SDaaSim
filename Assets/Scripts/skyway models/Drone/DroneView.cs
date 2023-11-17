@@ -56,16 +56,14 @@ public class DroneView : MonoBehaviour, IHighlightable
     {
         // set name tag
         string tag = string.Format(
-            "{0} {1}J/{2}J ({3}%)",
+            "{0} - {1}J/{2}J - {3}% - EPM: {4}J/m - payload weight: {5}kg",
             drone.name,
             drone.CurrBatteryJ,
             drone.BatteryCapacityJ,
-            drone.BatteryStatus * 100
+            drone.BatteryStatus * 100,
+            drone.Epm,
+            drone.PayloadWeight
         );
-        foreach (Payload payload in drone.Payloads)
-        {
-            tag += string.Format(" - {0}({1}kg)", payload.name, payload.Weight.ToString());
-        }
         nameTag.text = tag;
     }
 

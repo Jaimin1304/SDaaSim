@@ -111,10 +111,14 @@ public class SerializableDrone
     public string id;
     public string name;
     public string subswarm;
-    public float selfWeight;
     public float speed;
+    public float bodyWeight;
+    public float payloadWeight;
     public float maxPayloadWeight;
     public float batteryStatus;
+    public float epm;
+    public float currBatteryJ;
+    public float batteryCapacityJ;
     public List<string> payloads;
 }
 
@@ -408,6 +412,8 @@ public class JsonConverter : MonoBehaviour
             }
             // node
             subSwarm.Node = subSwarm.ParentSwarm.Request.StartNode;
+            // edge
+            subSwarm.Edge = skyway.Edges.Find(i => i.Id == s.edge);
             subSwarm.Init();
         }
     }

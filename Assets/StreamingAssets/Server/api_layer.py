@@ -61,10 +61,12 @@ def init_skyway(data):
     drones: Dict[str, Drone] = {
         drone["id"]: Drone(
             drone["id"],
-            drone["selfWeight"],
+            drone["bodyWeight"],
+            drone["payloadWeight"],
             drone["speed"],
             drone["maxPayloadWeight"],
             drone["batteryStatus"],
+            drone["epm"],
             {id: payloads[id] for id in drone["payloads"]}
         )
         for drone in data["drones"]

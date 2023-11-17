@@ -7,7 +7,7 @@ public class AirDensityModel : MonoBehaviour
     public static AirDensityModel instance;
 
     // Define basic constants
-    float T0 = 288.15f; // Standard temperature at sea level in Kelvin
+    float T0 = 288.15f; // Standard temperature at sea level in Kelvinfloa
     float P0 = 101325f; // Standard atmospheric pressure at sea level in Pascals
     float L = 0.0065f; // Temperature lapse rate in Kelvin per meter
     float R = 287.05f; // Specific gas constant for air in Joules/(kg·Kelvin)

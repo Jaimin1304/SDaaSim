@@ -75,7 +75,8 @@ public class DataManager : MonoBehaviour
             // Get the data collection from the drone
             List<DroneData> dataCollection = drone.DataCollection;
             // Initialize CSV string with Header row
-            string csvData = "TimeString,X,Y,Z,Speed,BatteryStatus,PhysicalBatteryStatus,Node,Edge\n";
+            string csvData =
+                "TimeString,X,Y,Z,Speed,BatteryStatus,EPM,g,airDensity,currBatteryJ,Node,Edge\n";
             // Append each data row to the CSV string
             foreach (var data in dataCollection)
             {

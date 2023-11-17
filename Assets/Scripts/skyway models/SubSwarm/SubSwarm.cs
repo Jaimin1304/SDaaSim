@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Events;
 using UnityEditor.Search;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 
 public class SubSwarm : MonoBehaviour
 {
@@ -43,7 +44,16 @@ public class SubSwarm : MonoBehaviour
     Vector3 currEngineSpd = new Vector3(0, 0, 0);
 
     [SerializeField]
-    float epm;
+    float flightAngle;
+
+    [SerializeField]
+    float g;
+
+    [SerializeField]
+    float airDensity;
+
+    [SerializeField]
+    bool usePhysicsEPM;
 
     public string Id
     {
@@ -87,10 +97,28 @@ public class SubSwarm : MonoBehaviour
         set { wayPointIndex = value; }
     }
 
-    public float Epm
+    public float FlightAngle
     {
-        get { return epm; }
-        set { epm = value; }
+        get { return flightAngle; }
+        set { flightAngle = value; }
+    }
+
+    public float G
+    {
+        get { return g; }
+        set { g = value; }
+    }
+
+    public float AirDensity
+    {
+        get { return airDensity; }
+        set { airDensity = value; }
+    }
+
+    public bool UsePhysicsEPM
+    {
+        get { return usePhysicsEPM; }
+        set { usePhysicsEPM = value; }
     }
 
     public Vector3 CurrEngineSpd
@@ -102,7 +130,6 @@ public class SubSwarm : MonoBehaviour
     void Awake()
     {
         id = Guid.NewGuid().ToString();
-        epm = 0;
     }
 
     void Start()
@@ -128,6 +155,11 @@ public class SubSwarm : MonoBehaviour
         transform.position = node.transform.position;
         subSwarmView.SetFlyPosition(this);
         subSwarmView.InitVisual(gameObject.name);
+        flightAngle = 0f;
+        G = Globals.g0;
+        usePhysicsEPM = true;
+        flightAngle = CalFlightAngle();
+        //ToFlying(edge);
     }
 
     public void UpdateLogic()
@@ -187,6 +219,8 @@ public class SubSwarm : MonoBehaviour
             <= Globals.nodeTouchDistance
         )
         {
+            // update flight angle
+            flightAngle = CalFlightAngle();
             // check if reach target node
             if (
                 Vector3.Distance(transform.position, targetNode.transform.position)
@@ -210,10 +244,71 @@ public class SubSwarm : MonoBehaviour
             wayPointIndex += indexIncrease;
         }
         MoveToTarget(Edge.Path[wayPointIndex]);
+        // get altitude
+        float altitude = transform.position.y;
+        // update gravity
+        g = GravityModel.instance.CalGravity(altitude);
+        // update air density
+        airDensity = AirDensityModel.instance.CalAirDensity(altitude, g);
+        // calculate drone energy consumption, apply energy loss for each drone
+        if (usePhysicsEPM)
+        {
+            ApplyPhysicalEPMForDrones();
+        }
+        else
+        {
+            ApplyTraditionalEPMForDrones();
+        }
+    }
 
-        // calculate drone energy consumption
-        
-        // calculate flight angle
+    void ApplyTraditionalEPMForDrones()
+    {
+        Debug.Log("ApplyTraditionalEPMForDrones");
+        foreach (Drone drone in drones)
+        {
+            drone.BatteryStatus -= 0.0018f * Time.deltaTime * Globals.PlaySpeed;
+            drone.CurrBatteryJ = drone.BatteryCapacityJ * drone.BatteryStatus;
+            if (drone.BatteryStatus < 0)
+            {
+                Debug.LogError(string.Format("{0} is out of battery!", drone.name));
+                drone.CurrBatteryJ = 0;
+                drone.BatteryStatus = 0;
+            }
+        }
+    }
+
+    void ApplyPhysicalEPMForDrones()
+    {
+        Debug.Log("ApplyPhysicalEPMForDrones");
+        // update epm for each drone according to their payload weight
+        foreach (Drone drone in drones)
+        {
+            float epm = KirchsteinECM.instance.CalEpm(
+                CurrEngineSpd.magnitude,
+                flightAngle,
+                g,
+                airDensity,
+                drone.PayloadWeight
+            );
+            drone.Epm = epm;
+            Debug.Log("Epm: " + epm);
+            // calculate energyUsedPerSecond by epm and va
+            float energyUsedPerSecond = currEngineSpd.magnitude * epm;
+            Debug.Log("energyUsedPerSecond: " + energyUsedPerSecond);
+            // update battery status
+            drone.CurrBatteryJ -= energyUsedPerSecond * Time.deltaTime * Globals.PlaySpeed;
+            if (drone.CurrBatteryJ < 0)
+            {
+                Debug.LogError(string.Format("{0} is out of battery!", drone.name));
+                drone.CurrBatteryJ = 0;
+                drone.BatteryStatus = 0;
+            }
+            drone.SyncBatStatus();
+        }
+    }
+
+    float CalFlightAngle()
+    {
         Vector3 direction = (Edge.Path[wayPointIndex] - transform.position).normalized;
         Vector3 horizontalProjection = new Vector3(direction.x, 0, direction.z);
         float theta = Vector3.Angle(horizontalProjection, direction);
@@ -221,9 +316,7 @@ public class SubSwarm : MonoBehaviour
         {
             theta = -theta;
         }
-        // update epm
-        epm = KirchsteinECM.instance.CalEpm(CurrEngineSpd.magnitude, theta, 9.807f, 1.225f);
-        // apply energy loss for each drone
+        return theta;
     }
 
     void LandLogic()
@@ -410,7 +503,7 @@ public class SubSwarm : MonoBehaviour
             position = transform.position,
             drones = drones.Select(drone => drone.Id).ToList(),
             node = node.Id,
-            edge = "",
+            edge = edge.Id,
             wayPointIndex = wayPointIndex,
             currentState = currentState.ToString()
         };

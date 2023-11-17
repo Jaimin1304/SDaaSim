@@ -16,7 +16,7 @@ public class Drone : MonoBehaviour
     Pad pad;
 
     [SerializeField]
-    float selfWeight;
+    float bodyWeight;
 
     [SerializeField]
     float speed;
@@ -34,6 +34,9 @@ public class Drone : MonoBehaviour
     float maxPayloadWeight;
 
     [SerializeField]
+    float payloadWeight;
+
+    [SerializeField]
     List<Payload> payloads = new();
 
     [SerializeField]
@@ -43,13 +46,13 @@ public class Drone : MonoBehaviour
     float batteryStatus;
 
     [SerializeField]
-    float physicalBatteryStatus;
-
-    [SerializeField]
     float currBatteryJ;
 
     [SerializeField]
     float batteryCapacityJ;
+
+    [SerializeField]
+    float epm;
 
     List<DroneData> dataCollection = new List<DroneData>();
 
@@ -79,10 +82,10 @@ public class Drone : MonoBehaviour
         set { pad = value; }
     }
 
-    public float SelfWeight
+    public float BodyWeight
     {
-        get { return selfWeight; }
-        set { selfWeight = value; }
+        get { return bodyWeight; }
+        set { bodyWeight = value; }
     }
 
     public float MaxLiftSpd
@@ -115,16 +118,16 @@ public class Drone : MonoBehaviour
         set { maxPayloadWeight = value; }
     }
 
+    public float PayloadWeight
+    {
+        get { return payloadWeight; }
+        set { payloadWeight = value; }
+    }
+
     public float BatteryStatus
     {
         get { return batteryStatus; }
         set { batteryStatus = value; }
-    }
-
-    public float PhysicalBatteryStatus
-    {
-        get { return physicalBatteryStatus; }
-        set { physicalBatteryStatus = value; }
     }
 
     public List<Payload> Payloads
@@ -143,6 +146,12 @@ public class Drone : MonoBehaviour
     {
         get { return batteryCapacityJ; }
         set { batteryCapacityJ = value; }
+    }
+
+    public float Epm
+    {
+        get { return epm; }
+        set { epm = value; }
     }
 
     void Awake()
@@ -168,19 +177,6 @@ public class Drone : MonoBehaviour
             case SubSwarm.State.Hovering:
                 break;
             case SubSwarm.State.Flying:
-
-                // traditional
-                batteryStatus -= 0.0018f * Time.deltaTime * Globals.PlaySpeed;
-                if (batteryStatus < 0)
-                {
-                    Debug.LogError(string.Format("{0} is out of battery!", this.name));
-                }
-                // physical
-                float energyUsedPerSecond = subSwarm.CurrEngineSpd.magnitude * subSwarm.Epm; // 根据速度和epm计算每秒的能量消耗
-                CurrBatteryJ -= energyUsedPerSecond * Time.deltaTime; // 更新电池电量
-                if (CurrBatteryJ < 0)
-                    CurrBatteryJ = 0;
-                SyncBatStatus(); // 同步电池状态
                 break;
             case SubSwarm.State.Landed:
                 break;
@@ -201,17 +197,17 @@ public class Drone : MonoBehaviour
         droneView.initVisual(this);
         droneView.UpdateVisual(this);
         batteryStatus = 1;
-        physicalBatteryStatus = 1;
         batteryCapacityJ = Globals.DroneBatCap;
         currBatteryJ = batteryCapacityJ;
         maxLiftSpd = Globals.MaxLiftSpd;
         maxDescentSpd = Globals.MaxDescnetSpd;
         maxHorizontalSpd = Globals.MaxHorizontalSpd;
+        FetchPayloadWeight();
     }
 
-    void EnergyDrop()
+    void FetchPayloadWeight()
     {
-        // Use energy comsumption model to calculate energy loss
+        payloadWeight = payloads.Sum(payload => payload.Weight);
     }
 
     public void Recharge(float amount)
@@ -224,9 +220,9 @@ public class Drone : MonoBehaviour
         SyncBatStatus();
     }
 
-    void SyncBatStatus()
+    public void SyncBatStatus()
     {
-        physicalBatteryStatus = Mathf.Round(currBatteryJ / batteryCapacityJ * 100f) / 100f;
+        batteryStatus = Mathf.Round(currBatteryJ / batteryCapacityJ * 100f) / 100f;
     }
 
     void CollectData()
@@ -237,7 +233,9 @@ public class Drone : MonoBehaviour
             position = transform.position,
             speed = speed,
             batteryStatus = batteryStatus,
-            physicalBatteryStatus = physicalBatteryStatus,
+            epm = epm,
+            g = subSwarm.G,
+            airDensity = subSwarm.AirDensity,
             node = (subSwarm.Node != null) ? subSwarm.Node.name : "-",
             edge = (subSwarm.Edge != null) ? subSwarm.Edge.name : "-"
         };
@@ -257,10 +255,14 @@ public class Drone : MonoBehaviour
             id = id,
             name = gameObject.name,
             subswarm = subSwarm.Id,
-            selfWeight = selfWeight,
             speed = speed,
+            bodyWeight = bodyWeight,
+            payloadWeight = payloadWeight,
             maxPayloadWeight = maxPayloadWeight,
             batteryStatus = batteryStatus,
+            epm = epm,
+            currBatteryJ = currBatteryJ,
+            batteryCapacityJ = batteryCapacityJ,
             payloads = payloads.Select(payload => payload.Id).ToList(),
         };
     }
@@ -272,12 +274,15 @@ public class DroneData
     public Vector3 position;
     public float speed;
     public float batteryStatus;
-    public float physicalBatteryStatus;
+    public float epm;
+    public float g;
+    public float currBatteryJ;
+    public float airDensity;
     public string node;
     public string edge;
 
     public string ToCSV()
     {
-        return $"{timestring},{position.x},{position.y},{position.z},{speed},{batteryStatus},{physicalBatteryStatus},{node},{edge}";
+        return $"{timestring},{position.x},{position.y},{position.z},{speed},{batteryStatus},{epm},{g},{airDensity},{currBatteryJ},{node},{edge}";
     }
 }

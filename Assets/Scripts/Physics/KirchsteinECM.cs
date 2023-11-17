@@ -73,17 +73,30 @@ public class KirchsteinECM : MonoBehaviour
         Pavio = Globals.AvionicsPwr;
 
         // test different va
-        float[] vaValues = { 0.3f, 5, 10, 15, 25 };
+        float[] vaValues = { 0.3f, 5, 10, 15, 20, 25 };
         foreach (float vaValue in vaValues)
         {
             va = vaValue; // set va
-            float Epm = CalEpm(1, 0, 9.807f, 1.225f);
+            float Epm = CalEpm(va, 0, 9.807f, 1.225f, 1f);
             Debug.Log("For va = " + va + ", Energy per meter: " + Epm);
         }
     }
 
-    public float CalEpm(float va, float theta, float g, float rho)
+    public float CalEpm(float va, float theta, float g, float rho, float payloadWeight)
     {
+        Debug.Log(
+            String.Format(
+                "va: {0}, theta: {1}, g: {2}, rho: {3}, payloadWeight: {4}",
+                va,
+                theta,
+                g,
+                rho,
+                payloadWeight
+            )
+        );
+        // assign payload weight
+        //mk[2] = payloadWeight;
+
         float sumCDkAk = 0;
         float sumMk = 0;
         for (int k = 0; k < 3; k++)
@@ -91,18 +104,18 @@ public class KirchsteinECM : MonoBehaviour
             sumCDkAk += CDk[k] * Ak[k];
             sumMk += mk[k];
         }
-
+        // Calculate thrust
         T = Mathf.Sqrt(
             Mathf.Pow(g * sumMk, 2)
                 + Mathf.Pow(0.5f * rho * sumCDkAk * Mathf.Pow(va, 2), 2)
                 + rho * sumCDkAk * Mathf.Pow(va, 2) * m * g * (float)Math.Sin((float)theta)
         );
-        Debug.Log(String.Format("Thrust T: {0}", T));
+        //Debug.Log(String.Format("Thrust T: {0}", T));
         // Calculate the angle of attack alpha in radians
         float numerator = 0.5f * rho * sumCDkAk * Mathf.Pow(va, 2);
         float denominator = sumMk * g;
         alpha = Mathf.Atan(numerator / denominator);
-        Debug.Log(String.Format("Angle of attack Alpha: {0}", alpha));
+        //Debug.Log(String.Format("Angle of attack Alpha: {0}", alpha));
         // Calculate Epm
         float Epm =
             (1 / eta)
