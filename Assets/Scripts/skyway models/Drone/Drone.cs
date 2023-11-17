@@ -19,9 +19,6 @@ public class Drone : MonoBehaviour
     float bodyWeight;
 
     [SerializeField]
-    float speed;
-
-    [SerializeField]
     float maxLiftSpd;
 
     [SerializeField]
@@ -104,12 +101,6 @@ public class Drone : MonoBehaviour
     {
         get { return maxHorizontalSpd; }
         set { maxHorizontalSpd = value; }
-    }
-
-    public float Speed
-    {
-        get { return speed; }
-        set { speed = value; }
     }
 
     public float MaxPayloadWeight
@@ -231,7 +222,8 @@ public class Drone : MonoBehaviour
         {
             timestring = Simulator.instance.GetTimeString(),
             position = transform.position,
-            speed = speed,
+            va = subSwarm.AirSpd.magnitude,
+            absSpd = (subSwarm.AirSpd + Globals.WindSpd).magnitude,
             batteryStatus = batteryStatus,
             epm = epm,
             g = subSwarm.G,
@@ -255,7 +247,6 @@ public class Drone : MonoBehaviour
             id = id,
             name = gameObject.name,
             subswarm = subSwarm.Id,
-            speed = speed,
             bodyWeight = bodyWeight,
             payloadWeight = payloadWeight,
             maxPayloadWeight = maxPayloadWeight,
@@ -272,7 +263,8 @@ public class DroneData
 {
     public string timestring;
     public Vector3 position;
-    public float speed;
+    public float va;
+    public float absSpd;
     public float batteryStatus;
     public float epm;
     public float g;
@@ -283,6 +275,6 @@ public class DroneData
 
     public string ToCSV()
     {
-        return $"{timestring},{position.x},{position.y},{position.z},{speed},{batteryStatus},{epm},{g},{airDensity},{currBatteryJ},{node},{edge}";
+        return $"{timestring},{position.x},{position.y},{position.z},{va},{absSpd},{batteryStatus},{epm},{g},{airDensity},{currBatteryJ},{node},{edge}";
     }
 }

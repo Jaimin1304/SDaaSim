@@ -41,7 +41,7 @@ public class SubSwarm : MonoBehaviour
     int wayPointIndex;
 
     [SerializeField]
-    Vector3 currEngineSpd = new Vector3(0, 0, 0);
+    Vector3 airSpd = new Vector3(0, 0, 0);
 
     [SerializeField]
     float flightAngle;
@@ -121,10 +121,10 @@ public class SubSwarm : MonoBehaviour
         set { usePhysicsEPM = value; }
     }
 
-    public Vector3 CurrEngineSpd
+    public Vector3 AirSpd
     {
-        get { return currEngineSpd; }
-        set { currEngineSpd = value; }
+        get { return airSpd; }
+        set { airSpd = value; }
     }
 
     void Awake()
@@ -157,7 +157,7 @@ public class SubSwarm : MonoBehaviour
         subSwarmView.InitVisual(gameObject.name);
         flightAngle = 0f;
         G = Globals.g0;
-        usePhysicsEPM = true;
+        usePhysicsEPM = false;
         flightAngle = CalFlightAngle();
         //ToFlying(edge);
     }
@@ -266,7 +266,7 @@ public class SubSwarm : MonoBehaviour
         Debug.Log("ApplyTraditionalEPMForDrones");
         foreach (Drone drone in drones)
         {
-            drone.BatteryStatus -= 0.0018f * Time.deltaTime * Globals.PlaySpeed;
+            drone.BatteryStatus -= 0.005f * Time.deltaTime * Globals.PlaySpeed;
             drone.CurrBatteryJ = drone.BatteryCapacityJ * drone.BatteryStatus;
             if (drone.BatteryStatus < 0)
             {
@@ -284,7 +284,7 @@ public class SubSwarm : MonoBehaviour
         foreach (Drone drone in drones)
         {
             float epm = KirchsteinECM.instance.CalEpm(
-                CurrEngineSpd.magnitude,
+                airSpd.magnitude,
                 flightAngle,
                 g,
                 airDensity,
@@ -293,7 +293,7 @@ public class SubSwarm : MonoBehaviour
             drone.Epm = epm;
             Debug.Log("Epm: " + epm);
             // calculate energyUsedPerSecond by epm and va
-            float energyUsedPerSecond = currEngineSpd.magnitude * epm;
+            float energyUsedPerSecond = airSpd.magnitude * epm;
             Debug.Log("energyUsedPerSecond: " + energyUsedPerSecond);
             // update battery status
             drone.CurrBatteryJ -= energyUsedPerSecond * Time.deltaTime * Globals.PlaySpeed;
@@ -309,7 +309,11 @@ public class SubSwarm : MonoBehaviour
 
     float CalFlightAngle()
     {
-        Vector3 direction = (Edge.Path[wayPointIndex] - transform.position).normalized;
+        if (edge == null)
+        {
+            return 0;
+        }
+        Vector3 direction = (edge.Path[wayPointIndex] - transform.position).normalized;
         Vector3 horizontalProjection = new Vector3(direction.x, 0, direction.z);
         float theta = Vector3.Angle(horizontalProjection, direction);
         if (direction.y < 0)
@@ -326,16 +330,8 @@ public class SubSwarm : MonoBehaviour
 
     void RechargeLogic()
     {
-        bool allDronesFullyCharged = true;
-        foreach (Drone drone in drones)
-        {
-            drone.Recharge(Globals.PadRechargeRate);
-            if (drone.BatteryStatus < 0.99f) // Check if full recharge
-            {
-                allDronesFullyCharged = false;
-            }
-        }
-        if (allDronesFullyCharged)
+        drones.ForEach(drone => drone.Recharge(Globals.PadRechargeRate));
+        if (drones.All(drone => drone.BatteryStatus >= 0.6f))
         {
             AskForCommand();
         }
@@ -349,9 +345,9 @@ public class SubSwarm : MonoBehaviour
     public void MoveToTarget(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        currEngineSpd = CalculateEngineSpeedWithWind(direction);
-        transform.position +=
-            (currEngineSpd + Globals.WindSpd) * Time.deltaTime * Globals.PlaySpeed;
+        airSpd = CalculateEngineSpeedWithWind(direction);
+        Vector3 absSpd = airSpd + Globals.WindSpd;
+        transform.position += absSpd * Time.deltaTime * Globals.PlaySpeed;
     }
 
     Vector3 CalculateEngineSpeedWithWind(Vector3 dir)
@@ -447,7 +443,7 @@ public class SubSwarm : MonoBehaviour
             Drones[i].Pad = freeRechargePads[i];
         }
         // Update drone visuals
-        subSwarmView.LandVisualUpdate(this);
+        //subSwarmView.LandVisualUpdate(this);
         subSwarmView.SetLandPosition(this, freeRechargePads);
         // Update subswarm states
         currentState = State.Recharging;
@@ -484,12 +480,9 @@ public class SubSwarm : MonoBehaviour
 
     void LogState()
     {
-        Debug.Log("currEngineSpd: " + currEngineSpd);
-        Debug.Log("currVerticalSpd: " + currEngineSpd.y);
-        Debug.Log(
-            "currHorizontalSpd: "
-                + MathF.Sqrt(currEngineSpd.x * currEngineSpd.x + currEngineSpd.z * currEngineSpd.z)
-        );
+        Debug.Log("airSpd: " + airSpd);
+        Debug.Log("currVerticalSpd: " + airSpd.y);
+        Debug.Log("currHorizontalSpd: " + MathF.Sqrt(airSpd.x * airSpd.x + airSpd.z * airSpd.z));
         Debug.Log("windSpd: " + Globals.WindSpd);
     }
 
@@ -499,11 +492,12 @@ public class SubSwarm : MonoBehaviour
         {
             id = id,
             name = gameObject.name,
+            airSpd = airSpd,
             parentSwarm = parentSwarm.Id,
             position = transform.position,
             drones = drones.Select(drone => drone.Id).ToList(),
             node = node.Id,
-            edge = edge.Id,
+            edge = edge ? edge.Id : "",
             wayPointIndex = wayPointIndex,
             currentState = currentState.ToString()
         };

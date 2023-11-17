@@ -65,7 +65,14 @@ public class SubSwarmView : MonoBehaviour
         engineSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
         windSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
         // add epm to name
-        nameTag.text = String.Format("{0} - g:{1}m/s^2 - rho:{2}kg/m^3", subSwarm.name, subSwarm.G, subSwarm.AirDensity);
+        nameTag.text = String.Format(
+            "{0} - g: {1}m/s^2 - rho: {2}kg/m^3 - va:{3}m/s - absSpd: {4}m/s",
+            subSwarm.name,
+            subSwarm.G,
+            subSwarm.AirDensity,
+            subSwarm.AirSpd.magnitude,
+            (subSwarm.AirSpd + Globals.WindSpd).magnitude
+        );
     }
 
     public void Visual(SubSwarm subSwarm)
@@ -90,7 +97,7 @@ public class SubSwarmView : MonoBehaviour
         {
             drone.transform.position = new Vector3(
                 drone.Pad.transform.position.x,
-                drone.Pad.transform.position.y + 2f,
+                drone.Pad.transform.position.y + 6f,
                 drone.Pad.transform.position.z
             );
         }
@@ -128,7 +135,7 @@ public class SubSwarmView : MonoBehaviour
     public void DrawEngineSpeed(SubSwarm subSwarm)
     {
         Vector3 startPosition = subSwarm.transform.position;
-        Vector3 endPosition = startPosition + subSwarm.CurrEngineSpd;
+        Vector3 endPosition = startPosition + subSwarm.AirSpd;
         Vector3 hightOffset = new Vector3(0, 1, 0);
         engineSpdLineRenderer.SetPosition(0, startPosition + hightOffset);
         engineSpdLineRenderer.SetPosition(1, endPosition + hightOffset);
@@ -149,7 +156,8 @@ public class SubSwarmView : MonoBehaviour
     {
         for (int i = 0; i < subSwarm.Drones.Count; i++)
         {
-            subSwarm.Drones[i].transform.position = pads[i].transform.position;
+            subSwarm.Drones[i].transform.position =
+                pads[i].transform.position + new Vector3(0, Globals.padDroneOffset, 0);
         }
     }
 }

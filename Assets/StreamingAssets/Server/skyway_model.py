@@ -57,11 +57,10 @@ class Edge:
 
 
 class Drone:
-    def __init__(self, id, bodyWeight, payloadWeight, speed, maxPayloadWeight, batteryStatus, epm, payloads: Dict[str, Payload]):
+    def __init__(self, id, bodyWeight, payloadWeight, maxPayloadWeight, batteryStatus, epm, payloads: Dict[str, Payload]):
         self.id = id
         self.bodyWeight = bodyWeight
         self.payloadWeight = payloadWeight
-        self.speed = speed
         self.maxPayloadWeight = maxPayloadWeight
         self.batteryStatus = batteryStatus
         self.epm = epm
@@ -71,7 +70,6 @@ class Drone:
         print('--drone--')
         print(self.id)
         print('bodyWeight: ' + str(self.bodyWeight))
-        print('speed: ' + str(self.speed))
         print('maxPayloadWeight' + str(self.maxPayloadWeight))
         print('batteryStatus: ' + str(self.batteryStatus))
         for i in self.payloads.values():
@@ -79,8 +77,10 @@ class Drone:
 
 
 class SubSwarm:
-    def __init__(self, id, position, drones: Dict[str, Drone], node, edge, wayPointIndex, currentState):
+    def __init__(self, id, name, airSpd, position, drones: Dict[str, Drone], node, edge, wayPointIndex, currentState):
         self.id = id
+        self.name = name
+        self.airSpd = airSpd
         self.position = position
         self.drones = drones
         self.node = node

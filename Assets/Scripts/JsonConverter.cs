@@ -96,6 +96,7 @@ public class SerializableSubSwarm
 {
     public string id;
     public string name;
+    public Vector3 airSpd;
     public string parentSwarm;
     public Vector3 position;
     public List<String> drones;
@@ -111,7 +112,6 @@ public class SerializableDrone
     public string id;
     public string name;
     public string subswarm;
-    public float speed;
     public float bodyWeight;
     public float payloadWeight;
     public float maxPayloadWeight;
@@ -413,7 +413,10 @@ public class JsonConverter : MonoBehaviour
             // node
             subSwarm.Node = subSwarm.ParentSwarm.Request.StartNode;
             // edge
-            subSwarm.Edge = skyway.Edges.Find(i => i.Id == s.edge);
+            if (s.edge != "")
+            {
+                subSwarm.Edge = skyway.Edges.Find(i => i.Id == s.edge);
+            }
             subSwarm.Init();
         }
     }

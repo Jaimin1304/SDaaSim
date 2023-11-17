@@ -360,8 +360,11 @@ MonoBehaviour:
   node: {fileID: 0}
   edge: {fileID: 0}
   currentState: 0
-  currEngineSpd: {x: 0, y: 0, z: 0}
-  epm: 0
+  airSpd: {x: 0, y: 0, z: 0}
+  flightAngle: 0
+  g: 0
+  airDensity: 0
+  usePhysicsEPM: 0
 --- !u!114 &1419115481682865108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,7 +420,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 6}
-  m_SizeDelta: {x: 20, y: 4}
+  m_SizeDelta: {x: 30, y: 6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &8673967807705987016
 MeshRenderer:

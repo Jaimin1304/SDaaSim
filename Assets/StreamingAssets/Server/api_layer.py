@@ -63,7 +63,6 @@ def init_skyway(data):
             drone["id"],
             drone["bodyWeight"],
             drone["payloadWeight"],
-            drone["speed"],
             drone["maxPayloadWeight"],
             drone["batteryStatus"],
             drone["epm"],

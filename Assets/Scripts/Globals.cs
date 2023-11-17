@@ -33,6 +33,7 @@ public class Globals : MonoBehaviour
     public const float padGap = 4f;
     public const float edgeHeightOffset = 2f;
     public const float edgeNodeGap = 5f;
+    public const float padDroneOffset = 0.6f;
 
     // physics const
     public const float g0 = 9.807f; // Gravitational acceleration at the Earth's surface, in m/s²
@@ -98,33 +99,33 @@ public class Globals : MonoBehaviour
     const float DefaultCamRotateSpeed = 0.15f;
     const float DefaultCamZoomSpeed = 200;
     const float DefaultEdgeThickness = 0.6f;
-    const float DefaultPadRechargeRate = 0.05f;
-    const int DefaultRechargePadNum = 3;
-    const int DefaultNonRechargePadNum = 3;
-    const float DefaultDroneBatCap = 133200;
+    const float DefaultPadRechargeRate = 300f; // J/s
+    const int DefaultRechargePadNum = 4;
+    const int DefaultNonRechargePadNum = 4;
+    const float DefaultDroneBatCap = 292680;
     static Vector3 DefaultWindSpd = new Vector3(0, 0, 0);
     const float DefaultBatChargingEffic = 0.9f;
     const float DefaultRotorNum = 4f;
     const float DefaultAirDensity = 1.225f;
     const float DefaultDownwashCoeff = 1f;
-    const float DefaultPwrXferEffic = 0.73f;
+    const float DefaultPwrXferEffic = 0.7f;
     const float DefaultAvionicsPwr = 10f;
 
     // Default drone attributes
-    const float DefaultMaxLiftSpd = 5f;
-    const float DefaultMaxDescnetSpd = 5f;
-    const float DefaultMaxHorizontalSpd = 18f;
-    const float DefaultBodyMass = 7f;
-    const float DefaultBatMass = 10f;
-    const float DefaultPayloadMass = 5f;
-    const float DefaultBodyArea = 0.224f;
-    const float DefaultBatArea = 0.015f;
-    const float DefaultPayloadArea = 0.0929f;
+    const float DefaultMaxLiftSpd = 6f;
+    const float DefaultMaxDescnetSpd = 4f;
+    const float DefaultMaxHorizontalSpd = 20f;
+    const float DefaultBodyMass = 1.07f;
+    const float DefaultBatMass = 1f;
+    const float DefaultPayloadMass = 0.5f;
+    const float DefaultBodyArea = 0.0599f;
+    const float DefaultBatArea = 0.0037f;
+    const float DefaultPayloadArea = 0.0135f;
     const float DefaultBodyDragCoeff = 1.49f;
     const float DefaultBatDragCoeff = 1f;
     const float DefaultPayloadDragCoeff = 2.2f;
     const float DefaultInducedPowFactor = 1f;
-    const float DefaultProfilePowFactor = 0.790f;
+    const float DefaultProfilePowFactor = 0.79f;
     const float DefaultProfilePowWithSpdFactor = 0.0042f;
 
     // Properties with PlayerPrefs saving in setters
