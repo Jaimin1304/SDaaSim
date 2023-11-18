@@ -228,6 +228,7 @@ public class Drone : MonoBehaviour
             epm = epm,
             g = subSwarm.G,
             airDensity = subSwarm.AirDensity,
+            currBatteryJ = currBatteryJ,
             node = (subSwarm.Node != null) ? subSwarm.Node.name : "-",
             edge = (subSwarm.Edge != null) ? subSwarm.Edge.name : "-"
         };

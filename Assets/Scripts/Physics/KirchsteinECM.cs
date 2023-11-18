@@ -95,7 +95,7 @@ public class KirchsteinECM : MonoBehaviour
             )
         );
         // assign payload weight
-        //mk[2] = payloadWeight;
+        mk[2] = payloadWeight;
 
         float sumCDkAk = 0;
         float sumMk = 0;
