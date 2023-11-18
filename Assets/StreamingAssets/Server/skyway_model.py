@@ -77,10 +77,11 @@ class Drone:
 
 
 class SubSwarm:
-    def __init__(self, id, name, airSpd, position, drones: Dict[str, Drone], node, edge, wayPointIndex, currentState):
+    def __init__(self, id, name, airSpd, parentSwarm, position, drones: Dict[str, Drone], node, edge, wayPointIndex, currentState):
         self.id = id
         self.name = name
         self.airSpd = airSpd
+        self.parentSwarm = parentSwarm
         self.position = position
         self.drones = drones
         self.node = node

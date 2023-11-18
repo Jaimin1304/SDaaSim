@@ -99,10 +99,11 @@ public class Globals : MonoBehaviour
     const float DefaultCamRotateSpeed = 0.15f;
     const float DefaultCamZoomSpeed = 200;
     const float DefaultEdgeThickness = 0.6f;
-    const float DefaultPadRechargeRate = 300f; // J/s
     const int DefaultRechargePadNum = 4;
     const int DefaultNonRechargePadNum = 4;
-    const float DefaultDroneBatCap = 292680;
+    // Default drone attributes
+    const float DefaultPadRechargeRate = 300f; // J/s
+    const float DefaultDroneBatCap = 288000;
     static Vector3 DefaultWindSpd = new Vector3(0, 0, 0);
     const float DefaultBatChargingEffic = 0.9f;
     const float DefaultRotorNum = 4f;
@@ -110,8 +111,6 @@ public class Globals : MonoBehaviour
     const float DefaultDownwashCoeff = 1f;
     const float DefaultPwrXferEffic = 0.7f;
     const float DefaultAvionicsPwr = 10f;
-
-    // Default drone attributes
     const float DefaultMaxLiftSpd = 6f;
     const float DefaultMaxDescnetSpd = 4f;
     const float DefaultMaxHorizontalSpd = 20f;

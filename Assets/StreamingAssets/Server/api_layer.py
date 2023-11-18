@@ -120,6 +120,9 @@ def init_skyway(data):
     subSwarms: Dict[str, SubSwarm] = {
         subSwarm["id"]: SubSwarm(
             subSwarm["id"],
+            subSwarm["name"],
+            subSwarm["airSpd"],
+            None, # parentSwarm set to None temporarily
             subSwarm["position"],
             {id: drones[id] for id in subSwarm["drones"]},
             nodes[subSwarm["node"]],
@@ -139,6 +142,14 @@ def init_skyway(data):
         )
         for swarm in data["swarms"]
     }
+    # assign parentSwarm to subswarms
+    # 然后，遍历 subSwarms 并更新每个 SubSwarm 对象的 parentSwarm 属性
+    for subSwarm_id, subSwarm_obj in subSwarms.items():
+        # 假设 data["subSwarms"] 中的每个项目都有一个与 subSwarm_id 匹配的项
+        parentSwarm_id = next(item for item in data["subSwarms"] if item["id"] == subSwarm_id)["parentSwarm"]
+        # 如果 parentSwarm 存在于 swarms 中，则更新 subSwarm_obj 的 parentSwarm 属性
+        if parentSwarm_id in swarms:
+            subSwarm_obj.parentSwarm = swarms[parentSwarm_id]
 
     skyway = Skyway(
         nodes,

@@ -266,7 +266,7 @@ public class SubSwarm : MonoBehaviour
         Debug.Log("ApplyTraditionalEPMForDrones");
         foreach (Drone drone in drones)
         {
-            drone.BatteryStatus -= 0.005f * Time.deltaTime * Globals.PlaySpeed;
+            drone.BatteryStatus -= 0.00005f * Time.deltaTime * Globals.PlaySpeed * airSpd.magnitude;
             drone.CurrBatteryJ = drone.BatteryCapacityJ * drone.BatteryStatus;
             if (drone.BatteryStatus < 0)
             {
