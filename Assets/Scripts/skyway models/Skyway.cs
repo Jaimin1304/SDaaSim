@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System.Xml.Serialization;
 
 [Serializable]
 public class Skyway : MonoBehaviour

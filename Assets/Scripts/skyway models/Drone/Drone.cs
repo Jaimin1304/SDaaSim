@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.PlayerLoop;
 
 public class Drone : MonoBehaviour
 {

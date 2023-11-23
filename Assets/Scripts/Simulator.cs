@@ -4,7 +4,6 @@ using System;
 using Newtonsoft.Json;
 using System.Linq;
 using UnityEngine.Events;
-using System.Xml.Serialization;
 
 [System.Serializable]
 public class BoolEvent : UnityEvent<bool> { }
@@ -136,7 +135,7 @@ public class Simulator : MonoBehaviour
         }
         instance = this;
         // start the server
-        //pyRunner.ExecutePythonScript();
+        pyRunner.ExecutePythonScript();
 
         // Initialize the UnityEvents
         OnPlayEvent = new UnityEvent();
