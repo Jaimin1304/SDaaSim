@@ -106,67 +106,30 @@ def run(skyway: Skyway):
     #  write your algorithm here  #
     ###############################
 
-    for swarm in skyway.swarms.values():
-        for subSwarm in swarm.subSwarms.values():
-            # land and recharge if low power
-            for drone in subSwarm.drones.values():
-                print(drone.batteryStatus)
-                print(drone.id)
-                if drone.batteryStatus < 0.4:
-                    api.subswarm_land(subSwarm.id, subSwarm.node.id, instructions)
-                    print("subswarm landed")
-                    return instructions
-            # find next edge to go
-            next_node_id = None
-            for i in range(len(computed_path)):
-                if computed_path[i] == subSwarm.node.id:
-                    if i == len(computed_path) - 1:  # reach the end
-                        next_node_id = computed_path[i - 1]
-                        print("reach target")
-                    next_node_id = computed_path[i + 1]
-            next_edge_id = None
-            for edge in subSwarm.node.edges.values():
-                if (
-                    edge.leftNode.id == next_node_id
-                    or edge.rightNode.id == next_node_id
-                ):
-                    next_edge_id = edge.id
-                    subSwarm.edge = edge
-                    break
-            print(next_node_id)
-            print(next_edge_id)
-            api.set_subswarm_edge(subSwarm.id, next_edge_id, instructions)
-
-            path_num = len(subSwarm.node.edges.values())
-            subswarm_num = len(swarm.subSwarms.values())
-            # split if only one subswarm with multiple forward path
-            if subswarm_num <= 2 and path_num > 2:
-                drone_lst = [subSwarm.drones[0].id]
-                lastEdgeVisited = subSwarm.lastEdgeVisited
-                original_edge = subSwarm.edge
-                # find a random new edge for the new subswarm to go to
-                new_edge_id = ""
-                for i in subSwarm.node.edges.values():
-                    if i != lastEdgeVisited and i != original_edge:
-                        new_edge_id = i.id
-                        break
-                # split subswarm and let new subswarm follow the new path
-                api.split_subswarm(subSwarm.id, drone_lst, new_edge_id, instructions)
-                continue
-            # keep flying if multiple subswarm and one forward path
-            if subswarm_num >= 2 and path_num == 2:
-                continue
-            # wait if multiple subswarm and multiple path
-            if subswarm_num >= 2 and path_num >= 2:
-                api.subswarm_hover(subSwarm.id, instructions)
-                continue
-            # merge if multiple subswarms are at the same node
-            for subSwarmB in swarm.subSwarms.values():
-                if subSwarm == subSwarmB:
-                    continue
-                if subSwarm.node == subSwarmB.node:
-                    api.merge_all_subswarms_at_node(swarm, subSwarm.node, subSwarm.edge, instructions)
-                    break
+    for subSwarm in skyway.subSwarms.values():
+        # land and recharge if low power
+        for drone in subSwarm.drones.values():
+            print(drone.batteryStatus)
+            print(drone.id)
+            if drone.batteryStatus < 0.4:
+                api.subswarm_land(subSwarm.id, subSwarm.node.id, instructions)
+                print("subswarm landed")
+                return instructions
+        # find next edge to go
+        next_node_id = None
+        for i in range(len(computed_path)):
+            if computed_path[i] == subSwarm.node.id:
+                if i == len(computed_path) - 1:  # reach the end
+                    next_node_id = computed_path[i - 1]
+                    print("reach target")
+                next_node_id = computed_path[i + 1]
+        next_edge_id = None
+        for edge in subSwarm.node.edges.values():
+            if edge.leftNode.id == next_node_id or edge.rightNode.id == next_node_id:
+                next_edge_id = edge.id
+        print(next_node_id)
+        print(next_edge_id)
+        api.set_subswarm_edge(subSwarm.id, next_edge_id, instructions)
 
     ###############################
     # the end of custom algorithm #

@@ -101,6 +101,7 @@ public class SerializableSubSwarm
     public List<String> drones;
     public string node;
     public string edge;
+    public string lastEdgeVisited;
     public int wayPointIndex;
     public String currentState;
 }

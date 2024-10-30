@@ -16,6 +16,7 @@ public class Globals : MonoBehaviour
     public const string subswarmLand = "subswarm_land";
     public const string splitSubswarm = "split_subswarm";
     public const string mergeTwoSubswarms = "merge_two_subswarms";
+    public const string mergeAllSubswarmsAtNode = "merge_all_subswarms_at_node";
     public const string proceed = "proceed";
     public const float camMaxZoomDistance = 150;
     public const float camMaxPitch = 80;

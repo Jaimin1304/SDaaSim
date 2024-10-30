@@ -84,16 +84,6 @@ public class KirchsteinECM : MonoBehaviour
 
     public float CalEpm(float va, float theta, float g, float rho, float payloadWeight)
     {
-        Debug.Log(
-            String.Format(
-                "va: {0}, theta: {1}, g: {2}, rho: {3}, payloadWeight: {4}",
-                va,
-                theta,
-                g,
-                rho,
-                payloadWeight
-            )
-        );
         // assign payload weight
         mk[2] = payloadWeight;
 
@@ -115,9 +105,8 @@ public class KirchsteinECM : MonoBehaviour
         float numerator = 0.5f * rho * sumCDkAk * Mathf.Pow(va, 2);
         float denominator = sumMk * g;
         alpha = Mathf.Atan(numerator / denominator);
-        //Debug.Log(String.Format("Angle of attack Alpha: {0}", alpha));
         // Calculate Epm
-        float Epm =
+        float epm =
             (1 / eta)
                 * (
                     (k * T * w / va)
@@ -126,7 +115,20 @@ public class KirchsteinECM : MonoBehaviour
                     + (k3 * Mathf.Sqrt(g * sumMk) * va)
                 )
             + (Pavio / (etaC * va));
-        //Debug.Log(String.Format("Joule per meter Epm: {0}", Epm));
-        return Epm;
+
+        Debug.Log(
+            String.Format(
+                "va: {0}, theta: {1}, g: {2}, rho: {3}, payloadWeight: {4}, EPM: {5}, thrust, {6}",
+                va,
+                theta,
+                g,
+                rho,
+                payloadWeight,
+                epm,
+                T
+            )
+        );
+
+        return epm;
     }
 }

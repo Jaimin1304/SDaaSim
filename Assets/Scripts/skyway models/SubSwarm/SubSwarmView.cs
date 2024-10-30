@@ -66,12 +66,13 @@ public class SubSwarmView : MonoBehaviour
         windSpdTag.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
         // add epm to name
         nameTag.text = String.Format(
-            "{0} - g: {1}m/s^2 - rho: {2}kg/m^3 - va:{3}m/s - absSpd: {4}m/s",
+            "{0} - g: {1}m/s^2 - rho: {2}kg/m^3 - va:{3}m/s - absSpd: {4}m/s - flightAngle: {5}",
             subSwarm.name,
             subSwarm.G,
             subSwarm.AirDensity,
             subSwarm.AirSpd.magnitude,
-            (subSwarm.AirSpd + Globals.WindSpd).magnitude
+            (subSwarm.AirSpd + Globals.WindSpd).magnitude,
+            subSwarm.FlightAngle
         );
     }
 

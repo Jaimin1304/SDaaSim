@@ -23,6 +23,9 @@ public class SubSwarm : MonoBehaviour
     [SerializeField]
     Edge edge;
 
+    [SerializeField]
+    Edge lastEdgeVisited;
+
     public enum State
     {
         Hovering,
@@ -86,6 +89,12 @@ public class SubSwarm : MonoBehaviour
     {
         get { return edge; }
         set { edge = value; }
+    }
+
+    public Edge LastEdgeVisited
+    {
+        get { return lastEdgeVisited; }
+        set { lastEdgeVisited = value; }
     }
 
     public int WayPointIndex
@@ -152,11 +161,9 @@ public class SubSwarm : MonoBehaviour
         transform.position = node.transform.position;
         subSwarmView.SetFlyPosition(this);
         subSwarmView.InitVisual(gameObject.name);
-        flightAngle = 0f;
         G = Globals.g0;
-        usePhysicsEPM = false;
-        flightAngle = CalFlightAngle();
-        //ToFlying(edge);
+        usePhysicsEPM = true;
+        flightAngle = 0;
     }
 
     public void UpdateLogic()
@@ -216,8 +223,6 @@ public class SubSwarm : MonoBehaviour
             <= Globals.nodeTouchDistance
         )
         {
-            // update flight angle
-            flightAngle = CalFlightAngle();
             // check if reach target node
             if (
                 Vector3.Distance(transform.position, targetNode.transform.position)
@@ -241,6 +246,8 @@ public class SubSwarm : MonoBehaviour
             wayPointIndex += indexIncrease;
         }
         MoveToTarget(Edge.Path[wayPointIndex]);
+        // update flight angle
+        flightAngle = CalFlightAngle();
         // get altitude
         float altitude = transform.position.y;
         // update gravity
@@ -260,14 +267,14 @@ public class SubSwarm : MonoBehaviour
 
     void ApplyTraditionalEPMForDrones()
     {
-        Debug.Log("ApplyTraditionalEPMForDrones");
+        //Debug.Log("ApplyTraditionalEPMForDrones");
         foreach (Drone drone in drones)
         {
             drone.BatteryStatus -= 0.00005f * Time.deltaTime * Globals.PlaySpeed * airSpd.magnitude;
             drone.CurrBatteryJ = drone.BatteryCapacityJ * drone.BatteryStatus;
             if (drone.BatteryStatus < 0)
             {
-                Debug.LogError(string.Format("{0} is out of battery!", drone.name));
+                //Debug.LogError(string.Format("{0} is out of battery!", drone.name));
                 drone.CurrBatteryJ = 0;
                 drone.BatteryStatus = 0;
             }
@@ -276,7 +283,7 @@ public class SubSwarm : MonoBehaviour
 
     void ApplyPhysicalEPMForDrones()
     {
-        Debug.Log("ApplyPhysicalEPMForDrones");
+        //Debug.Log("ApplyPhysicalEPMForDrones");
         // update epm for each drone according to their payload weight
         foreach (Drone drone in drones)
         {
@@ -288,10 +295,12 @@ public class SubSwarm : MonoBehaviour
                 drone.PayloadWeight
             );
             drone.Epm = epm;
-            Debug.Log("Epm: " + epm);
+            //Debug.Log("Epm: " + epm);
             // calculate energyUsedPerSecond by epm and va
             float energyUsedPerSecond = airSpd.magnitude * epm;
-            Debug.Log("energyUsedPerSecond: " + energyUsedPerSecond);
+            // update drone energy per second (W)
+            drone.Eps = energyUsedPerSecond;
+            //Debug.Log("energyUsedPerSecond: " + energyUsedPerSecond);
             // update battery status
             drone.CurrBatteryJ -= energyUsedPerSecond * Time.deltaTime * Globals.PlaySpeed;
             if (drone.CurrBatteryJ < 0)
@@ -304,7 +313,7 @@ public class SubSwarm : MonoBehaviour
         }
     }
 
-    float CalFlightAngle()
+    public float CalFlightAngle()
     {
         if (edge == null)
         {
@@ -313,6 +322,8 @@ public class SubSwarm : MonoBehaviour
         Vector3 direction = (edge.Path[wayPointIndex] - transform.position).normalized;
         Vector3 horizontalProjection = new Vector3(direction.x, 0, direction.z);
         float theta = Vector3.Angle(horizontalProjection, direction);
+        // Convert angles to radians
+        theta = theta * Mathf.PI / 180;
         if (direction.y < 0)
         {
             theta = -theta;
@@ -382,7 +393,7 @@ public class SubSwarm : MonoBehaviour
 
     public void ToFlying(Edge edge)
     {
-        Debug.Log("ToFlying");
+        //Debug.Log("ToFlying");
         currentState = State.Flying;
         Edge = edge;
         if (node == edge.LeftNode)
@@ -396,15 +407,21 @@ public class SubSwarm : MonoBehaviour
         // restart drone flying animations
         subSwarmView.ToggleDroneAnimation(this, 1);
         subSwarmView.SetFlyPosition(this);
+        subSwarmView.Visual(this);
     }
 
     public void ToHovering(Node node)
     {
-        Debug.Log("ToHovering");
+        //Debug.Log("ToHovering");
         currentState = State.Hovering;
         Node = node;
         transform.position = node.transform.position;
-        Edge = null;
+        // record last edge
+        if (Edge != null)
+        {
+            LastEdgeVisited = Edge;
+            Edge = null;
+        }
         wayPointIndex = 0;
         // restart drone flying animations
         subSwarmView.ToggleDroneAnimation(this, 1);
@@ -413,7 +430,7 @@ public class SubSwarm : MonoBehaviour
 
     public void ToArrived(Node node)
     {
-        Debug.Log("ToArrived");
+        //Debug.Log("ToArrived");
         currentState = State.Arrived;
         Node = node;
         transform.position = node.transform.position;
@@ -426,7 +443,7 @@ public class SubSwarm : MonoBehaviour
 
     public bool ToRecharging(Node node)
     {
-        Debug.Log("ToRecharging");
+        //Debug.Log("ToRecharging");
         List<Pad> freeRechargePads = node.FreeRechargePads();
         // Check if still has available pads
         if (freeRechargePads.Count < drones.Count)
@@ -449,22 +466,22 @@ public class SubSwarm : MonoBehaviour
         Edge = null;
         wayPointIndex = 0;
         node.Drones.AddRange(drones);
-        Debug.Log(node.name);
-        Debug.Log(node.Drones.Count);
+        //Debug.Log(node.name);
+        //Debug.Log(node.Drones.Count);
         return true;
     }
 
     public bool ToLanded(Node node)
     {
-        Debug.Log("ToLanded");
+        //Debug.Log("ToLanded");
         currentState = State.Recharging;
         Node = node;
         transform.position = node.transform.position;
         Edge = null;
         wayPointIndex = 0;
         node.Drones.AddRange(drones);
-        Debug.Log(node.name);
-        Debug.Log(node.Drones.Count);
+        //Debug.Log(node.name);
+        //Debug.Log(node.Drones.Count);
         subSwarmView.LandVisualUpdate(this);
         return true;
     }
@@ -473,6 +490,26 @@ public class SubSwarm : MonoBehaviour
     {
         Simulator.instance.UpdateDrones(this);
         Simulator.instance.UpdateSubSwarm(this);
+    }
+
+    public void AddDrone(Drone drone)
+    {
+        if (drones.Contains(drone))
+        {
+            return;
+        }
+        drone.SubSwarm = this;
+        drones.Add(drone);
+    }
+
+    public void RemoveDrone(Drone drone)
+    {
+        if (!drones.Contains(drone))
+        {
+            return;
+        }
+        drone.SubSwarm = null;
+        drones.Remove(drone);
     }
 
     void LogState()
@@ -495,6 +532,7 @@ public class SubSwarm : MonoBehaviour
             drones = drones.Select(drone => drone.Id).ToList(),
             node = node.Id,
             edge = edge ? edge.Id : "",
+            lastEdgeVisited = lastEdgeVisited ? lastEdgeVisited.Id : "",
             wayPointIndex = wayPointIndex,
             currentState = currentState.ToString()
         };

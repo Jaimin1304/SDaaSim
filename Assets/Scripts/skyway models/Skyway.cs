@@ -37,8 +37,9 @@ public class Skyway : MonoBehaviour
     List<Drone> drones = new();
 
     Dictionary<string, Edge> edgeDict = new();
-    Dictionary<string, Pad> padDict = new();
     Dictionary<string, Node> nodeDict = new();
+    Dictionary<string, Pad> padDict = new();
+    Dictionary<string, Swarm> swarmDict = new();
     Dictionary<string, SubSwarm> subSwarmDict = new();
     Dictionary<string, Drone> droneDict = new();
     Dictionary<string, Payload> payloadDict = new();
@@ -103,6 +104,12 @@ public class Skyway : MonoBehaviour
         set { drones = value; }
     }
 
+    public Dictionary<string, Swarm> SwarmDict
+    {
+        get { return swarmDict; }
+        set { swarmDict = value; }
+    }
+
     public Dictionary<string, SubSwarm> SubSwarmDict
     {
         get { return subSwarmDict; }
@@ -156,6 +163,19 @@ public class Skyway : MonoBehaviour
         {
             nodeDict.Add(node.Id, node);
         }
+        //// init padDict
+        //foreach (Node node in nodes)
+        //{
+        //    foreach (Pad pad in node.Pads)
+        //    {
+        //        pads.Add(pad.Id, pad);
+        //    }
+        //}
+        // init swarmDict
+        foreach (Swarm swarm in swarms)
+        {
+            swarmDict.Add(swarm.Id, swarm);
+        }
         // init subSwarmDict
         foreach (Swarm swarm in swarms)
         {
@@ -164,14 +184,6 @@ public class Skyway : MonoBehaviour
                 subSwarmDict.Add(subSwarm.Id, subSwarm);
             }
         }
-        //// init pads
-        //foreach (Node node in nodes)
-        //{
-        //    foreach (Pad pad in node.Pads)
-        //    {
-        //        pads.Add(pad.Id, pad);
-        //    }
-        //}
         // init droneDict
         foreach (SubSwarm subSwarm in subSwarmDict.Values)
         {
@@ -386,6 +398,10 @@ public class Skyway : MonoBehaviour
         drone.SubSwarm = null;
         drone.Payloads = null;
         Destroy(drone.gameObject);
+    }
+
+    public bool RemoveSubSwarm(SubSwarm subSwarm) {
+        return true;
     }
 
     public void ClearSkyway()

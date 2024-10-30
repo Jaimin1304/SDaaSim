@@ -12,6 +12,7 @@ skyway = Skyway(None, None, None, None, None, None, None)
 def execute_user_logic():
     return custom_algorithm.run(skyway)
 
+3
 
 def update_swarm(data):
     print('update swarm')
@@ -24,12 +25,14 @@ def update_subswarm(data):
     newPos = data.get('position')
     nodeId = data.get('node')
     edgeId = data.get('edge')
+    lastEdgeVisited = data.get('lastEdgeVisited')
     # find target subswarm in skyway
     subSwarm = skyway.subSwarms.get(id)
     # update the subSwarm
     subSwarm.position = newPos
     subSwarm.node = skyway.nodes.get(nodeId)
     subSwarm.edge = skyway.edges.get(edgeId)
+    subSwarm.lastEdgeVisited = skyway.edges.get(lastEdgeVisited)
 
 
 def update_drones(data):
@@ -128,6 +131,8 @@ def init_skyway(data):
             nodes[subSwarm["node"]],
             # edge could be None
             edges[subSwarm["edge"]] if subSwarm["edge"] != '' else None,
+            # lastEdgeVisited could be None
+            edges[subSwarm["lastEdgeVisited"]] if subSwarm["lastEdgeVisited"] != '' else None,
             subSwarm["wayPointIndex"],
             subSwarm["currentState"]
         )
@@ -143,11 +148,11 @@ def init_skyway(data):
         for swarm in data["swarms"]
     }
     # assign parentSwarm to subswarms
-    # 然后，遍历 subSwarms 并更新每个 SubSwarm 对象的 parentSwarm 属性
+    # then，traverse subSwarms and update each SubSwarm object's parentSwarm
     for subSwarm_id, subSwarm_obj in subSwarms.items():
-        # 假设 data["subSwarms"] 中的每个项目都有一个与 subSwarm_id 匹配的项
+        # assume each item in data["subSwarms"] have one attribute that match subSwarm_id
         parentSwarm_id = next(item for item in data["subSwarms"] if item["id"] == subSwarm_id)["parentSwarm"]
-        # 如果 parentSwarm 存在于 swarms 中，则更新 subSwarm_obj 的 parentSwarm 属性
+        # if parentSwarm exists in swarms，then update subSwarm_obj's parentSwarm
         if parentSwarm_id in swarms:
             subSwarm_obj.parentSwarm = swarms[parentSwarm_id]
 

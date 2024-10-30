@@ -50,6 +50,9 @@ public class Drone : MonoBehaviour
     [SerializeField]
     float epm;
 
+    [SerializeField]
+    float eps;
+
     List<DroneData> dataCollection = new List<DroneData>();
 
     float lastDataCollectionTime = 0f; // To store the time of the last data collection
@@ -144,6 +147,12 @@ public class Drone : MonoBehaviour
         set { epm = value; }
     }
 
+    public float Eps
+    {
+        get { return eps; }
+        set { eps = value; }
+    }
+
     void Awake()
     {
         id = Guid.NewGuid().ToString();
@@ -225,6 +234,7 @@ public class Drone : MonoBehaviour
             absSpd = (subSwarm.AirSpd + Globals.WindSpd).magnitude,
             batteryStatus = batteryStatus,
             epm = epm,
+            eps = eps,
             g = subSwarm.G,
             airDensity = subSwarm.AirDensity,
             currBatteryJ = currBatteryJ,
@@ -267,6 +277,7 @@ public class DroneData
     public float absSpd;
     public float batteryStatus;
     public float epm;
+    public float eps;
     public float g;
     public float currBatteryJ;
     public float airDensity;
@@ -275,6 +286,6 @@ public class DroneData
 
     public string ToCSV()
     {
-        return $"{timestring},{position.x},{position.y},{position.z},{va},{absSpd},{batteryStatus},{epm},{g},{airDensity},{currBatteryJ},{node},{edge}";
+        return $"{timestring},{position.x},{position.y},{position.z},{va},{absSpd},{batteryStatus},{epm},{eps},{g},{airDensity},{currBatteryJ},{node},{edge}";
     }
 }
